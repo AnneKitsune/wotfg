@@ -1,0 +1,17 @@
+[package]
+name = "wotfg"
+version = "0.1.0"
+authors = ["Joël Lupien <jojolepro@jojolepro.com>"]
+edition = "2018"
+
+[dependencies]
+amethyst = { git = "https://github.com/amethyst/amethyst", default-features=false, features = ["vulkan"] }
+pathfinding = "2.0.3"
+easycurses = "0.12.2"
+pancurses = "0.16"
+lazy_static = "1.4.0"
+
+[target.'cfg(unix)'.dependencies]
+ncurses = "5.91.0"
+#pathfinding = { path = "../pathfinding" }
+
