@@ -360,7 +360,8 @@ pub struct InitState;
 impl State<GameData> for InitState {
     fn on_start(&mut self, data: &mut GameData) {
         println!("Game started!");
-        data.world.create_entity().with(Pos(1, 1)).build();
+        let entity = data.world.get_mut::<Entities>().unwrap().create();
+        data.world.get_mut::<Components<_>>().unwrap().insert(entity, Pos(1, 1));
 
         let mut curses = EasyCurses::initialize_system().expect("Failed to start ncurses.");
         curses.set_input_mode(InputMode::Character);
@@ -370,17 +371,18 @@ impl State<GameData> for InitState {
         curses.set_input_timeout(TimeoutMode::Immediate);
         #[cfg(unix)]
         unsafe {
+            // TODO remove uses of escape key and then this dependency
             ncurses::ll::set_escdelay(0)
         };
 
         curses.refresh();
 
-        data.world.insert(Curses(curses));
+        *data.world.get_mut::<Option<Curses>>().unwrap() = Some(Curses(curses));
     }
 
     fn update(&mut self, _data: &mut GameData) -> StateTransition<GameData> {
         //println!("Hello from Amethyst!");
-        Trans::None
+        StateTransition::None
     }
 }
 

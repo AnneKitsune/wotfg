@@ -278,6 +278,7 @@ dependencies = [
  "easycurses",
  "game_engine_core",
  "lazy_static",
+ "ncurses",
  "pathfinding",
  "planck_ecs",
  "planck_ecs_bundle",
