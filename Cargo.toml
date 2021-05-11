@@ -5,13 +5,13 @@ authors = ["Joël Lupien <jojolepro@jojolepro.com>"]
 edition = "2018"
 
 [dependencies]
-amethyst = { git = "https://github.com/amethyst/amethyst", default-features=false, features = ["vulkan"] }
-pathfinding = "2.0.3"
+pathfinding = "2.1.4"
 easycurses = "0.12.2"
-pancurses = "0.16"
+
 lazy_static = "1.4.0"
 
-[target.'cfg(unix)'.dependencies]
-ncurses = "5.91.0"
-#pathfinding = { path = "../pathfinding" }
+game_clock = "1.1.1"
+game_engine_core = "1.1.0"
+planck_ecs = "1.1.2"
+planck_ecs_bundle = "1.0.0"
 
