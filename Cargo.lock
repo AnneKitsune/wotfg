@@ -276,7 +276,6 @@ name = "wotfg"
 version = "0.1.0"
 dependencies = [
  "easycurses",
- "game_clock",
  "game_engine_core",
  "lazy_static",
  "pathfinding",

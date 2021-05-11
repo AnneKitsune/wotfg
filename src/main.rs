@@ -6,14 +6,12 @@ use std::time::Duration;
 use std::cmp::{min, max};
 use lazy_static::lazy_static;
 
+use planck_ecs::*;
+use planck_ecs_bundle::*;
 use game_engine_core::*;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pos(pub u32, pub u32);
-
-impl Component for Pos {
-    type Storage = VecStorage<Self>;
-}
 
 pub struct Curses(pub EasyCurses);
 
