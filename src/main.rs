@@ -391,6 +391,7 @@ fn main() {
     dispatcher = dispatcher.add(layer_visibility_change_system);
     dispatcher = dispatcher.add(cursor_move_system);
     dispatcher = dispatcher.add(curses_render_system);
+    dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {ev1.clear(); Ok(())});
     let dispatcher = dispatcher.build(&mut world);
 
     let mut engine =
