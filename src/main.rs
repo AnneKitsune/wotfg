@@ -44,7 +44,7 @@ fn curses_render_system(
     layer: &LayerVisibility,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
-    let curses = &mut curses.0;
+    let curses = &mut curses.as_mut().unwrap().0;
 
     // Tile space
     // Then screenspace
@@ -123,7 +123,7 @@ fn curses_render_system(
     if screen_height < 12 || screen_width < 26 {
         curses.move_rc(0, 0);
         curses.print("Smol Screen...");
-        return;
+        return Ok(());
     }
 
     curses.set_color_pair(*COLOR_NORMAL);
@@ -234,11 +234,8 @@ fn cursor_move_system(
     input_ev: &mut Vec<InputEvent>,
     cursor: &mut MapCursor,
 ) -> SystemResult {
-    if self.reader.is_none() {
-        self.reader = Some(input_ev.register_reader());
-    }
     let offset = 1 << 9 * layer.0;
-    for ev in input_ev.read(&mut self.reader.as_mut().unwrap()) {
+    for ev in input_ev {
         let new = match ev {
             InputEvent::MoveUp => (Some(cursor.0), cursor.1.checked_sub(offset)),
             InputEvent::MoveDown => (Some(cursor.0), cursor.1.checked_add(offset)),
@@ -258,10 +255,7 @@ fn layer_visibility_change_system(
     input_ev: &mut Vec<InputEvent>,
     layer: &mut LayerVisibility,
 ) -> SystemResult {
-    if self.reader.is_none() {
-        self.reader = Some(input_ev.register_reader());
-    }
-    for ev in input_ev.read(&mut self.reader.as_mut().unwrap()) {
+    for ev in input_ev {
         match ev {
             InputEvent::LayerUp => {
                 if layer.0 < 3 {
@@ -321,10 +315,10 @@ fn curses_input_system(
     input_ev: &mut Vec<InputEvent>,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
-    let curses = &mut curses.0;
+    let curses = &mut curses.as_mut().unwrap().0;
     while let Some(input) = curses.get_input() {
         if let Some(ev) = keymap.map.get(&input) {
-            input_ev.single_write(*ev);
+            input_ev.push(*ev);
         }
     }
     Ok(())
@@ -387,7 +381,7 @@ impl State<GameData> for InitState {
 }
 
 fn main() {
-    let world = World::default();
+    let mut world = World::default();
 
     let mut dispatcher = DispatcherBuilder::default();
     dispatcher = dispatcher.add(curses_input_system);
