@@ -209,20 +209,10 @@ fn curses_render_system(_positions: &Components<Pos>, cursor: &MapCursor, layer:
 
         // Render
         curses.refresh();
+        Ok(())
 }
 
-#[derive(Default)]
-pub struct CursorMoveSystem {
-    reader: Option<ReaderId<InputEvent>>,
-}
-
-impl<'a> System<'a> for CursorMoveSystem {
-    type SystemData = (
-        Write<'a, EventChannel<InputEvent>>,
-        Read<'a, LayerVisibility>,
-        Write<'a, MapCursor>,
-    );
-    fn run(&mut self, (mut input_ev, layer, mut cursor): Self::SystemData) {
+fn cursor_move_system(layer: &LayerVisibility, input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor) -> SystemResult {
         if self.reader.is_none() {
             self.reader = Some(input_ev.register_reader());
         }
@@ -240,7 +230,7 @@ impl<'a> System<'a> for CursorMoveSystem {
                 cursor.1 = new_y;
             }
         }
-    }
+        Ok(())
 }
 
 #[derive(Default)]
