@@ -350,10 +350,15 @@ impl Pos {
     }*/
 }
 
+pub struct GameData {
+    pub dispatcher: Dispatcher,
+    pub world: World,
+}
+
 pub struct InitState;
 
-impl SimpleState for InitState {
-    fn on_start(&mut self, data: StateData<'_, GameData<'_, '_>>) {
+impl State<GameData> for InitState {
+    fn on_start(&mut self, data: &mut GameData) {
         println!("Game started!");
         data.world.create_entity().with(Pos(1, 1)).build();
 
@@ -373,7 +378,7 @@ impl SimpleState for InitState {
         data.world.insert(Curses(curses));
     }
 
-    fn update(&mut self, _data: &mut StateData<'_, GameData<'_, '_>>) -> SimpleTrans {
+    fn update(&mut self, _data: &mut GameData) -> StateTransition<GameData> {
         //println!("Hello from Amethyst!");
         Trans::None
     }
