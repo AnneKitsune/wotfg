@@ -374,6 +374,9 @@ impl State<GameData> for InitState {
 
         curses.refresh();
 
+        data.dispatcher.run_seq(&mut data.world).expect("Failed to run systems.");
+        data.world.maintain();
+
         *data.world.get_mut::<Option<Curses>>().unwrap() = Some(Curses(curses));
     }
 
