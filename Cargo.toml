@@ -14,3 +14,5 @@ game_engine_core = "1.1.0"
 planck_ecs = "1.1.2"
 planck_ecs_bundle = "1.0.0"
 
+[target.'cfg(unix)'.dependencies]
+ncurses = "5.91.0"
