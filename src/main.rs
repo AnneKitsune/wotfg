@@ -373,14 +373,13 @@ impl State<GameData> for InitState {
         };
 
         curses.refresh();
-
-        data.dispatcher.run_seq(&mut data.world).expect("Failed to run systems.");
-        data.world.maintain();
-
         *data.world.get_mut::<Option<Curses>>().unwrap() = Some(Curses(curses));
     }
 
-    fn update(&mut self, _data: &mut GameData) -> StateTransition<GameData> {
+    fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {
+        data.dispatcher.run_seq(&mut data.world).expect("Failed to run systems.");
+        data.world.maintain();
+
         //println!("Hello from Amethyst!");
         StateTransition::None
     }
