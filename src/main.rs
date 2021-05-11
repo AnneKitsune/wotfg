@@ -355,7 +355,10 @@ impl State<GameData> for InitState {
     fn on_start(&mut self, data: &mut GameData) {
         println!("Game started!");
         let entity = data.world.get_mut::<Entities>().unwrap().create();
-        data.world.get_mut::<Components<_>>().unwrap().insert(entity, Pos(1, 1));
+        data.world
+            .get_mut::<Components<_>>()
+            .unwrap()
+            .insert(entity, Pos(1, 1));
 
         let mut curses = EasyCurses::initialize_system().expect("Failed to start ncurses.");
         curses.set_input_mode(InputMode::Character);
@@ -390,6 +393,7 @@ fn main() {
     dispatcher = dispatcher.add(curses_render_system);
     let dispatcher = dispatcher.build(&mut world);
 
-    let mut engine = Engine::<GameData, _>::new(InitState, GameData {world, dispatcher}, |_, _| {}, 60.0);
+    let mut engine =
+        Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);
     engine.engine_loop();
 }
