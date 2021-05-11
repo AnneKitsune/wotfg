@@ -377,7 +377,9 @@ impl State<GameData> for InitState {
     }
 
     fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {
-        data.dispatcher.run_seq(&mut data.world).expect("Failed to run systems.");
+        data.dispatcher
+            .run_seq(&mut data.world)
+            .expect("Failed to run systems.");
         data.world.maintain();
 
         //println!("Hello from Amethyst!");
@@ -395,7 +397,10 @@ fn main() {
     dispatcher = dispatcher.add(layer_visibility_change_system);
     dispatcher = dispatcher.add(cursor_move_system);
     dispatcher = dispatcher.add(curses_render_system);
-    dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {ev1.clear(); Ok(())});
+    dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
+        ev1.clear();
+        Ok(())
+    });
     let dispatcher = dispatcher.build(&mut world);
 
     let mut engine =
