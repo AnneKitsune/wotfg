@@ -233,17 +233,7 @@ fn cursor_move_system(layer: &LayerVisibility, input_ev: &mut Vec<InputEvent>, c
         Ok(())
 }
 
-#[derive(Default)]
-pub struct LayerVisibilityChangeSystem {
-    reader: Option<ReaderId<InputEvent>>,
-}
-
-impl<'a> System<'a> for LayerVisibilityChangeSystem {
-    type SystemData = (
-        Write<'a, EventChannel<InputEvent>>,
-        Write<'a, LayerVisibility>,
-    );
-    fn run(&mut self, (mut input_ev, mut layer,): Self::SystemData) {
+fn layer_visibility_change_system(input_ev: &mut Vec<InputEvent>, layer: &mut LayerVisibility) -> SystemResult {
         if self.reader.is_none() {
             self.reader = Some(input_ev.register_reader());
         }
@@ -254,7 +244,7 @@ impl<'a> System<'a> for LayerVisibilityChangeSystem {
                 _ => continue,
             }
         }
-    }
+        Ok(())
 }
 
 #[derive(Copy, Clone, Debug, Eq, PartialEq)]
@@ -291,22 +281,14 @@ impl Default for Keymap {
     }
 }
 
-pub struct CursesInputSystem;
-
-impl<'a> System<'a> for CursesInputSystem {
-    type SystemData = (
-        Write<'a, EventChannel<InputEvent>>,
-        WriteExpect<'a, Curses>,
-        Read<'a, Keymap>,
-    );
-    fn run(&mut self, (mut input_ev, mut curses, keymap): Self::SystemData) {
+fn curses_input_system(keymap: &Keymap, input_ev: &mut Vec<InputEvent>, curses: &mut Option<Curses>) -> SystemResult {
         let curses = &mut curses.0;
         while let Some(input) = curses.get_input() {
             if let Some(ev) = keymap.map.get(&input) {
                 input_ev.single_write(*ev);
             }
         }
-    }
+        Ok(())
 }
 
 impl Pos {
