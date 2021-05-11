@@ -1,8 +1,3 @@
-use amethyst::core::frame_limiter::FrameRateLimitStrategy;
-use amethyst::ecs::*;
-use amethyst::prelude::*;
-use amethyst::shrev::{EventChannel, ReaderId};
-use amethyst::utils::*;
 //use pathfinding::directed::astar;
 use easycurses::*;
 use easycurses::constants::acs;
@@ -10,6 +5,8 @@ use std::collections::HashMap;
 use std::time::Duration;
 use std::cmp::{min, max};
 use lazy_static::lazy_static;
+
+use game_engine_core::*;
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
 pub struct Pos(pub u32, pub u32);
