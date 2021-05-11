@@ -386,38 +386,16 @@ impl State<GameData> for InitState {
     }
 }
 
-fn main() -> amethyst::Result<()> {
-    amethyst::start_logger(Default::default());
+fn main() {
+    let world = World::default();
 
-    let app_root = application_root_dir()?;
-    let assets_dir = app_root.join("assets/");
+    let mut dispatcher = DispatcherBuilder::default();
+    dispatcher = dispatcher.add(curses_input_system);
+    dispatcher = dispatcher.add(layer_visibility_change_system);
+    dispatcher = dispatcher.add(cursor_move_system);
+    dispatcher = dispatcher.add(curses_render_system);
+    let dispatcher = dispatcher.build(&mut world);
 
-    let game_data = GameDataBuilder::default()
-        .with(CursesInputSystem, "curses_input", &[])
-        .with(
-            LayerVisibilityChangeSystem::default(),
-            "layer_move",
-            &["curses_input"],
-        )
-        .with(
-            CursorMoveSystem::default(),
-            "cursor_move",
-            &["curses_input", "layer_move"],
-        )
-        .with(
-            CursesRenderSystem,
-            "curses_render",
-            &["cursor_move", "layer_move"],
-        );
-    //let start = std::time::Instant::now();
-    //astar::astar(&Pos(1, 1), |p| p.successors().into_iter().cloned(), |p| p.distance_bad(&GOAL), |p| *p == GOAL);
-    //println!("{}ms", start.elapsed().as_millis());
-    let mut game = Application::build(assets_dir, InitState)?
-        .with_frame_limit(
-            FrameRateLimitStrategy::SleepAndYield(Duration::from_millis(2)),
-            60,
-        )
-        .build(game_data)?;
-    game.run();
-    Ok(())
+    let mut engine = Engine::<GameData, _>::new(InitState, GameData {world, dispatcher}, |_, _| {}, 60.0);
+    engine.engine_loop();
 }
