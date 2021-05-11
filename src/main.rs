@@ -34,16 +34,8 @@ lazy_static! {
     static ref COLOR_DEBUG: easycurses::ColorPair = easycurses::ColorPair::new(Color::Blue, Color::White);
 }
 
-pub struct CursesRenderSystem;
 
-impl<'a> System<'a> for CursesRenderSystem {
-    type SystemData = (
-        ReadStorage<'a, Pos>,
-        WriteExpect<'a, Curses>,
-        Read<'a, MapCursor>,
-        Read<'a, LayerVisibility>,
-    );
-    fn run(&mut self, (_positions, mut curses, cursor, layer): Self::SystemData) {
+fn curses_render_system(_positions: &Components<Pos>, cursor: &MapCursor, layer: &LayerVisibility, curses: &mut Option<Curses>) -> SystemResult {
         let curses = &mut curses.0;
 
         // Tile space
@@ -217,7 +209,6 @@ impl<'a> System<'a> for CursesRenderSystem {
 
         // Render
         curses.refresh();
-    }
 }
 
 #[derive(Default)]
