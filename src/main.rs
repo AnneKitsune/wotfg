@@ -386,6 +386,8 @@ impl State<GameData> for InitState {
 fn main() {
     let mut world = World::default();
 
+    world.initialize::<Entities>();
+
     let mut dispatcher = DispatcherBuilder::default();
     dispatcher = dispatcher.add(curses_input_system);
     dispatcher = dispatcher.add(layer_visibility_change_system);
