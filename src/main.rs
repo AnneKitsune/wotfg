@@ -106,13 +106,53 @@ impl Position {
     }
 }
 
-enum Tile {
+pub enum Tile {
     Air,
     Grass,
+    Border,
+    Tree,
+}
+
+// TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
+impl Into<char> for Tile{
+    fn into(self) -> char {
+        match self {
+            Tile::Air => ' ',
+            Tile::Grass => '0',
+            Tile::Border => 'b',
+            Tile::Tree => 'T',
+        }
+    }
 }
 
 pub struct Chunk {
-    tiles: Vec<Tile>,
+    pub tiles: Vec<Tile>,
+    // TODO
+    //pub collisions: CollisionMap,
+}
+
+impl Chunk {
+    pub fn new_rand() -> Self {
+        let mut tiles = vec![];
+        for y in 0..CHUNK_SIZE_Y {
+            for x in 0..CHUNK_SIZE_X {
+                let mut tile = match (x + y) % 20 {
+                    0..=15 => Tile::Grass,
+                    16..=18 => Tile::Tree,
+                    19..=20 => Tile::Air,
+                    // unreachable
+                    _ => Tile::Air,
+                };
+                if x == 0 || y == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 {
+                    tile = Tile::Border;
+                }
+                tiles.push(tile);
+            }
+        }
+        Self {
+            tiles
+        }
+    }
 }
 
 pub struct Curses(pub EasyCurses);
@@ -407,6 +447,12 @@ fn main() {
     let mut world = World::default();
 
     world.initialize::<Entities>();
+    world.initialize::<HashMap<(u32, u32), Chunk>>();
+
+    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((0, 0), Chunk::new_rand());
+    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((0, 1), Chunk::new_rand());
+    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((1, 0), Chunk::new_rand());
+    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((1, 1), Chunk::new_rand());
 
     let mut dispatcher = DispatcherBuilder::default();
     dispatcher = dispatcher.add(curses_input_system);
