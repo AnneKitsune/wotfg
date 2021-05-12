@@ -14,19 +14,16 @@ use modular_bitfield::prelude::*;
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
 // value.
-const CHUNK_SIZE_X: u64 = 64;
-const CHUNK_SIZE_Y: u64 = 64;
-const CHUNK_SIZE_Z: u64 = 16;
-
-// u32: 256x256
-// u64: 16777216x16777216
-// 256 is kinda small, and the cost of using u64 is just a doubling of memory for the chunks that
-// are loaded, which is acceptable since it eliminates any issue with a map being too small forever.
-// We'll probably have to limit the map to something smaller, because this is huge.
-const CHUNK_COUNT: u64 = u64::MAX / CHUNK_SIZE_X / CHUNK_SIZE_Y / CHUNK_SIZE_Z;
-//const CHUNK_COUNT_SQRT: u64 = CHUNK_COUNT.sqrt();
+const CHUNK_SIZE_X: u32 = 64;
+const CHUNK_SIZE_Y: u32 = 64;
+const CHUNK_SIZE_Z: u32 = 16;
+const MAIN_AREA_OFFSET_X: u32 = 0;
+const MAIN_AREA_OFFSET_Y: u32 = 4;
+const UI_SIZE_X: u32 = 20;
+const UI_SIZE_Y: u32 = 0;
 
 #[bitfield]
+#[derive(Clone, Default, Debug, Eq, PartialEq)]
 pub struct Position {
     chunk_x: B24, // 16777216
     chunk_y: B24, // 16777216
@@ -54,13 +51,10 @@ pub struct Chunk {
     tiles: Vec<Tile>,
 }
 
-#[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Pos(pub u32, pub u32, pub u32);
-
 pub struct Curses(pub EasyCurses);
 
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
-pub struct MapCursor(pub u32, pub u32);
+pub struct MapCursor(pub Position);
 
 // boi
 unsafe impl Send for Curses {}
@@ -81,9 +75,7 @@ lazy_static! {
 }
 
 fn curses_render_system(
-    _positions: &Components<Pos>,
     cursor: &MapCursor,
-    layer: &LayerVisibility,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
@@ -95,61 +87,30 @@ fn curses_render_system(
 
     // ---- Tile Space ----
 
-    let bitshift_factor = 9 * layer.0;
-    //let tiles_per_square = 1 << 9 * layer.0;
-
-    let mask: u32 = 0xFFFFFFFFu32 << bitshift_factor;
-    let mask: u32 = mask << 9; // NECESSARY TO SPLIT
-    let x_start_tile = cursor.0 & mask;
-    let y_start_tile = cursor.1 & mask;
-    //let x_start_tile = cursor.0 - (cursor.0 % tiles_per_square); // TODO: replace by bitmasking (this is the same as bitshifting right and then left??)
-    //let y_start_tile = cursor.1 - (cursor.1 % tiles_per_square);
-
-    //let x_end_tiles = x_start_tile + tiles_per_square;
-    //let y_end_tiles = y_start_tile + tiles_per_square;
-
-    // How many squares do we have to render for this layer?
-    //let square_count = std::u32::MAX >> 9 * (3 - layer.0);
-    let square_count = if layer.0 == 3 { 32 } else { 512 };
-
-    let layered_x_start = x_start_tile >> bitshift_factor;
-    let layered_y_start = y_start_tile >> bitshift_factor;
-    //let layered_x_stop = layered_x_start + square_count - 1;
-    //let layered_y_stop = layered_y_start + square_count - 1;
-    let layered_cursor = (
-        (cursor.0 >> bitshift_factor) - layered_x_start,
-        (cursor.1 >> bitshift_factor) - layered_y_start,
-    );
-    let something = bitshift_factor;
-
-    //println!("{:?}", x_start_tile);
 
     // ---- Screen Space ----
-
-    let screen_offset = (0u32, 4u32);
-    let outside_edge = (20u32, 3u32);
 
     let (screen_height, screen_width) = curses.get_row_col_count();
     let (screen_height, screen_width) = (screen_height as u32, screen_width as u32);
     let (xmax, ymax) = (
-        min(screen_width as u32 - outside_edge.0, square_count),
-        min(screen_height as u32 - outside_edge.1, square_count),
+        min(screen_width as u32 - UI_SIZE_X, CHUNK_SIZE_X),
+        min(screen_height as u32 - UI_SIZE_Y, CHUNK_SIZE_Y),
     );
 
-    let render_width = screen_width - screen_offset.0 - outside_edge.0;
-    let render_height = screen_height - screen_offset.1 - outside_edge.1;
+    let render_width = screen_width - MAIN_AREA_OFFSET_X - UI_SIZE_X;
+    let render_height = screen_height - MAIN_AREA_OFFSET_Y - UI_SIZE_Y;
 
     // Try to keep the cursor centered
     // 0 <= offset <= end - render_size
     let map_offset = (
         min(
-            max(0, layered_cursor.0 as i32 - (render_width >> 1) as i32),
-            max(0, square_count as i32 - render_width as i32),
+            max(0, cursor.0.x() as i32 - (render_width >> 1) as i32),
+            max(0, CHUNK_SIZE_X as i32 - render_width as i32),
         ) as u32,
         //min(max(0, layered_cursor.1 as i32 - ((layered_y_stop - layered_y_start) >> 1) as i32), square_count as i32 - render_height as i32) as u32,
         min(
-            max(0, layered_cursor.1 as i32 - (render_height >> 1) as i32),
-            max(0, square_count as i32 - render_height as i32),
+            max(0, cursor.0.y() as i32 - (render_height >> 1) as i32),
+            max(0, CHUNK_SIZE_Y as i32 - render_height as i32),
         ) as u32,
     );
 
@@ -162,17 +123,17 @@ fn curses_render_system(
         }
     }
 
-    if screen_height < 12 || screen_width < 26 {
+    if screen_height < UI_SIZE_Y + 2 || screen_width < UI_SIZE_X + 2 {
         curses.move_rc(0, 0);
-        curses.print("Smol Screen...");
+        curses.print("Screen too small");
         return Ok(());
     }
 
     curses.set_color_pair(*COLOR_NORMAL);
 
     // Render the map tiles and border
-    for y in screen_offset.1..ymax {
-        for x in screen_offset.0..xmax {
+    for y in MAIN_AREA_OFFSET_Y..ymax {
+        for x in MAIN_AREA_OFFSET_X..xmax {
             let x_pos = x;
             let y_pos = y;
             curses.move_rc(y_pos as i32, x_pos as i32);
@@ -185,39 +146,39 @@ fn curses_render_system(
 
     // how much you need to render > the space you have available
     let (edge_bottom, edge_top, edge_left, edge_right) = (
-        square_count - map_offset.1 > screen_height - screen_offset.1 - outside_edge.1,
+        CHUNK_SIZE_Y - map_offset.1 > screen_height - MAIN_AREA_OFFSET_Y - UI_SIZE_Y,
         map_offset.1 > 0,
         map_offset.0 > 0,
-        square_count - map_offset.0 > screen_width - screen_offset.0 - outside_edge.0,
+        CHUNK_SIZE_X - map_offset.0 > screen_width - MAIN_AREA_OFFSET_X - UI_SIZE_X,
     );
 
     curses.set_color_pair(*COLOR_EDGE);
 
     // Top Border
     if edge_top {
-        for x in screen_offset.0..xmax {
-            curses.move_rc(screen_offset.1 as i32, x as i32);
+        for x in MAIN_AREA_OFFSET_X..xmax {
+            curses.move_rc(MAIN_AREA_OFFSET_Y as i32, x as i32);
             curses.print_char('^');
         }
     }
 
     if edge_left {
-        for y in screen_offset.1..ymax {
-            curses.move_rc(y as i32, screen_offset.0 as i32);
+        for y in MAIN_AREA_OFFSET_Y..ymax {
+            curses.move_rc(y as i32, MAIN_AREA_OFFSET_X as i32);
             curses.print_char('<');
         }
     }
 
     if edge_bottom {
-        for x in screen_offset.0..xmax {
-            curses.move_rc((screen_height - outside_edge.1 - 1) as i32, x as i32);
+        for x in MAIN_AREA_OFFSET_X..xmax {
+            curses.move_rc((screen_height - UI_SIZE_Y - 1) as i32, x as i32);
             curses.print_char('v');
         }
     }
 
     if edge_right {
-        for y in screen_offset.1..ymax {
-            curses.move_rc(y as i32, (screen_width - outside_edge.0 - 1) as i32);
+        for y in MAIN_AREA_OFFSET_Y..ymax {
+            curses.move_rc(y as i32, (screen_width - UI_SIZE_X - 1) as i32);
             curses.print_char('>');
         }
     }
@@ -233,36 +194,27 @@ fn curses_render_system(
     curses.set_color_pair(*COLOR_DEBUG);
 
     curses.move_rc(1, 0);
-    curses.print(format!("Layer 0: ({},{}), Layer 1: ({},{}), Layer 2: ({},{}), Layer 3: ({},{}), Point On Map: ({},{})", 
-                             cursor.0,
-                             cursor.1,
-                             cursor.0 >> 9,
-                             cursor.1 >> 9,
-                             cursor.0 >> 18,
-                             cursor.1 >> 18,
-                             cursor.0 >> 27,
-                             cursor.1 >> 27,
-                             layered_cursor.0,
-                             layered_cursor.1));
-    curses.move_rc(3, 0);
-    curses.print(format!("Current Visible Layer: {}", layer.0));
-
-    curses.move_rc(3, 50);
-    curses.print(format!("Debug Data: {:?},{:?}", something, layered_x_start));
+    curses.print(format!("Chunk: {},{} Position: {},{},{}", 
+                             cursor.0.chunk_x(),
+                             cursor.0.chunk_y(),
+                             cursor.0.x(),
+                             cursor.0.y(),
+                             cursor.0.z(),
+                             ));
 
     // Sidebar Test
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(4, (screen_width - outside_edge.0) as i32);
+    curses.move_rc(4, (screen_width - UI_SIZE_X) as i32);
     curses.print("Some Things");
-    curses.move_rc(5, (screen_width - outside_edge.0) as i32);
+    curses.move_rc(5, (screen_width - UI_SIZE_X) as i32);
     curses.print("And More");
 
     // Map Cursor
 
     curses.set_color_pair(*COLOR_NORMAL);
     curses.move_rc(
-        (layered_cursor.1 + screen_offset.1 - map_offset.1) as i32,
-        (layered_cursor.0 + screen_offset.0 - map_offset.0) as i32,
+        (cursor.0.y() as u32 + MAIN_AREA_OFFSET_Y - map_offset.1) as i32,
+        (cursor.0.x() as u32 + MAIN_AREA_OFFSET_X - map_offset.0) as i32,
     );
     curses.print_char(acs::block());
 
