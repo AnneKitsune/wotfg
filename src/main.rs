@@ -37,9 +37,6 @@ pub struct Position {
 }
 
 impl Position {
-    pub fn chunk_index(&self) -> u64 {
-        ((self.chunk_x() as u64) << 23) | (self.chunk_y() as u64)
-    }
     /// Returns the position inside the chunk as a single number
     pub fn position_index(&self) -> u16 {
         ((self.x() as u16) << 11) | ((self.y() as u16) << 4) | (self.z() as u16)
@@ -110,6 +107,7 @@ pub enum Tile {
     Air,
     Grass,
     Border,
+    Bedrock,
     Tree,
 }
 
@@ -120,6 +118,7 @@ impl Into<char> for Tile {
             Tile::Air => ' ',
             Tile::Grass => '0',
             Tile::Border => 'b',
+            Tile::Bedrock => 'B',
             Tile::Tree => 'T',
         }
     }
@@ -134,19 +133,24 @@ pub struct Chunk {
 impl Chunk {
     pub fn new_rand() -> Self {
         let mut tiles = vec![];
-        for y in 0..CHUNK_SIZE_Y {
-            for x in 0..CHUNK_SIZE_X {
-                let mut tile = match (x + y) % 20 {
-                    0..=15 => Tile::Grass,
-                    16..=18 => Tile::Tree,
-                    19..=20 => Tile::Air,
-                    // unreachable
-                    _ => Tile::Air,
-                };
-                if x == 0 || y == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 {
-                    tile = Tile::Border;
+        for x in 0..CHUNK_SIZE_X {
+            for y in 0..CHUNK_SIZE_Y {
+                for z in 0..CHUNK_SIZE_Z {
+                    let mut tile = match (x + y) % 20 {
+                        0..=15 => Tile::Grass,
+                        16..=18 => Tile::Tree,
+                        19..=20 => Tile::Air,
+                        // unreachable
+                        _ => Tile::Air,
+                    };
+                    if x == 0 || y == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 {
+                        tile = Tile::Border;
+                    }
+                    if z == 0 {
+                        tile = Tile::Bedrock;
+                    }
+                    tiles.push(tile);
                 }
-                tiles.push(tile);
             }
         }
         Self { tiles }
@@ -176,7 +180,7 @@ lazy_static! {
         easycurses::ColorPair::new(Color::Blue, Color::White);
 }
 
-fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> SystemResult {
+fn curses_render_system(cursor: &MapCursor, chunks: &HashMap<(u32, u32), Chunk>, curses: &mut Option<Curses>) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
 
     // Tile space
@@ -221,7 +225,7 @@ fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> Syst
         }
     }
 
-    if screen_height < UI_SIZE_Y + 2 || screen_width < UI_SIZE_X + 2 {
+    if screen_height < UI_SIZE_Y + MAIN_AREA_OFFSET_Y + 2 || screen_width < UI_SIZE_X + MAIN_AREA_OFFSET_X + 2 {
         curses.move_rc(0, 0);
         curses.print("Screen too small");
         return Ok(());
@@ -229,18 +233,23 @@ fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> Syst
 
     curses.set_color_pair(*COLOR_NORMAL);
 
-    // Render the map tiles and border
-    for y in MAIN_AREA_OFFSET_Y..ymax {
-        for x in MAIN_AREA_OFFSET_X..xmax {
-            let x_pos = x;
-            let y_pos = y;
-            curses.move_rc(y_pos as i32, x_pos as i32);
-            // TODO: Set tile color and char
-            curses.print_char('0');
+    if let Some(chunk) = chunks.get((cursor.0.chunk_x(), cursor.0.chunk_y())) {
+        // Render the map tiles and border
+        for y in MAIN_AREA_OFFSET_Y..ymax {
+            for x in MAIN_AREA_OFFSET_X..xmax {
+                let x_pos = map_offset.0 + x;
+                let y_pos = map_offset.1 + y;
+                curses.move_rc(y as i32, x as i32);
+                // TODO: Set tile color and char
+                let pos = Position::new().with_x(x_pos as u8).with_y(y_pos as u8).with_z(cursor.0.z());
+                curses.print_char(chunk.get(pos.position_index()));
+            }
         }
+    } else {
+        eprintln!("No chunk data for this chunk!");
     }
 
-    // ---- Map Borders ----
+    // ---- Map visibility sides ----
 
     // how much you need to render > the space you have available
     let (edge_bottom, edge_top, edge_left, edge_right) = (
@@ -445,7 +454,16 @@ fn main() {
     let mut world = World::default();
 
     world.initialize::<Entities>();
-    world.initialize::<HashMap<(u32, u32), Chunk>>();
+
+    let mut dispatcher = DispatcherBuilder::default();
+    dispatcher = dispatcher.add(curses_input_system);
+    dispatcher = dispatcher.add(cursor_move_system);
+    dispatcher = dispatcher.add(curses_render_system);
+    dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
+        ev1.clear();
+        Ok(())
+    });
+    let dispatcher = dispatcher.build(&mut world);
 
     world
         .get_mut::<HashMap<(u32, u32), Chunk>>()
@@ -464,15 +482,6 @@ fn main() {
         .unwrap()
         .insert((1, 1), Chunk::new_rand());
 
-    let mut dispatcher = DispatcherBuilder::default();
-    dispatcher = dispatcher.add(curses_input_system);
-    dispatcher = dispatcher.add(cursor_move_system);
-    dispatcher = dispatcher.add(curses_render_system);
-    dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
-        ev1.clear();
-        Ok(())
-    });
-    let dispatcher = dispatcher.build(&mut world);
 
     let mut engine =
         Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);
