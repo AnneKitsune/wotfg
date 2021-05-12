@@ -28,11 +28,30 @@ const CHUNK_COUNT: u64 = u64::MAX / CHUNK_SIZE_X / CHUNK_SIZE_Y / CHUNK_SIZE_Z;
 
 #[bitfield]
 pub struct Position {
-    chunk_x: B24,
-    chunk_y: B24,
-    x: B6,
-    y: B6,
-    z: B4,
+    chunk_x: B24, // 16777216
+    chunk_y: B24, // 16777216
+    x: B6, // 64
+    y: B6, // 64
+    z: B4, // 16
+}
+
+impl Position {
+    pub fn chunk_index(&self) -> u64 {
+        ((self.chunk_x() as u64) << 24) & (self.chunk_y() as u64)
+    }
+    /// Returns the position inside the chunk as a single number
+    pub fn position_index(&self) -> u16 {
+        ((self.x() as u16) << 10) & ((self.y() as u16) << 4) & (self.z() as u16)
+    }
+}
+
+enum Tile {
+    Air,
+    Grass,
+}
+
+pub struct Chunk {
+    tiles: Vec<Tile>,
 }
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
