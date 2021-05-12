@@ -14,8 +14,8 @@ use planck_ecs_bundle::*;
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
 // value.
-const CHUNK_SIZE_X: u32 = 64;
-const CHUNK_SIZE_Y: u32 = 64;
+const CHUNK_SIZE_X: u32 = 128;
+const CHUNK_SIZE_Y: u32 = 128;
 const CHUNK_SIZE_Z: u32 = 16;
 const MAIN_AREA_OFFSET_X: u32 = 0;
 const MAIN_AREA_OFFSET_Y: u32 = 4;
@@ -25,20 +25,20 @@ const UI_SIZE_Y: u32 = 0;
 #[bitfield]
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
 pub struct Position {
-    chunk_x: B24, // 16777216
-    chunk_y: B24, // 16777216
-    x: B6,        // 64
-    y: B6,        // 64
+    chunk_x: B23, // 8388608
+    chunk_y: B23, // 8388608
+    x: B7,        // 128
+    y: B7,        // 128
     z: B4,        // 16
 }
 
 impl Position {
     pub fn chunk_index(&self) -> u64 {
-        ((self.chunk_x() as u64) << 24) & (self.chunk_y() as u64)
+        ((self.chunk_x() as u64) << 23) | (self.chunk_y() as u64)
     }
     /// Returns the position inside the chunk as a single number
     pub fn position_index(&self) -> u16 {
-        ((self.x() as u16) << 10) & ((self.y() as u16) << 4) & (self.z() as u16)
+        ((self.x() as u16) << 11) | ((self.y() as u16) << 4) | (self.z() as u16)
     }
 }
 
