@@ -45,54 +45,53 @@ impl Position {
         ((self.x() as u16) << 11) | ((self.y() as u16) << 4) | (self.z() as u16)
     }
 
-// TODO add collision map handling
-pub fn move_towards(&mut self, direction: Direction) {
-    match direction {
-        Direction::East => {
-            if self.x() == 0 {
-                if self.chunk_x() > 0 {
-                    self.set_chunk_x(self.chunk_x() - 1);
-                    self.set_x(CHUNK_SIZE_X - 1);
+    // TODO add collision map handling
+    pub fn move_towards(&mut self, direction: Direction) {
+        match direction {
+            Direction::East => {
+                if self.x() == 0 {
+                    if self.chunk_x() > 0 {
+                        self.set_chunk_x(self.chunk_x() - 1);
+                        self.set_x(CHUNK_SIZE_X - 1);
+                    }
                 }
             }
-        }
-        Direction::West => {
-            if self.x() >= CHUNK_SIZE_X - 1 {
-                if self.chunk_x() < CHUNK_COUNT_SQRT - 1 {
-                    self.set_chunk_x(self.chunk_x() + 1);
-                    self.set_x(0);
+            Direction::West => {
+                if self.x() >= CHUNK_SIZE_X - 1 {
+                    if self.chunk_x() < CHUNK_COUNT_SQRT - 1 {
+                        self.set_chunk_x(self.chunk_x() + 1);
+                        self.set_x(0);
+                    }
                 }
             }
-        }
-        Direction::North => {
-            if self.y() == 0 {
-                if self.chunk_y() > 0 {
-                    self.set_chunk_y(self.chunk_y() - 1);
-                    self.set_y(CHUNK_SIZE_Y - 1);
+            Direction::North => {
+                if self.y() == 0 {
+                    if self.chunk_y() > 0 {
+                        self.set_chunk_y(self.chunk_y() - 1);
+                        self.set_y(CHUNK_SIZE_Y - 1);
+                    }
                 }
             }
-        }
-        Direction::South => {
-            if self.y() >= CHUNK_SIZE_Y - 1 {
-                if self.chunk_y() < CHUNK_COUNT_SQRT - 1 {
-                    self.set_chunk_y(self.chunk_y() + 1);
-                    self.set_y(0);
+            Direction::South => {
+                if self.y() >= CHUNK_SIZE_Y - 1 {
+                    if self.chunk_y() < CHUNK_COUNT_SQRT - 1 {
+                        self.set_chunk_y(self.chunk_y() + 1);
+                        self.set_y(0);
+                    }
                 }
             }
-        }
-        Direction::Up => {
-            if self.z() < CHUNK_SIZE_Z - 2 {
-                self.set_z(self.z() + 1);
+            Direction::Up => {
+                if self.z() < CHUNK_SIZE_Z - 2 {
+                    self.set_z(self.z() + 1);
+                }
             }
-        }
-        Direction::Down => {
-            if self.z() > 0 {
-                self.set_z(self.z() - 1);
+            Direction::Down => {
+                if self.z() > 0 {
+                    self.set_z(self.z() - 1);
+                }
             }
         }
     }
-}
-
 }
 
 enum Tile {
@@ -275,7 +274,12 @@ fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> Syst
 
 // TODO replace by minigene's builtin
 enum Direction {
-    North, South, East, West, Up, Down,
+    North,
+    South,
+    East,
+    West,
+    Up,
+    Down,
 }
 
 fn cursor_move_system(input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor) -> SystemResult {
