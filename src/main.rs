@@ -224,22 +224,20 @@ fn curses_render_system(
 }
 
 fn cursor_move_system(
-    layer: &LayerVisibility,
     input_ev: &mut Vec<InputEvent>,
     cursor: &mut MapCursor,
 ) -> SystemResult {
-    let offset = 1 << 9 * layer.0;
     for ev in input_ev {
         let new = match ev {
-            InputEvent::MoveUp => (Some(cursor.0), cursor.1.checked_sub(offset)),
-            InputEvent::MoveDown => (Some(cursor.0), cursor.1.checked_add(offset)),
-            InputEvent::MoveRight => (cursor.0.checked_add(offset), Some(cursor.1)),
-            InputEvent::MoveLeft => (cursor.0.checked_sub(offset), Some(cursor.1)),
+            InputEvent::MoveUp => (Some(cursor.0.x()), cursor.0.y().checked_sub(1)),
+            InputEvent::MoveDown => (Some(cursor.0.x()), cursor.0.y().checked_add(1)),
+            InputEvent::MoveRight => (cursor.0.x().checked_add(1), Some(cursor.0.y())),
+            InputEvent::MoveLeft => (cursor.0.x().checked_sub(1), Some(cursor.0.y())),
             _ => continue,
         };
         if let (Some(new_x), Some(new_y)) = new {
-            cursor.0 = new_x;
-            cursor.1 = new_y;
+            cursor.0.set_x(new_x);
+            cursor.0.set_y(new_y);
         }
     }
     Ok(())
@@ -247,18 +245,18 @@ fn cursor_move_system(
 
 fn layer_visibility_change_system(
     input_ev: &mut Vec<InputEvent>,
-    layer: &mut LayerVisibility,
+    cursor: &mut MapCursor,
 ) -> SystemResult {
     for ev in input_ev {
         match ev {
             InputEvent::LayerUp => {
-                if layer.0 < 3 {
-                    layer.0 += 1
+                if cursor.0.z() < 15 {
+                    cursor.0.set_z(cursor.0.z() + 1);
                 }
             }
             InputEvent::LayerDown => {
-                if layer.0 > 0 {
-                    layer.0 -= 1
+                if cursor.0.z() > 0 {
+                    cursor.0.set_z(cursor.0.z() - 1);
                 }
             }
             _ => continue,
@@ -318,26 +316,6 @@ fn curses_input_system(
     Ok(())
 }
 
-impl Pos {
-    /*fn distance_bad(&self, other: &Pos) -> u32 {
-        let xdiff = if self.0 <= other.0 {
-            other.0 - self.0
-        } else {
-            self.0 - other.0
-        };
-        let ydiff = if self.1 <= other.1 {
-            other.1 - self.1
-        } else {
-            self.1 - other.1
-        };
-        xdiff + ydiff
-    }
-    fn successors(&self) -> [(Pos, u32); 4] {
-        let &Pos(x, y) = self;
-        [(Pos(x+1, y), 1), (Pos(x-1, y), 1), (Pos(x, y+1), 1), (Pos(x, y-1), 1)]
-    }*/
-}
-
 pub struct GameData {
     pub dispatcher: Dispatcher,
     pub world: World,
@@ -349,10 +327,10 @@ impl State<GameData> for InitState {
     fn on_start(&mut self, data: &mut GameData) {
         println!("Game started!");
         let entity = data.world.get_mut::<Entities>().unwrap().create();
-        data.world
+        /*data.world
             .get_mut::<Components<_>>()
             .unwrap()
-            .insert(entity, Pos(1, 1));
+            .insert(entity, Pos(1, 1));*/
 
         let mut curses = EasyCurses::initialize_system().expect("Failed to start ncurses.");
         curses.set_input_mode(InputMode::Character);
