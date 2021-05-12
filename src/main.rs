@@ -14,13 +14,17 @@ use planck_ecs_bundle::*;
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
 // value.
-const CHUNK_SIZE_X: u32 = 128;
-const CHUNK_SIZE_Y: u32 = 128;
-const CHUNK_SIZE_Z: u32 = 16;
+const CHUNK_SIZE_X: u8 = 128;
+const CHUNK_SIZE_Y: u8 = 128;
+const CHUNK_SIZE_Z: u8 = 16;
 const MAIN_AREA_OFFSET_X: u32 = 0;
 const MAIN_AREA_OFFSET_Y: u32 = 4;
 const UI_SIZE_X: u32 = 20;
 const UI_SIZE_Y: u32 = 0;
+
+// sqrt(18446744073709551615 / 128 / 128 / 16)
+// or also, 2^23.
+const CHUNK_COUNT_SQRT: u32 = 8388608;
 
 #[bitfield]
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
@@ -40,6 +44,55 @@ impl Position {
     pub fn position_index(&self) -> u16 {
         ((self.x() as u16) << 11) | ((self.y() as u16) << 4) | (self.z() as u16)
     }
+
+// TODO add collision map handling
+pub fn move_towards(&mut self, direction: Direction) {
+    match direction {
+        Direction::East => {
+            if self.x() == 0 {
+                if self.chunk_x() > 0 {
+                    self.set_chunk_x(self.chunk_x() - 1);
+                    self.set_x(CHUNK_SIZE_X - 1);
+                }
+            }
+        }
+        Direction::West => {
+            if self.x() >= CHUNK_SIZE_X - 1 {
+                if self.chunk_x() < CHUNK_COUNT_SQRT - 1 {
+                    self.set_chunk_x(self.chunk_x() + 1);
+                    self.set_x(0);
+                }
+            }
+        }
+        Direction::North => {
+            if self.y() == 0 {
+                if self.chunk_y() > 0 {
+                    self.set_chunk_y(self.chunk_y() - 1);
+                    self.set_y(CHUNK_SIZE_Y - 1);
+                }
+            }
+        }
+        Direction::South => {
+            if self.y() >= CHUNK_SIZE_Y - 1 {
+                if self.chunk_y() < CHUNK_COUNT_SQRT - 1 {
+                    self.set_chunk_y(self.chunk_y() + 1);
+                    self.set_y(0);
+                }
+            }
+        }
+        Direction::Up => {
+            if self.z() < CHUNK_SIZE_Z - 2 {
+                self.set_z(self.z() + 1);
+            }
+        }
+        Direction::Down => {
+            if self.z() > 0 {
+                self.set_z(self.z() - 1);
+            }
+        }
+    }
+}
+
 }
 
 enum Tile {
@@ -89,8 +142,8 @@ fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> Syst
     let (screen_height, screen_width) = curses.get_row_col_count();
     let (screen_height, screen_width) = (screen_height as u32, screen_width as u32);
     let (xmax, ymax) = (
-        min(screen_width as u32 - UI_SIZE_X, CHUNK_SIZE_X),
-        min(screen_height as u32 - UI_SIZE_Y, CHUNK_SIZE_Y),
+        min(screen_width as u32 - UI_SIZE_X, CHUNK_SIZE_X as u32),
+        min(screen_height as u32 - UI_SIZE_Y, CHUNK_SIZE_Y as u32),
     );
 
     let render_width = screen_width - MAIN_AREA_OFFSET_X - UI_SIZE_X;
@@ -142,10 +195,10 @@ fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> Syst
 
     // how much you need to render > the space you have available
     let (edge_bottom, edge_top, edge_left, edge_right) = (
-        CHUNK_SIZE_Y - map_offset.1 > screen_height - MAIN_AREA_OFFSET_Y - UI_SIZE_Y,
+        CHUNK_SIZE_Y as u32 - map_offset.1 > screen_height - MAIN_AREA_OFFSET_Y - UI_SIZE_Y,
         map_offset.1 > 0,
         map_offset.0 > 0,
-        CHUNK_SIZE_X - map_offset.0 > screen_width - MAIN_AREA_OFFSET_X - UI_SIZE_X,
+        CHUNK_SIZE_X as u32 - map_offset.0 > screen_width - MAIN_AREA_OFFSET_X - UI_SIZE_X,
     );
 
     curses.set_color_pair(*COLOR_EDGE);
@@ -220,41 +273,22 @@ fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> Syst
     Ok(())
 }
 
+// TODO replace by minigene's builtin
+enum Direction {
+    North, South, East, West, Up, Down,
+}
+
 fn cursor_move_system(input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor) -> SystemResult {
     for ev in input_ev {
         let new = match ev {
-            InputEvent::MoveUp => (Some(cursor.0.x()), cursor.0.y().checked_sub(1)),
-            InputEvent::MoveDown => (Some(cursor.0.x()), cursor.0.y().checked_add(1)),
-            InputEvent::MoveRight => (cursor.0.x().checked_add(1), Some(cursor.0.y())),
-            InputEvent::MoveLeft => (cursor.0.x().checked_sub(1), Some(cursor.0.y())),
+            InputEvent::MoveUp => cursor.0.move_towards(Direction::North),
+            InputEvent::MoveDown => cursor.0.move_towards(Direction::South),
+            InputEvent::MoveRight => cursor.0.move_towards(Direction::East),
+            InputEvent::MoveLeft => cursor.0.move_towards(Direction::West),
+            InputEvent::LayerUp => cursor.0.move_towards(Direction::Up),
+            InputEvent::LayerDown => cursor.0.move_towards(Direction::Down),
             _ => continue,
         };
-        if let (Some(new_x), Some(new_y)) = new {
-            cursor.0.set_x(new_x);
-            cursor.0.set_y(new_y);
-        }
-    }
-    Ok(())
-}
-
-fn layer_visibility_change_system(
-    input_ev: &mut Vec<InputEvent>,
-    cursor: &mut MapCursor,
-) -> SystemResult {
-    for ev in input_ev {
-        match ev {
-            InputEvent::LayerUp => {
-                if cursor.0.z() < 15 {
-                    cursor.0.set_z(cursor.0.z() + 1);
-                }
-            }
-            InputEvent::LayerDown => {
-                if cursor.0.z() > 0 {
-                    cursor.0.set_z(cursor.0.z() - 1);
-                }
-            }
-            _ => continue,
-        }
     }
     Ok(())
 }
@@ -360,7 +394,6 @@ fn main() {
 
     let mut dispatcher = DispatcherBuilder::default();
     dispatcher = dispatcher.add(curses_input_system);
-    dispatcher = dispatcher.add(layer_visibility_change_system);
     dispatcher = dispatcher.add(cursor_move_system);
     dispatcher = dispatcher.add(curses_render_system);
     dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
