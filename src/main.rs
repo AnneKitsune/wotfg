@@ -114,7 +114,7 @@ pub enum Tile {
 }
 
 // TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
-impl Into<char> for Tile{
+impl Into<char> for Tile {
     fn into(self) -> char {
         match self {
             Tile::Air => ' ',
@@ -149,9 +149,7 @@ impl Chunk {
                 tiles.push(tile);
             }
         }
-        Self {
-            tiles
-        }
+        Self { tiles }
     }
 }
 
@@ -449,10 +447,22 @@ fn main() {
     world.initialize::<Entities>();
     world.initialize::<HashMap<(u32, u32), Chunk>>();
 
-    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((0, 0), Chunk::new_rand());
-    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((0, 1), Chunk::new_rand());
-    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((1, 0), Chunk::new_rand());
-    world.get_mut::<HashMap<(u32, u32), Chunk>>().unwrap().insert((1, 1), Chunk::new_rand());
+    world
+        .get_mut::<HashMap<(u32, u32), Chunk>>()
+        .unwrap()
+        .insert((0, 0), Chunk::new_rand());
+    world
+        .get_mut::<HashMap<(u32, u32), Chunk>>()
+        .unwrap()
+        .insert((0, 1), Chunk::new_rand());
+    world
+        .get_mut::<HashMap<(u32, u32), Chunk>>()
+        .unwrap()
+        .insert((1, 0), Chunk::new_rand());
+    world
+        .get_mut::<HashMap<(u32, u32), Chunk>>()
+        .unwrap()
+        .insert((1, 1), Chunk::new_rand());
 
     let mut dispatcher = DispatcherBuilder::default();
     dispatcher = dispatcher.add(curses_input_system);
