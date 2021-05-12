@@ -7,9 +7,9 @@ use std::collections::HashMap;
 use std::time::Duration;
 
 use game_engine_core::*;
+use modular_bitfield::prelude::*;
 use planck_ecs::*;
 use planck_ecs_bundle::*;
-use modular_bitfield::prelude::*;
 
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
@@ -27,9 +27,9 @@ const UI_SIZE_Y: u32 = 0;
 pub struct Position {
     chunk_x: B24, // 16777216
     chunk_y: B24, // 16777216
-    x: B6, // 64
-    y: B6, // 64
-    z: B4, // 16
+    x: B6,        // 64
+    y: B6,        // 64
+    z: B4,        // 16
 }
 
 impl Position {
@@ -74,10 +74,7 @@ lazy_static! {
         easycurses::ColorPair::new(Color::Blue, Color::White);
 }
 
-fn curses_render_system(
-    cursor: &MapCursor,
-    curses: &mut Option<Curses>,
-) -> SystemResult {
+fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
 
     // Tile space
@@ -86,7 +83,6 @@ fn curses_render_system(
     // Then ui
 
     // ---- Tile Space ----
-
 
     // ---- Screen Space ----
 
@@ -194,13 +190,14 @@ fn curses_render_system(
     curses.set_color_pair(*COLOR_DEBUG);
 
     curses.move_rc(1, 0);
-    curses.print(format!("Chunk: {},{} Position: {},{},{}", 
-                             cursor.0.chunk_x(),
-                             cursor.0.chunk_y(),
-                             cursor.0.x(),
-                             cursor.0.y(),
-                             cursor.0.z(),
-                             ));
+    curses.print(format!(
+        "Chunk: {},{} Position: {},{},{}",
+        cursor.0.chunk_x(),
+        cursor.0.chunk_y(),
+        cursor.0.x(),
+        cursor.0.y(),
+        cursor.0.z(),
+    ));
 
     // Sidebar Test
     curses.set_color_pair(*COLOR_NORMAL);
@@ -223,10 +220,7 @@ fn curses_render_system(
     Ok(())
 }
 
-fn cursor_move_system(
-    input_ev: &mut Vec<InputEvent>,
-    cursor: &mut MapCursor,
-) -> SystemResult {
+fn cursor_move_system(input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor) -> SystemResult {
     for ev in input_ev {
         let new = match ev {
             InputEvent::MoveUp => (Some(cursor.0.x()), cursor.0.y().checked_sub(1)),
@@ -328,9 +322,9 @@ impl State<GameData> for InitState {
         println!("Game started!");
         let entity = data.world.get_mut::<Entities>().unwrap().create();
         /*data.world
-            .get_mut::<Components<_>>()
-            .unwrap()
-            .insert(entity, Pos(1, 1));*/
+        .get_mut::<Components<_>>()
+        .unwrap()
+        .insert(entity, Pos(1, 1));*/
 
         let mut curses = EasyCurses::initialize_system().expect("Failed to start ncurses.");
         curses.set_input_mode(InputMode::Character);
