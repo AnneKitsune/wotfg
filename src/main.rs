@@ -205,10 +205,15 @@ fn curses_render_system(
     let render_height = screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM;
 
     let (xmax, ymax) = (
-        min(screen_width - MAIN_AREA_MARGIN_RIGHT, MAIN_AREA_MARGIN_LEFT + CHUNK_SIZE_X as u32),
-        min(screen_height - MAIN_AREA_MARGIN_BOTTOM, MAIN_AREA_MARGIN_TOP + CHUNK_SIZE_Y as u32),
+        min(
+            screen_width - MAIN_AREA_MARGIN_RIGHT,
+            MAIN_AREA_MARGIN_LEFT + CHUNK_SIZE_X as u32,
+        ),
+        min(
+            screen_height - MAIN_AREA_MARGIN_BOTTOM,
+            MAIN_AREA_MARGIN_TOP + CHUNK_SIZE_Y as u32,
+        ),
     );
-
 
     // Try to keep the cursor centered
     // 0 <= offset <= end - render_size
@@ -259,8 +264,13 @@ fn curses_render_system(
                     let c = char::from(*(tile));
                     curses.print_char(c);
                 } else {
-                    eprintln!("Missing tile at location {}, {}, {} (position index {}).",
-                    x_pos, y_pos, cursor.0.z(), pos.position_index());
+                    eprintln!(
+                        "Missing tile at location {}, {}, {} (position index {}).",
+                        x_pos,
+                        y_pos,
+                        cursor.0.z(),
+                        pos.position_index()
+                    );
                 }
             }
         }
@@ -272,10 +282,12 @@ fn curses_render_system(
 
     // how much you need to render > the space you have available
     let (edge_bottom, edge_top, edge_left, edge_right) = (
-        CHUNK_SIZE_Y as u32 - map_offset.1 > screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM,
+        CHUNK_SIZE_Y as u32 - map_offset.1
+            > screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM,
         map_offset.1 > 0,
         map_offset.0 > 0,
-        CHUNK_SIZE_X as u32 - map_offset.0 > screen_width - MAIN_AREA_MARGIN_LEFT - MAIN_AREA_MARGIN_RIGHT,
+        CHUNK_SIZE_X as u32 - map_offset.0
+            > screen_width - MAIN_AREA_MARGIN_LEFT - MAIN_AREA_MARGIN_RIGHT,
     );
 
     curses.set_color_pair(*COLOR_EDGE);
@@ -297,7 +309,10 @@ fn curses_render_system(
 
     if edge_bottom {
         for x in MAIN_AREA_MARGIN_LEFT..xmax {
-            curses.move_rc((screen_height - MAIN_AREA_MARGIN_BOTTOM - 1) as i32, x as i32);
+            curses.move_rc(
+                (screen_height - MAIN_AREA_MARGIN_BOTTOM - 1) as i32,
+                x as i32,
+            );
             curses.print_char('v');
         }
     }
