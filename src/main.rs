@@ -181,7 +181,11 @@ lazy_static! {
         easycurses::ColorPair::new(Color::Blue, Color::White);
 }
 
-fn curses_render_system(cursor: &MapCursor, chunks: &HashMap<(u32, u32), Chunk>, curses: &mut Option<Curses>) -> SystemResult {
+fn curses_render_system(
+    cursor: &MapCursor,
+    chunks: &HashMap<(u32, u32), Chunk>,
+    curses: &mut Option<Curses>,
+) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
 
     // Tile space
@@ -226,7 +230,9 @@ fn curses_render_system(cursor: &MapCursor, chunks: &HashMap<(u32, u32), Chunk>,
         }
     }
 
-    if screen_height < UI_SIZE_Y + MAIN_AREA_OFFSET_Y + 2 || screen_width < UI_SIZE_X + MAIN_AREA_OFFSET_X + 2 {
+    if screen_height < UI_SIZE_Y + MAIN_AREA_OFFSET_Y + 2
+        || screen_width < UI_SIZE_X + MAIN_AREA_OFFSET_X + 2
+    {
         curses.move_rc(0, 0);
         curses.print("Screen too small");
         return Ok(());
@@ -242,8 +248,16 @@ fn curses_render_system(cursor: &MapCursor, chunks: &HashMap<(u32, u32), Chunk>,
                 let y_pos = map_offset.1 + y;
                 curses.move_rc(y as i32, x as i32);
                 // TODO: Set tile color and char
-                let pos = Position::new().with_x(x_pos as u8).with_y(y_pos as u8).with_z(cursor.0.z());
-                let c = char::from(*(chunk.tiles.get(pos.position_index()).expect("Missing tile in chunk!")));
+                let pos = Position::new()
+                    .with_x(x_pos as u8)
+                    .with_y(y_pos as u8)
+                    .with_z(cursor.0.z());
+                let c = char::from(
+                    *(chunk
+                        .tiles
+                        .get(pos.position_index())
+                        .expect("Missing tile in chunk!")),
+                );
                 curses.print_char(c);
             }
         }
@@ -483,7 +497,6 @@ fn main() {
         .get_mut::<HashMap<(u32, u32), Chunk>>()
         .unwrap()
         .insert((1, 1), Chunk::new_rand());
-
 
     let mut engine =
         Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);
