@@ -17,10 +17,10 @@ use planck_ecs_bundle::*;
 const CHUNK_SIZE_X: u8 = 128;
 const CHUNK_SIZE_Y: u8 = 128;
 const CHUNK_SIZE_Z: u8 = 16;
-const MAIN_AREA_OFFSET_X: u32 = 0;
-const MAIN_AREA_OFFSET_Y: u32 = 4;
-const UI_SIZE_X: u32 = 20;
-const UI_SIZE_Y: u32 = 0;
+const MAIN_AREA_MARGIN_LEFT: u32 = 0;
+const MAIN_AREA_MARGIN_TOP: u32 = 4;
+const MAIN_AREA_MARGIN_RIGHT: u32 = 20;
+const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
 
 // sqrt(18446744073709551615 / 128 / 128 / 16)
 // or also, 2^23.
@@ -125,6 +125,7 @@ impl From<Tile> for char {
     }
 }
 
+#[derive(Debug, Clone)]
 pub struct Chunk {
     pub tiles: Vec<Tile>,
     // TODO
@@ -199,13 +200,15 @@ fn curses_render_system(
 
     let (screen_height, screen_width) = curses.get_row_col_count();
     let (screen_height, screen_width) = (screen_height as u32, screen_width as u32);
+
+    let render_width = screen_width - MAIN_AREA_MARGIN_LEFT - MAIN_AREA_MARGIN_RIGHT;
+    let render_height = screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM;
+
     let (xmax, ymax) = (
-        min(screen_width as u32 - UI_SIZE_X, CHUNK_SIZE_X as u32),
-        min(screen_height as u32 - UI_SIZE_Y, CHUNK_SIZE_Y as u32),
+        min(screen_width - MAIN_AREA_MARGIN_RIGHT, MAIN_AREA_MARGIN_LEFT + CHUNK_SIZE_X as u32),
+        min(screen_height - MAIN_AREA_MARGIN_BOTTOM, MAIN_AREA_MARGIN_TOP + CHUNK_SIZE_Y as u32),
     );
 
-    let render_width = screen_width - MAIN_AREA_OFFSET_X - UI_SIZE_X;
-    let render_height = screen_height - MAIN_AREA_OFFSET_Y - UI_SIZE_Y;
 
     // Try to keep the cursor centered
     // 0 <= offset <= end - render_size
@@ -230,8 +233,8 @@ fn curses_render_system(
         }
     }
 
-    if screen_height < UI_SIZE_Y + MAIN_AREA_OFFSET_Y + 2
-        || screen_width < UI_SIZE_X + MAIN_AREA_OFFSET_X + 2
+    if screen_height < MAIN_AREA_MARGIN_BOTTOM + MAIN_AREA_MARGIN_TOP + 2
+        || screen_width < MAIN_AREA_MARGIN_RIGHT + MAIN_AREA_MARGIN_LEFT + 2
     {
         curses.move_rc(0, 0);
         curses.print("Screen too small");
@@ -242,23 +245,23 @@ fn curses_render_system(
 
     if let Some(chunk) = chunks.get(&(cursor.0.chunk_x(), cursor.0.chunk_y())) {
         // Render the map tiles and border
-        for y in MAIN_AREA_OFFSET_Y..ymax {
-            for x in MAIN_AREA_OFFSET_X..xmax {
-                let x_pos = map_offset.0 + x;
-                let y_pos = map_offset.1 + y;
+        for y in MAIN_AREA_MARGIN_TOP..ymax {
+            for x in MAIN_AREA_MARGIN_LEFT..xmax {
+                let x_pos = map_offset.0 + x - MAIN_AREA_MARGIN_LEFT;
+                let y_pos = map_offset.1 + y - MAIN_AREA_MARGIN_TOP;
                 curses.move_rc(y as i32, x as i32);
                 // TODO: Set tile color and char
                 let pos = Position::new()
                     .with_x(x_pos as u8)
                     .with_y(y_pos as u8)
                     .with_z(cursor.0.z());
-                let c = char::from(
-                    *(chunk
-                        .tiles
-                        .get(pos.position_index())
-                        .expect("Missing tile in chunk!")),
-                );
-                curses.print_char(c);
+                if let Some(tile) = chunk.tiles.get(pos.position_index()) {
+                    let c = char::from(*(tile));
+                    curses.print_char(c);
+                } else {
+                    eprintln!("Missing tile at location {}, {}, {} (position index {}).",
+                    x_pos, y_pos, cursor.0.z(), pos.position_index());
+                }
             }
         }
     } else {
@@ -269,39 +272,39 @@ fn curses_render_system(
 
     // how much you need to render > the space you have available
     let (edge_bottom, edge_top, edge_left, edge_right) = (
-        CHUNK_SIZE_Y as u32 - map_offset.1 > screen_height - MAIN_AREA_OFFSET_Y - UI_SIZE_Y,
+        CHUNK_SIZE_Y as u32 - map_offset.1 > screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM,
         map_offset.1 > 0,
         map_offset.0 > 0,
-        CHUNK_SIZE_X as u32 - map_offset.0 > screen_width - MAIN_AREA_OFFSET_X - UI_SIZE_X,
+        CHUNK_SIZE_X as u32 - map_offset.0 > screen_width - MAIN_AREA_MARGIN_LEFT - MAIN_AREA_MARGIN_RIGHT,
     );
 
     curses.set_color_pair(*COLOR_EDGE);
 
     // Top Border
     if edge_top {
-        for x in MAIN_AREA_OFFSET_X..xmax {
-            curses.move_rc(MAIN_AREA_OFFSET_Y as i32, x as i32);
+        for x in MAIN_AREA_MARGIN_LEFT..xmax {
+            curses.move_rc(MAIN_AREA_MARGIN_TOP as i32, x as i32);
             curses.print_char('^');
         }
     }
 
     if edge_left {
-        for y in MAIN_AREA_OFFSET_Y..ymax {
-            curses.move_rc(y as i32, MAIN_AREA_OFFSET_X as i32);
+        for y in MAIN_AREA_MARGIN_TOP..ymax {
+            curses.move_rc(y as i32, MAIN_AREA_MARGIN_LEFT as i32);
             curses.print_char('<');
         }
     }
 
     if edge_bottom {
-        for x in MAIN_AREA_OFFSET_X..xmax {
-            curses.move_rc((screen_height - UI_SIZE_Y - 1) as i32, x as i32);
+        for x in MAIN_AREA_MARGIN_LEFT..xmax {
+            curses.move_rc((screen_height - MAIN_AREA_MARGIN_BOTTOM - 1) as i32, x as i32);
             curses.print_char('v');
         }
     }
 
     if edge_right {
-        for y in MAIN_AREA_OFFSET_Y..ymax {
-            curses.move_rc(y as i32, (screen_width - UI_SIZE_X - 1) as i32);
+        for y in MAIN_AREA_MARGIN_TOP..ymax {
+            curses.move_rc(y as i32, (screen_width - MAIN_AREA_MARGIN_RIGHT - 1) as i32);
             curses.print_char('>');
         }
     }
@@ -328,17 +331,17 @@ fn curses_render_system(
 
     // Sidebar Test
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(4, (screen_width - UI_SIZE_X) as i32);
+    curses.move_rc(4, (screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
     curses.print("Some Things");
-    curses.move_rc(5, (screen_width - UI_SIZE_X) as i32);
+    curses.move_rc(5, (screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
     curses.print("And More");
 
     // Map Cursor
 
     curses.set_color_pair(*COLOR_NORMAL);
     curses.move_rc(
-        (cursor.0.y() as u32 + MAIN_AREA_OFFSET_Y - map_offset.1) as i32,
-        (cursor.0.x() as u32 + MAIN_AREA_OFFSET_X - map_offset.0) as i32,
+        (cursor.0.y() as u32 + MAIN_AREA_MARGIN_TOP - map_offset.1) as i32,
+        (cursor.0.x() as u32 + MAIN_AREA_MARGIN_LEFT - map_offset.0) as i32,
     );
     curses.print_char(acs::block());
 
@@ -461,7 +464,6 @@ impl State<GameData> for InitState {
             .expect("Failed to run systems.");
         data.world.maintain();
 
-        //println!("Hello from Amethyst!");
         StateTransition::None
     }
 }
