@@ -48,36 +48,48 @@ impl Position {
     // TODO add collision map handling
     pub fn move_towards(&mut self, direction: Direction) {
         match direction {
-            Direction::East => {
+            Direction::West => {
                 if self.x() == 0 {
+                    // change chunk
                     if self.chunk_x() > 0 {
                         self.set_chunk_x(self.chunk_x() - 1);
                         self.set_x(CHUNK_SIZE_X - 1);
                     }
+                } else {
+                    self.set_x(self.x() - 1);
                 }
             }
-            Direction::West => {
+            Direction::East => {
                 if self.x() >= CHUNK_SIZE_X - 1 {
+                    // change chunk
                     if self.chunk_x() < CHUNK_COUNT_SQRT - 1 {
                         self.set_chunk_x(self.chunk_x() + 1);
                         self.set_x(0);
                     }
+                } else {
+                    self.set_x(self.x() + 1);
                 }
             }
             Direction::North => {
                 if self.y() == 0 {
+                    // change chunk
                     if self.chunk_y() > 0 {
                         self.set_chunk_y(self.chunk_y() - 1);
                         self.set_y(CHUNK_SIZE_Y - 1);
                     }
+                } else {
+                    self.set_y(self.y() - 1);
                 }
             }
             Direction::South => {
                 if self.y() >= CHUNK_SIZE_Y - 1 {
+                    // change chunk
                     if self.chunk_y() < CHUNK_COUNT_SQRT - 1 {
                         self.set_chunk_y(self.chunk_y() + 1);
                         self.set_y(0);
                     }
+                } else {
+                    self.set_y(self.y() + 1);
                 }
             }
             Direction::Up => {
