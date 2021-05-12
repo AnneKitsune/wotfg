@@ -38,8 +38,8 @@ pub struct Position {
 
 impl Position {
     /// Returns the position inside the chunk as a single number
-    pub fn position_index(&self) -> u16 {
-        ((self.x() as u16) << 11) | ((self.y() as u16) << 4) | (self.z() as u16)
+    pub fn position_index(&self) -> usize {
+        ((self.x() as usize) << 11) | ((self.y() as usize) << 4) | (self.z() as usize)
     }
 
     // TODO add collision map handling
@@ -103,6 +103,7 @@ impl Position {
     }
 }
 
+#[derive(Clone, Copy, Debug)]
 pub enum Tile {
     Air,
     Grass,
@@ -112,9 +113,9 @@ pub enum Tile {
 }
 
 // TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
-impl Into<char> for Tile {
-    fn into(self) -> char {
-        match self {
+impl From<Tile> for char {
+    fn from(t: Tile) -> Self {
+        match t {
             Tile::Air => ' ',
             Tile::Grass => '0',
             Tile::Border => 'b',
@@ -233,7 +234,7 @@ fn curses_render_system(cursor: &MapCursor, chunks: &HashMap<(u32, u32), Chunk>,
 
     curses.set_color_pair(*COLOR_NORMAL);
 
-    if let Some(chunk) = chunks.get((cursor.0.chunk_x(), cursor.0.chunk_y())) {
+    if let Some(chunk) = chunks.get(&(cursor.0.chunk_x(), cursor.0.chunk_y())) {
         // Render the map tiles and border
         for y in MAIN_AREA_OFFSET_Y..ymax {
             for x in MAIN_AREA_OFFSET_X..xmax {
@@ -242,7 +243,8 @@ fn curses_render_system(cursor: &MapCursor, chunks: &HashMap<(u32, u32), Chunk>,
                 curses.move_rc(y as i32, x as i32);
                 // TODO: Set tile color and char
                 let pos = Position::new().with_x(x_pos as u8).with_y(y_pos as u8).with_z(cursor.0.z());
-                curses.print_char(chunk.get(pos.position_index()));
+                let c = char::from(*(chunk.tiles.get(pos.position_index()).expect("Missing tile in chunk!")));
+                curses.print_char(c);
             }
         }
     } else {
