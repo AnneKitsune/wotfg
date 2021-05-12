@@ -93,7 +93,7 @@ impl Position {
                 }
             }
             Direction::Up => {
-                if self.z() < CHUNK_SIZE_Z - 2 {
+                if self.z() < CHUNK_SIZE_Z - 1 {
                     self.set_z(self.z() + 1);
                 }
             }
