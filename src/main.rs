@@ -9,24 +9,47 @@ use std::time::Duration;
 use game_engine_core::*;
 use planck_ecs::*;
 use planck_ecs_bundle::*;
+use modular_bitfield::prelude::*;
+
+// originally, values were 40,40,10
+// if we use values that can be divided by a power of two, its easier to store position as a single
+// value.
+const CHUNK_SIZE_X: u64 = 64;
+const CHUNK_SIZE_Y: u64 = 64;
+const CHUNK_SIZE_Z: u64 = 16;
+
+// u32: 256x256
+// u64: 16777216x16777216
+// 256 is kinda small, and the cost of using u64 is just a doubling of memory for the chunks that
+// are loaded, which is acceptable since it eliminates any issue with a map being too small forever.
+// We'll probably have to limit the map to something smaller, because this is huge.
+const CHUNK_COUNT: u64 = u64::MAX / CHUNK_SIZE_X / CHUNK_SIZE_Y / CHUNK_SIZE_Z;
+//const CHUNK_COUNT_SQRT: u64 = CHUNK_COUNT.sqrt();
+
+#[bitfield]
+pub struct Position {
+    chunk_x: B24,
+    chunk_y: B24,
+    x: B6,
+    y: B6,
+    z: B4,
+}
 
 #[derive(Clone, Debug, Eq, Hash, Ord, PartialEq, PartialOrd)]
-pub struct Pos(pub u32, pub u32);
+pub struct Pos(pub u32, pub u32, pub u32);
 
 pub struct Curses(pub EasyCurses);
 
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
 pub struct MapCursor(pub u32, pub u32);
 
-#[derive(Clone, Default, Debug, Eq, PartialEq)]
-pub struct LayerVisibility(pub u32);
-
 // boi
 unsafe impl Send for Curses {}
 // Garanteed by the system execution scheduler
 unsafe impl Sync for Curses {}
 
-pub const GOAL: Pos = Pos(4095, 4095);
+//pub const GOAL: Pos = Pos(4095, 4095);
+
 lazy_static! {
     static ref COLOR_NORMAL: easycurses::ColorPair =
         easycurses::ColorPair::new(Color::White, Color::Black);
