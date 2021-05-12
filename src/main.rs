@@ -273,7 +273,7 @@ fn curses_render_system(cursor: &MapCursor, curses: &mut Option<Curses>) -> Syst
 }
 
 // TODO replace by minigene's builtin
-enum Direction {
+pub enum Direction {
     North,
     South,
     East,
