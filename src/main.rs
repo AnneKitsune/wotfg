@@ -7,10 +7,10 @@ use std::collections::HashMap;
 use std::time::Duration;
 
 use game_engine_core::*;
+use minigene::{game_features::*, CollisionMap, Direction};
 use modular_bitfield::prelude::*;
 use planck_ecs::*;
 use planck_ecs_bundle::*;
-use minigene::{Direction, CollisionMap, game_features::*};
 
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
