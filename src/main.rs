@@ -10,6 +10,7 @@ use game_engine_core::*;
 use modular_bitfield::prelude::*;
 use planck_ecs::*;
 use planck_ecs_bundle::*;
+use minigene::{Direction, CollisionMap, game_features::*};
 
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
@@ -363,16 +364,6 @@ fn curses_render_system(
     // Render
     curses.refresh();
     Ok(())
-}
-
-// TODO replace by minigene's builtin
-pub enum Direction {
-    North,
-    South,
-    East,
-    West,
-    Up,
-    Down,
 }
 
 fn cursor_move_system(input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor) -> SystemResult {
