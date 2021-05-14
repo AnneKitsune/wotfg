@@ -33,9 +33,10 @@ pub enum Items {
     TestItemA,
     TestItemB,
     TestItemC,
-	RustyDagger,
+    RustyDagger,
 }
 
+// Switch to using effectors directly?
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum DamageType {
     Physical,
