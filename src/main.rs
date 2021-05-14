@@ -43,6 +43,17 @@ pub struct Position {
     z: B4,        // 16
 }
 
+/// An input which requires a second keypress and can be cancelled.
+#[derive(Copy, Clone, Debug, Eq, PartialEq)]
+pub enum HangedInput {
+    /// Requires a direction
+    Mine,
+    /// Requires a key name
+    MacroRecord,
+    /// Requires a key name
+    MacroReplay,
+}
+
 /// Indicates that this entity is directly controlled by the input events.
 /// Shouldn't be used once the network is implemented.
 #[derive(Clone, Copy, Default, Debug)]
@@ -146,6 +157,14 @@ impl From<Tile> for char {
         }
     }
 }
+
+pub fn mine_system(controlled: &Components<Controlled>, positions: &Components<Position>,
+    chunks: &Vec<Chunk>,
+    inputs: &Vec<InputEvent>,
+    inventories: &mut Components<Inventory<Items, (), ()>>) -> SystemResult {
+    Ok(())
+}
+
 
 #[derive(Debug, Clone)]
 pub struct Chunk {
@@ -527,6 +546,7 @@ pub enum InputEvent {
     LayerDown,
     Cancel,
     Accept,
+    Hanged(HangedInput)
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -544,6 +564,7 @@ impl Default for Keymap {
                 (Input::Character('k'), InputEvent::MoveUp),
                 (Input::Character(';'), InputEvent::LayerDown),
                 (Input::Character('.'), InputEvent::LayerUp),
+                (Input::Character('m'), InputEvent::Hanged(HangedInput::Mine)),
                 (Input::Character('\n'), InputEvent::Accept),
                 (Input::Character('\u{1b}'), InputEvent::Cancel), // Escape
             ]
@@ -562,6 +583,7 @@ fn curses_input_system(
     let curses = &mut curses.as_mut().unwrap().0;
     while let Some(input) = curses.get_input() {
         if let Some(ev) = keymap.map.get(&input) {
+            //if input_ev.first(|e| e ==
             input_ev.push(*ev);
         }
     }
