@@ -632,10 +632,15 @@ fn main() {
         .insert((1, 1), Chunk::new_rand());
 
     let player = world.get_mut::<Entities>().unwrap().create();
-    world
-        .get_mut::<Components<_>>()
-        .unwrap()
-        .insert(player, Position::new().with_x(0).with_y(0).with_z(0).with_chunk_x(0).with_chunk_y(0));
+    world.get_mut::<Components<_>>().unwrap().insert(
+        player,
+        Position::new()
+            .with_x(0)
+            .with_y(0)
+            .with_z(0)
+            .with_chunk_x(0)
+            .with_chunk_y(0),
+    );
     world
         .get_mut::<Components<_>>()
         .unwrap()
