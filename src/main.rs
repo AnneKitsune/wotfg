@@ -478,7 +478,11 @@ pub fn curses_render_inventory_system(
         for item in inv.as_ref().unwrap().content.iter() {
             if item.is_some() {
                 curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-                curses.print(format!("{:?} x{}", item.as_ref().unwrap().key, item.as_ref().unwrap().quantity));
+                curses.print(format!(
+                    "{:?} x{}",
+                    item.as_ref().unwrap().key,
+                    item.as_ref().unwrap().quantity
+                ));
                 y += 1;
             }
         }
