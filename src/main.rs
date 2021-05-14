@@ -198,6 +198,7 @@ lazy_static! {
         easycurses::ColorPair::new(Color::Blue, Color::White);
 }
 
+#[derive(Clone, Default, Debug)]
 pub struct RenderInfo {
     screen_width: u32,
     screen_height: u32,
@@ -270,7 +271,7 @@ pub fn entity_render_system(
     Ok(())
 }
 
-pub fn curses_update_render_info(curses: &Option<Curses>, render: &mut RenderInfo) -> SystemResult {
+pub fn curses_update_render_info_system(curses: &Option<Curses>, render: &mut RenderInfo) -> SystemResult {
     let (screen_height, screen_width) = curses.as_ref().unwrap().0.get_row_col_count();
     let (screen_height, screen_width) = (screen_height as u32, screen_width as u32);
     render.screen_width = screen_width;
@@ -574,7 +575,7 @@ fn main() {
     // multiple players, all assigned to one network connection
 
     let mut dispatcher = DispatcherBuilder::default();
-    dispatcher = dispatcher.add(curses_update_render_info);
+    dispatcher = dispatcher.add(curses_update_render_info_system);
     dispatcher = dispatcher.add(curses_input_system);
     dispatcher = dispatcher.add(cursor_move_system);
     dispatcher = dispatcher.add(curses_render_system);
