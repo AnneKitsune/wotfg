@@ -36,6 +36,28 @@ pub enum Items {
 	RustyDagger,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+pub enum DamageType {
+    Physical,
+    Magical,
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+pub enum Effectors {
+}
+
+#[derive(Default, Clone, Debug, Deserialize)]
+pub struct ItemProperties {
+    pub damages: Vec<(DamageType, f32)>,
+    pub crit_chance: f32,
+    pub mining_level: u32,
+    pub chopping_level: u32,
+    pub attack_speed: f32,
+    pub mining_speed: f32,
+    pub attack_range: f32,
+    pub can_range: bool,
+}
+
 #[bitfield]
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
 pub struct Position {
@@ -164,7 +186,7 @@ impl From<Tile> for char {
 pub fn mine_system(controlled: &Components<Controlled>, positions: &Components<Position>,
     chunks: &Vec<Chunk>,
     inputs: &Vec<InputEvent>,
-    inventories: &mut Components<Inventory<Items, (), ()>>) -> SystemResult {
+    inventories: &mut Components<Inventory<Items, (), ItemProperties>>) -> SystemResult {
     Ok(())
 }
 
@@ -485,8 +507,8 @@ pub fn curses_render_system(
 
 pub fn curses_render_inventory_system(
     controlled: &Components<Controlled>,
-    inventories: &Components<Inventory<Items, (), ()>>,
-    item_defs: &ItemDefinitions<Items, (), ()>,
+    inventories: &Components<Inventory<Items, (), ItemProperties>>,
+    item_defs: &ItemDefinitions<Items, (), ItemProperties>,
     render: &RenderInfo,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
@@ -697,7 +719,7 @@ fn main() {
         .unwrap()
         .insert((1, 1), Chunk::new_rand());
 
-    let mut inv = Inventory::<Items, (), ()>::new_dynamic(0, 9999);
+    let mut inv = Inventory::<Items, (), ItemProperties>::new_dynamic(0, 9999);
     inv.insert(ItemInstance::new(Items::TestItemA, 1))
         .expect("Failed to insert init item into inventory.");
     inv.get_mut(0).unwrap().quantity = 2;
@@ -737,7 +759,7 @@ fn main() {
         ),
     ]);*/
 
-    let item_defs: Vec<ItemDefinition<Items, (), ()>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let item_defs: Vec<ItemDefinition<Items, (), ItemProperties>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
     let item_defs = ItemDefinitions::from(item_defs);
 
     *world.get_mut_or_default::<_>() = item_defs;
