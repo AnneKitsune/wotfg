@@ -15,6 +15,7 @@ planck_ecs = "1.1.2"
 planck_ecs_bundle = "1.0.0"
 modular-bitfield = "0.11.2"
 minigene = { path = "../minigene" }
+derive-new = "0.5.9"
 
 [target.'cfg(unix)'.dependencies]
 ncurses = "5.91.0"
