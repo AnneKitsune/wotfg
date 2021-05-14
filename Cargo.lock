@@ -1405,21 +1405,12 @@ checksum = "3831453b3449ceb48b6d9c7ad7c96d5ea673e9b470a1dc578c2ce6521230884c"
 
 [[package]]
 name = "planck_ecs"
-version = "1.1.2"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e596816a546811eca2f751e827602c156ad0ff536700232c745b424e36230c3e"
+checksum = "c41235221b3cfb0369edbfee18192503b889e4567175b8a3d3f32f8fa062a7a4"
 dependencies = [
  "atomic_refcell_try",
  "entity_component",
- "world_dispatcher",
-]
-
-[[package]]
-name = "planck_ecs_bundle"
-version = "1.0.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "a9b34365db2fa171a1a79673056f8961107aa90be5e975717c7bc96411f3d43a"
-dependencies = [
  "world_dispatcher",
 ]
 
@@ -2111,9 +2102,9 @@ dependencies = [
 
 [[package]]
 name = "world_dispatcher"
-version = "1.1.2"
+version = "1.2.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "7918aa3f50395838a682b925aee23a7454f89aa24d3e8783d920d54b45be5507"
+checksum = "e85084d923923fbe2b15d4c1f75785a4dea78ab120e212e888a949775c56f874"
 dependencies = [
  "atomic_refcell_try",
  "downcast-rs",
@@ -2132,8 +2123,6 @@ dependencies = [
  "modular-bitfield",
  "ncurses",
  "pathfinding",
- "planck_ecs",
- "planck_ecs_bundle",
 ]
 
 [[package]]

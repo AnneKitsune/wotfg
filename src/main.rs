@@ -8,10 +8,8 @@ use std::time::Duration;
 
 use derive_new::*;
 use game_engine_core::*;
-use minigene::{game_features::*, CollisionMap, Direction};
+use minigene::*;
 use modular_bitfield::prelude::*;
-use planck_ecs::*;
-use planck_ecs_bundle::*;
 
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
@@ -569,7 +567,7 @@ pub struct GameData {
 
 pub struct InitState;
 
-impl State<GameData> for InitState {
+impl game_engine_core::State<GameData> for InitState {
     fn on_start(&mut self, data: &mut GameData) {
         println!("Game started!");
         let entity = data.world.get_mut::<Entities>().unwrap().create();
