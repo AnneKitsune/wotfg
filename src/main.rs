@@ -464,6 +464,7 @@ pub fn curses_render_system(
 pub fn curses_render_inventory_system(
     controlled: &Components<Controlled>,
     inventories: &Components<Inventory<Items, (), ()>>,
+    item_defs: &ItemDefinitions<Items, (), ()>,
     render: &RenderInfo,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
@@ -476,9 +477,10 @@ pub fn curses_render_inventory_system(
         for item in inv.as_ref().unwrap().content.iter() {
             if item.is_some() {
                 curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+                let def = item_defs.defs.get(&item.as_ref().unwrap().key).unwrap_or_else(|| panic!("Failed to find item def for item key {:?}", item.as_ref().unwrap().key));
                 curses.print(format!(
-                    "{:?} x{}",
-                    item.as_ref().unwrap().key,
+                    "{} x{}",
+                    def.name,
                     item.as_ref().unwrap().quantity
                 ));
                 y += 1;
