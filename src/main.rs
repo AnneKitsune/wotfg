@@ -44,12 +44,25 @@ pub enum DamageType {
     Magical,
 }
 
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]  
+pub enum Rarity {
+    Common,
+    Rare,
+    VeryRare,
+    Epic,
+    Mythic,
+    Legendary,
+    Unobtainable,
+    Unique,
+}
+
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum Effectors {
 }
 
 #[derive(Default, Clone, Debug, Deserialize)]
 pub struct ItemProperties {
+    pub rarity: Rarity,
     pub damages: Vec<(DamageType, f32)>,
     pub crit_chance: f32,
     pub mining_level: u32,
