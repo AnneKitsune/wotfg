@@ -636,6 +636,9 @@ fn main() {
         .unwrap()
         .insert((1, 1), Chunk::new_rand());
 
+    let mut inv = Inventory::<Items, (), ()>::new_dynamic(0, 9999);
+    inv.insert(ItemInstance::new(Items::A, 1)).expect("Failed to insert init item into inventory.");
+
     let player = world.get_mut::<Entities>().unwrap().create();
     world.get_mut::<Components<_>>().unwrap().insert(
         player,
@@ -657,7 +660,7 @@ fn main() {
     world
         .get_mut::<Components<_>>()
         .unwrap()
-        .insert(player, Inventory::<Items, (), ()>::new_dynamic(0, 9999));
+        .insert(player, inv);
 
     let mut engine =
         Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);
