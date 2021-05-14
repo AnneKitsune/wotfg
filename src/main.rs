@@ -11,6 +11,8 @@ use game_engine_core::*;
 use minigene::*;
 use modular_bitfield::prelude::*;
 
+use serde::Deserialize;
+
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
 // value.
@@ -26,7 +28,7 @@ const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
 // or also, 2^23.
 const CHUNK_COUNT_SQRT: u32 = 8388608;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
 pub enum Items {
     TestItemA,
     TestItemB,
@@ -703,7 +705,8 @@ fn main() {
     inv.insert(ItemInstance::new(Items::TestItemC, 1))
         .expect("Failed to insert init item into inventory.");
 
-    let item_defs = ItemDefinitions::from(vec![
+
+    /*let item_defs = ItemDefinitions::from(vec![
         ItemDefinition::<Items, (), ()>::new(
             Items::TestItemA,
             (),
@@ -731,7 +734,10 @@ fn main() {
             None,
             None,
         ),
-    ]);
+    ]);*/
+
+    let item_defs: Vec<ItemDefinition<Items, (), ()>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let item_defs = ItemDefinitions::from(item_defs);
 
     *world.get_mut_or_default::<_>() = item_defs;
 

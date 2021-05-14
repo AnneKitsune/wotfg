@@ -16,5 +16,8 @@ modular-bitfield = "0.11.2"
 minigene = { git = "https://github.com/jojolepro/minigene" }
 derive-new = "0.5.9"
 
+serde = { version = "1.0", features = ["derive"] }
+ron = "0.6.4"
+
 [target.'cfg(unix)'.dependencies]
 ncurses = "5.91.0"

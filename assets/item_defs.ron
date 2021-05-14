@@ -1,0 +1,12 @@
+[
+    ItemDefinition (
+        key: TestItemA,
+        user_data: (),
+        slot_type: (),
+        name: "Test Item A",
+        friendly_name: "test_item_a",
+        description: "A simple test item.",
+        maximum_stack: None,
+        maximum_durability: None,
+    ),
+]
