@@ -314,12 +314,14 @@ pub fn curses_render_system(
 
     curses.set_color_pair(*COLOR_NORMAL);
 
+    let map_offset = render.map_offsets(cursor);
     let (xmax, ymax) = render.maximum_positions();
 
     if let Some(chunk) = chunks.get(&(cursor.0.chunk_x(), cursor.0.chunk_y())) {
         // Render the map tiles and border
         for y in MAIN_AREA_MARGIN_TOP..ymax {
             for x in MAIN_AREA_MARGIN_LEFT..xmax {
+                // calculated manually here because its faster
                 let x_pos = map_offset.0 + x - MAIN_AREA_MARGIN_LEFT;
                 let y_pos = map_offset.1 + y - MAIN_AREA_MARGIN_TOP;
                 curses.move_rc(y as i32, x as i32);
@@ -351,11 +353,11 @@ pub fn curses_render_system(
     // how much you need to render > the space you have available
     let (edge_bottom, edge_top, edge_left, edge_right) = (
         CHUNK_SIZE_Y as u32 - map_offset.1
-            > screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM,
+            > render.screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM,
         map_offset.1 > 0,
         map_offset.0 > 0,
         CHUNK_SIZE_X as u32 - map_offset.0
-            > screen_width - MAIN_AREA_MARGIN_LEFT - MAIN_AREA_MARGIN_RIGHT,
+            > render.screen_width - MAIN_AREA_MARGIN_LEFT - MAIN_AREA_MARGIN_RIGHT,
     );
 
     curses.set_color_pair(*COLOR_EDGE);
@@ -378,7 +380,7 @@ pub fn curses_render_system(
     if edge_bottom {
         for x in MAIN_AREA_MARGIN_LEFT..xmax {
             curses.move_rc(
-                (screen_height - MAIN_AREA_MARGIN_BOTTOM - 1) as i32,
+                (render.screen_height - MAIN_AREA_MARGIN_BOTTOM - 1) as i32,
                 x as i32,
             );
             curses.print_char('v');
@@ -387,7 +389,7 @@ pub fn curses_render_system(
 
     if edge_right {
         for y in MAIN_AREA_MARGIN_TOP..ymax {
-            curses.move_rc(y as i32, (screen_width - MAIN_AREA_MARGIN_RIGHT - 1) as i32);
+            curses.move_rc(y as i32, (render.screen_width - MAIN_AREA_MARGIN_RIGHT - 1) as i32);
             curses.print_char('>');
         }
     }
@@ -414,9 +416,9 @@ pub fn curses_render_system(
 
     // Sidebar Test
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(4, (screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+    curses.move_rc(4, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
     curses.print("Some Things");
-    curses.move_rc(5, (screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+    curses.move_rc(5, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
     curses.print("And More");
 
     // Map Cursor
@@ -546,7 +548,33 @@ fn main() {
 
     world.initialize::<Entities>();
 
+
+    // client dispatcher
+    // receive events from server and apply to the single loaded chunk we see
+    // read inputs
+    // add inputs to event queue
+    // send event to server, if current event is the same as last one and we didn't get a server
+    // tick event, don't send again.
+    // render screen and up
+    // manage different screens and transitions
+    //
+    //
+    // fixed update dispatcher
+    // receive events from client, keeping only last received for each
+    // run game logic update, move entities, apply user actions, load/unload chunks
+    // send events to client updating the world
+
+    // client side
+    // only one chunk loaded
+    // multiple players, one of which is you but you don't directly control, and see only in your
+    // current chunk
+    //
+    // server side
+    // multiple chunk loaded
+    // multiple players, all assigned to one network connection
+
     let mut dispatcher = DispatcherBuilder::default();
+    dispatcher = dispatcher.add(curses_update_render_info);
     dispatcher = dispatcher.add(curses_input_system);
     dispatcher = dispatcher.add(cursor_move_system);
     dispatcher = dispatcher.add(curses_render_system);
