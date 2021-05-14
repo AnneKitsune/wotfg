@@ -48,7 +48,8 @@ pub struct Controlled;
 #[derive(new, Clone, Default, Debug)]
 pub struct Rendered {
     pub render_char: char,
-    pub fg_color: ColorPair,
+    // TODO switch to minigene's exported color
+    pub color: ColorPair,
     pub texture_path: Option<String>,
 }
 
@@ -257,10 +258,11 @@ impl RenderInfo {
     }
 }
 
-pub fn entity_render_system(
+pub fn entity_curses_render_system(
     cursor: &MapCursor,
     positions: &Components<Position>,
     rendered: &Components<Rendered>,
+    render: &RenderInfo,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
@@ -271,7 +273,11 @@ pub fn entity_render_system(
             && pos.chunk_y() == cursor.0.chunk_y()
             && pos.z() == cursor.0.z()
         {
-            // TODO
+            if let Some((screen_x, screen_y)) = render.position_to_main_area(cursor, (pos.x() as u32, pos.y() as u32)) {
+                curses.move_rc(screen_y as i32, screen_x as i32);
+                curses.set_color_pair(rend.color);
+                curses.print_char(rend.render_char);
+            }
         }
     }
     Ok(())
@@ -591,7 +597,7 @@ fn main() {
     dispatcher = dispatcher.add(curses_update_render_info_system);
     dispatcher = dispatcher.add(curses_input_system);
     dispatcher = dispatcher.add(cursor_move_system);
-    dispatcher = dispatcher.add(entity_render_system);
+    dispatcher = dispatcher.add(entity_curses_render_system);
     dispatcher = dispatcher.add(curses_render_system);
     dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
         ev1.clear();
