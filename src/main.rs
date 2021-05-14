@@ -599,8 +599,8 @@ fn main() {
     dispatcher = dispatcher.add(curses_update_render_info_system);
     dispatcher = dispatcher.add(curses_input_system);
     dispatcher = dispatcher.add(cursor_move_system);
-    dispatcher = dispatcher.add(entity_curses_render_system);
     dispatcher = dispatcher.add(curses_render_system);
+    dispatcher = dispatcher.add(entity_curses_render_system);
     dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
         ev1.clear();
         Ok(())
