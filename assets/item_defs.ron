@@ -1,7 +1,18 @@
 [
     ItemDefinition (
         key: TestItemA,
-        user_data: (),
+        user_data: ItemProperties (
+            damages: [
+                (Physical, 20.0),
+            ],
+            crit_chance: 0.0,
+            mining_level: 1,
+            chopping_level: 1,
+            attack_speed: 1.0,
+            mining_speed: 1.0,
+            attack_range: 1.0,
+            can_range: false,
+        ),
         slot_type: (),
         name: "Test Item A",
         friendly_name: "test_item_a",
@@ -11,7 +22,18 @@
     ),
     ItemDefinition (
         key: RustyDagger,
-        user_data: (),
+        user_data: ItemProperties (
+            damages: [
+                (Physical, 20.0),
+            ],
+            crit_chance: 0.0,
+            mining_level: 1,
+            chopping_level: 1,
+            attack_speed: 1.0,
+            mining_speed: 1.0,
+            attack_range: 1.0,
+            can_range: false,
+        ),
         slot_type: (),
         name: "Rusty Dagger",
         friendly_name: "rusty_dagger",
