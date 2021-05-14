@@ -34,6 +34,7 @@ pub enum Items {
     TestItemB,
     TestItemC,
 	RustyDagger,
+    MagicalGauntlet,
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
@@ -725,8 +726,8 @@ fn main() {
     inv.get_mut(0).unwrap().quantity = 2;
     inv.insert(ItemInstance::new(Items::RustyDagger, 1))
         .expect("Failed to insert init item into inventory.");
-    /*inv.insert(ItemInstance::new(Items::TestItemC, 1))
-        .expect("Failed to insert init item into inventory.");*/
+    inv.insert(ItemInstance::new(Items::MagicalGauntlet, 1))
+        .expect("Failed to insert init item into inventory.");
 
 
     /*let item_defs = ItemDefinitions::from(vec![

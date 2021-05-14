@@ -41,4 +41,25 @@
         maximum_stack: Some(1),
         maximum_durability: Some(10),
     ),
+    ItemDefinition (
+        key: MagicalGauntlet,
+        user_data: ItemProperties (
+            damages: [
+                (Magical, 20.0),
+            ],
+            crit_chance: 0.0,
+            mining_level: 1,
+            chopping_level: 1,
+            attack_speed: 1.0,
+            mining_speed: 1.0,
+            attack_range: 1.0,
+            can_range: true,
+        ),
+        slot_type: (),
+        name: "Magical Gauntlet",
+        friendly_name: "magical_gauntlet",
+        description: "ranged, 4 magic dmg per hit, 5 mana used",
+        maximum_stack: Some(1),
+        maximum_durability: Some(20),
+    ),
 ]	
