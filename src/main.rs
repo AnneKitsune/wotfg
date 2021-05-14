@@ -524,7 +524,7 @@ fn main() {
     let player = world.get_mut::<Entities>().unwrap().create();
     world.get_mut::<Components<_>>().unwrap().insert(player, Position::new());
     world.get_mut::<Components<_>>().unwrap().insert(player, Controlled);
-    world.get_mut::<Components<_>>().unwrap().insert(player, Rendered::new('P', COLOR_TITLE, None));
+    world.get_mut::<Components<_>>().unwrap().insert(player, Rendered::new('P', *COLOR_TITLE, None));
 
     let mut engine =
         Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);

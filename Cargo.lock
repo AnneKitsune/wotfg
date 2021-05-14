@@ -2124,6 +2124,7 @@ dependencies = [
 name = "wotfg"
 version = "0.1.0"
 dependencies = [
+ "derive-new",
  "easycurses",
  "game_engine_core",
  "lazy_static",
