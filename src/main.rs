@@ -248,8 +248,8 @@ impl RenderInfo {
     ) -> Option<(u32, u32)> {
         let offsets = self.map_offsets(cursor);
         let (xmax, ymax) = self.maximum_positions();
-        let x_pos = offsets.0 as i32 + position.0 as i32 - MAIN_AREA_MARGIN_LEFT as i32;
-        let y_pos = offsets.1 as i32 + position.1 as i32 - MAIN_AREA_MARGIN_TOP as i32;
+        let x_pos = offsets.0 as i32 + position.0 as i32 + MAIN_AREA_MARGIN_LEFT as i32;
+        let y_pos = offsets.1 as i32 + position.1 as i32 + MAIN_AREA_MARGIN_TOP as i32;
         if x_pos >= 0 && y_pos >= 0 && (x_pos as u32) < xmax && (y_pos as u32) < ymax {
             Some((x_pos as u32, y_pos as u32))
         } else {
@@ -279,6 +279,8 @@ pub fn entity_curses_render_system(
                 curses.move_rc(screen_y as i32, screen_x as i32);
                 curses.set_color_pair(rend.color);
                 curses.print_char(rend.render_char);
+            } else {
+                println!("outside of renderable area!");
             }
         }
     }
@@ -451,8 +453,12 @@ pub fn curses_render_system(
     );
     curses.print_char(acs::block());
 
+    Ok(())
+}
+
+pub fn curses_end_draw_system(curses: &mut Option<Curses>) -> SystemResult {
     // Render
-    curses.refresh();
+    curses.as_mut().unwrap().0.refresh();
     Ok(())
 }
 
@@ -601,6 +607,7 @@ fn main() {
     dispatcher = dispatcher.add(cursor_move_system);
     dispatcher = dispatcher.add(curses_render_system);
     dispatcher = dispatcher.add(entity_curses_render_system);
+    dispatcher = dispatcher.add(curses_end_draw_system);
     dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
         ev1.clear();
         Ok(())
