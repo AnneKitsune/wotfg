@@ -80,6 +80,12 @@ pub enum Rarity {
     Unique,
 }
 
+impl Default for Rarity {
+    fn default() -> Self {
+        Rarity::Common
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum Effectors {
 }
@@ -782,9 +788,9 @@ fn main() {
     let stat_defs = StatDefinitions::from(stat_defs);
     *world.get_mut_or_default::<_>() = stat_defs;
 
-    let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats, ItemProperties> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats, ItemProperties>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
     let transitions_defs = ItemTransitionDefinitions::from(transitions_defs);
-    *world.get_mut_or_default::<_>() = stat_defs;
+    *world.get_mut_or_default::<_>() = transitions_defs;
 
     let player = world.get_mut::<Entities>().unwrap().create();
     world.get_mut::<Components<_>>().unwrap().insert(
