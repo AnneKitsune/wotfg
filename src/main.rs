@@ -628,7 +628,7 @@ fn main() {
     world
         .get_mut::<Components<_>>()
         .unwrap()
-        .insert(player, Position::new());
+        .insert(player, Position::new().with_x(0).with_y(0).with_z(0).with_chunk_x(0).with_chunk_y(0));
     world
         .get_mut::<Components<_>>()
         .unwrap()
