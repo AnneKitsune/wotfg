@@ -560,6 +560,8 @@ fn main() {
     let mut world = World::default();
 
     world.initialize::<Entities>();
+    // TODO remove this init once we split the dispatchers
+    world.initialize::<Components<Controlled>>();
 
     // client dispatcher
     // receive events from server and apply to the single loaded chunk we see
