@@ -673,7 +673,7 @@ fn main() {
     inv.insert(ItemInstance::new(Items::TestItemC, 1))
         .expect("Failed to insert init item into inventory.");
 
-    let mut item_defs = ItemDefinitions::from(vec![
+    let item_defs = ItemDefinitions::from(vec![
         ItemDefinition::<Items, (), ()>::new(
             Items::TestItemA,
             (),
@@ -702,6 +702,8 @@ fn main() {
             None,
         ),
     ]);
+
+    *world.get_mut_or_default::<_>() = item_defs;
 
     let player = world.get_mut::<Entities>().unwrap().create();
     world.get_mut::<Components<_>>().unwrap().insert(
