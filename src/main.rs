@@ -30,8 +30,9 @@ const CHUNK_COUNT_SQRT: u32 = 8388608;
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Items {
-    A,
-    B,
+    TestItemA,
+    TestItemB,
+    TestItemC,
 }
 
 #[bitfield]
@@ -662,7 +663,12 @@ fn main() {
         .insert((1, 1), Chunk::new_rand());
 
     let mut inv = Inventory::<Items, (), ()>::new_dynamic(0, 9999);
-    inv.insert(ItemInstance::new(Items::A, 1))
+    inv.insert(ItemInstance::new(Items::TestItemA, 1))
+        .expect("Failed to insert init item into inventory.");
+    inv.get_mut(0).unwrap().quantity = 2;
+    inv.insert(ItemInstance::new(Items::TestItemB, 1))
+        .expect("Failed to insert init item into inventory.");
+    inv.insert(ItemInstance::new(Items::TestItemC, 1))
         .expect("Failed to insert init item into inventory.");
 
     let player = world.get_mut::<Entities>().unwrap().create();

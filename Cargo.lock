@@ -742,8 +742,8 @@ dependencies = [
 
 [[package]]
 name = "game_features"
-version = "0.5.0"
-source = "git+https://github.com/jojolepro/game_features#afec6a93d873125d581e842632c1be7372e7c948"
+version = "0.5.1"
+source = "git+https://github.com/jojolepro/game_features#c2bef0a1dce28cacd079ed34e6d4077ad6d117a3"
 dependencies = [
  "derivative",
  "derive-new",
