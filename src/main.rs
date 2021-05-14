@@ -239,6 +239,17 @@ impl RenderInfo {
         );
         map_offset
     }
+    pub fn position_to_main_area(&self, cursor: &MapCursor, position: (u32, u32)) -> Option<(u32, u32)> {
+        let offsets = self.map_offsets(cursor);
+        let (xmax, ymax) = self.maximum_positions();
+        let x_pos = offsets.0 as i32 + position.0 as i32 - MAIN_AREA_MARGIN_LEFT as i32;
+        let y_pos = offsets.1 as i32 + position.1 as i32 - MAIN_AREA_MARGIN_TOP as i32;
+        if x_pos >= 0 && y_pos >= 0 && (x_pos as u32) < xmax && (y_pos as u32) < ymax {
+            Some((x_pos as u32, y_pos as u32))
+        } else {
+            None
+        }
+    }
 }
 
 pub fn entity_render_system(
@@ -269,6 +280,7 @@ pub fn curses_update_render_info(curses: &Option<Curses>, render: &mut RenderInf
 
 pub fn curses_render_system(
     cursor: &MapCursor,
+    render: &RenderInfo,
     chunks: &HashMap<(u32, u32), Chunk>,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
@@ -283,48 +295,17 @@ pub fn curses_render_system(
 
     // ---- Screen Space ----
 
-    let (screen_height, screen_width) = curses.get_row_col_count();
-    let (screen_height, screen_width) = (screen_height as u32, screen_width as u32);
-
-    let render_width = screen_width - MAIN_AREA_MARGIN_LEFT - MAIN_AREA_MARGIN_RIGHT;
-    let render_height = screen_height - MAIN_AREA_MARGIN_TOP - MAIN_AREA_MARGIN_BOTTOM;
-
-    let (xmax, ymax) = (
-        min(
-            screen_width - MAIN_AREA_MARGIN_RIGHT,
-            MAIN_AREA_MARGIN_LEFT + CHUNK_SIZE_X as u32,
-        ),
-        min(
-            screen_height - MAIN_AREA_MARGIN_BOTTOM,
-            MAIN_AREA_MARGIN_TOP + CHUNK_SIZE_Y as u32,
-        ),
-    );
-
-    // Try to keep the cursor centered
-    // 0 <= offset <= end - render_size
-    let map_offset = (
-        min(
-            max(0, cursor.0.x() as i32 - (render_width >> 1) as i32),
-            max(0, CHUNK_SIZE_X as i32 - render_width as i32),
-        ) as u32,
-        //min(max(0, layered_cursor.1 as i32 - ((layered_y_stop - layered_y_start) >> 1) as i32), square_count as i32 - render_height as i32) as u32,
-        min(
-            max(0, cursor.0.y() as i32 - (render_height >> 1) as i32),
-            max(0, CHUNK_SIZE_Y as i32 - render_height as i32),
-        ) as u32,
-    );
-
     // Clear the screen
     curses.set_color_pair(*COLOR_NORMAL);
-    for y in 0..screen_height {
-        for x in 0..screen_width {
+    for y in 0..render.screen_height {
+        for x in 0..render.screen_width {
             curses.move_rc(y as i32, x as i32);
             curses.print_char(' ');
         }
     }
 
-    if screen_height < MAIN_AREA_MARGIN_BOTTOM + MAIN_AREA_MARGIN_TOP + 2
-        || screen_width < MAIN_AREA_MARGIN_RIGHT + MAIN_AREA_MARGIN_LEFT + 2
+    if render.screen_height < MAIN_AREA_MARGIN_BOTTOM + MAIN_AREA_MARGIN_TOP + 2
+        || render.screen_width < MAIN_AREA_MARGIN_RIGHT + MAIN_AREA_MARGIN_LEFT + 2
     {
         curses.move_rc(0, 0);
         curses.print("Screen too small");
@@ -332,6 +313,8 @@ pub fn curses_render_system(
     }
 
     curses.set_color_pair(*COLOR_NORMAL);
+
+    let (xmax, ymax) = render.maximum_positions();
 
     if let Some(chunk) = chunks.get(&(cursor.0.chunk_x(), cursor.0.chunk_y())) {
         // Render the map tiles and border
