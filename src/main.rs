@@ -37,6 +37,30 @@ pub enum Items {
     MagicalGauntlet,
 }
 
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+pub enum Stats {
+    Health,
+    Mana,
+    AttackSpeedMultiplier,
+    Temperature,
+    MagicalCraftingXp,
+    WeavingXp,
+    MovementSpeedMultiplier,
+    AfterlifeEssence,
+    AfterlifeDrain,
+    LifeLength,
+}
+
+// Some discrete stats like Magical Crafting V are actually passive skills unlocked
+// using the magical_crafting_xp stat.
+
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+pub enum Skills {
+    AfterlifeEfficiency,
+    MythicalComprehension1,
+    MythicalCrafting1,
+}
+
 // Switch to using effectors directly?
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum DamageType {
@@ -46,6 +70,11 @@ pub enum DamageType {
 
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum Effectors {
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+pub enum ItemTransitions {
+    CraftUnobtainiumPlatesChestpieceTier8,
 }
 
 #[derive(Default, Clone, Debug, Deserialize)]
@@ -731,40 +760,18 @@ fn main() {
         .expect("Failed to insert init item into inventory.");
 
 
-    /*let item_defs = ItemDefinitions::from(vec![
-        ItemDefinition::<Items, (), ()>::new(
-            Items::TestItemA,
-            (),
-            "Test Item A".to_string(),
-            "test_item_a".to_string(),
-            "A simple test item.".to_string(),
-            None,
-            None,
-        ),
-        ItemDefinition::<Items, (), ()>::new(
-            Items::TestItemB,
-            (),
-            "Test Item B".to_string(),
-            "test_item_b".to_string(),
-            "A simple test item.".to_string(),
-            None,
-            None,
-        ),
-        ItemDefinition::<Items, (), ()>::new(
-            Items::TestItemC,
-            (),
-            "Test Item C".to_string(),
-            "test_item_c".to_string(),
-            "A simple test item.".to_string(),
-            None,
-            None,
-        ),
-    ]);*/
-
     let item_defs: Vec<ItemDefinition<Items, (), ItemProperties>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
     let item_defs = ItemDefinitions::from(item_defs);
 
     *world.get_mut_or_default::<_>() = item_defs;
+
+    let stat_defs: Vec<StatDefinition<Stats>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/stat_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let stat_defs = StatDefinitions::from(stat_defs);
+    *world.get_mut_or_default::<_>() = stat_defs;
+
+    let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats, ItemProperties> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let transitions_defs = ItemTransitionDefinitions::from(transitions_defs);
+    *world.get_mut_or_default::<_>() = stat_defs;
 
     let player = world.get_mut::<Entities>().unwrap().create();
     world.get_mut::<Components<_>>().unwrap().insert(
