@@ -21,7 +21,7 @@ const CHUNK_SIZE_Y: u8 = 128;
 const CHUNK_SIZE_Z: u8 = 16;
 const MAIN_AREA_MARGIN_LEFT: u32 = 0;
 const MAIN_AREA_MARGIN_TOP: u32 = 4;
-const MAIN_AREA_MARGIN_RIGHT: u32 = 20;
+const MAIN_AREA_MARGIN_RIGHT: u32 = 40;
 const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
 
 // sqrt(18446744073709551615 / 128 / 128 / 16)
@@ -33,6 +33,7 @@ pub enum Items {
     TestItemA,
     TestItemB,
     TestItemC,
+	RustyDagger,
 }
 
 #[bitfield]
@@ -700,10 +701,10 @@ fn main() {
     inv.insert(ItemInstance::new(Items::TestItemA, 1))
         .expect("Failed to insert init item into inventory.");
     inv.get_mut(0).unwrap().quantity = 2;
-    inv.insert(ItemInstance::new(Items::TestItemB, 1))
+    inv.insert(ItemInstance::new(Items::RustyDagger, 1))
         .expect("Failed to insert init item into inventory.");
-    inv.insert(ItemInstance::new(Items::TestItemC, 1))
-        .expect("Failed to insert init item into inventory.");
+    /*inv.insert(ItemInstance::new(Items::TestItemC, 1))
+        .expect("Failed to insert init item into inventory.");*/
 
 
     /*let item_defs = ItemDefinitions::from(vec![
