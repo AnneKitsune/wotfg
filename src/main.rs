@@ -28,7 +28,7 @@ const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
 // or also, 2^23.
 const CHUNK_COUNT_SQRT: u32 = 8388608;
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash)]
 pub enum Items {
     TestItemA,
     TestItemB,
@@ -674,6 +674,36 @@ fn main() {
         .expect("Failed to insert init item into inventory.");
     inv.insert(ItemInstance::new(Items::TestItemC, 1))
         .expect("Failed to insert init item into inventory.");
+
+    let mut item_defs = ItemDefinitions::from(vec![
+        ItemDefinition::<Items, (), ()>::new(
+            Items::TestItemA,
+            (),
+            "Test Item A".to_string(),
+            "test_item_a".to_string(),
+            "A simple test item.".to_string(), 
+            None,
+            None,
+        ),
+        ItemDefinition::<Items, (), ()>::new(
+            Items::TestItemB,
+            (),
+            "Test Item B".to_string(),
+            "test_item_b".to_string(),
+            "A simple test item.".to_string(), 
+            None,
+            None,
+        ),
+        ItemDefinition::<Items, (), ()>::new(
+            Items::TestItemC,
+            (),
+            "Test Item C".to_string(),
+            "test_item_c".to_string(),
+            "A simple test item.".to_string(), 
+            None,
+            None,
+        ),
+    ]);
 
     let player = world.get_mut::<Entities>().unwrap().create();
     world.get_mut::<Components<_>>().unwrap().insert(
