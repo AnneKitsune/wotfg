@@ -6,12 +6,12 @@ use std::cmp::{max, min};
 use std::collections::HashMap;
 use std::time::Duration;
 
+use derive_new::*;
 use game_engine_core::*;
 use minigene::{game_features::*, CollisionMap, Direction};
 use modular_bitfield::prelude::*;
 use planck_ecs::*;
 use planck_ecs_bundle::*;
-use derive_new::*;
 
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
@@ -240,7 +240,11 @@ impl RenderInfo {
         );
         map_offset
     }
-    pub fn position_to_main_area(&self, cursor: &MapCursor, position: (u32, u32)) -> Option<(u32, u32)> {
+    pub fn position_to_main_area(
+        &self,
+        cursor: &MapCursor,
+        position: (u32, u32),
+    ) -> Option<(u32, u32)> {
         let offsets = self.map_offsets(cursor);
         let (xmax, ymax) = self.maximum_positions();
         let x_pos = offsets.0 as i32 + position.0 as i32 - MAIN_AREA_MARGIN_LEFT as i32;
@@ -263,15 +267,20 @@ pub fn entity_render_system(
     for (pos, rend) in join!(&positions && &rendered) {
         let pos = pos.unwrap();
         let rend = rend.unwrap();
-        if pos.chunk_x() == cursor.0.chunk_x() && pos.chunk_y() == cursor.0.chunk_y()
-            && pos.z() == cursor.0.z() {
-                // TODO
+        if pos.chunk_x() == cursor.0.chunk_x()
+            && pos.chunk_y() == cursor.0.chunk_y()
+            && pos.z() == cursor.0.z()
+        {
+            // TODO
         }
     }
     Ok(())
 }
 
-pub fn curses_update_render_info_system(curses: &Option<Curses>, render: &mut RenderInfo) -> SystemResult {
+pub fn curses_update_render_info_system(
+    curses: &Option<Curses>,
+    render: &mut RenderInfo,
+) -> SystemResult {
     let (screen_height, screen_width) = curses.as_ref().unwrap().0.get_row_col_count();
     let (screen_height, screen_width) = (screen_height as u32, screen_width as u32);
     render.screen_width = screen_width;
@@ -390,7 +399,10 @@ pub fn curses_render_system(
 
     if edge_right {
         for y in MAIN_AREA_MARGIN_TOP..ymax {
-            curses.move_rc(y as i32, (render.screen_width - MAIN_AREA_MARGIN_RIGHT - 1) as i32);
+            curses.move_rc(
+                y as i32,
+                (render.screen_width - MAIN_AREA_MARGIN_RIGHT - 1) as i32,
+            );
             curses.print_char('>');
         }
     }
@@ -549,7 +561,6 @@ fn main() {
 
     world.initialize::<Entities>();
 
-
     // client dispatcher
     // receive events from server and apply to the single loaded chunk we see
     // read inputs
@@ -603,9 +614,18 @@ fn main() {
         .insert((1, 1), Chunk::new_rand());
 
     let player = world.get_mut::<Entities>().unwrap().create();
-    world.get_mut::<Components<_>>().unwrap().insert(player, Position::new());
-    world.get_mut::<Components<_>>().unwrap().insert(player, Controlled);
-    world.get_mut::<Components<_>>().unwrap().insert(player, Rendered::new('P', *COLOR_TITLE, None));
+    world
+        .get_mut::<Components<_>>()
+        .unwrap()
+        .insert(player, Position::new());
+    world
+        .get_mut::<Components<_>>()
+        .unwrap()
+        .insert(player, Controlled);
+    world
+        .get_mut::<Components<_>>()
+        .unwrap()
+        .insert(player, Rendered::new('P', *COLOR_TITLE, None));
 
     let mut engine =
         Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);
