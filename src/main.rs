@@ -28,6 +28,11 @@ const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
 // or also, 2^23.
 const CHUNK_COUNT_SQRT: u32 = 8388608;
 
+#[derive(Clone, Debug, Eq, PartialEq)]
+pub enum Items {
+    A, B
+}
+
 #[bitfield]
 #[derive(Clone, Default, Debug, Eq, PartialEq)]
 pub struct Position {
@@ -649,6 +654,10 @@ fn main() {
         .get_mut::<Components<_>>()
         .unwrap()
         .insert(player, Rendered::new('P', *COLOR_TITLE, None));
+    world
+        .get_mut::<Components<_>>()
+        .unwrap()
+        .insert(player, Inventory::<Items, (), ()>::new_dynamic(0, 9999));
 
     let mut engine =
         Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);
