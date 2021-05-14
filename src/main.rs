@@ -11,6 +11,7 @@ use minigene::{game_features::*, CollisionMap, Direction};
 use modular_bitfield::prelude::*;
 use planck_ecs::*;
 use planck_ecs_bundle::*;
+use derive_new::*;
 
 // originally, values were 40,40,10
 // if we use values that can be divided by a power of two, its easier to store position as a single
@@ -35,6 +36,20 @@ pub struct Position {
     x: B7,        // 128
     y: B7,        // 128
     z: B4,        // 16
+}
+
+/// Indicates that this entity is directly controlled by the input events.
+/// Shouldn't be used once the network is implemented.
+#[derive(Clone, Copy, Default, Debug)]
+pub struct Controlled;
+
+/// Indicates that this entity should be rendered.
+/// The entity must also have a Position component attached if it is inside of the world.
+#[derive(new, Clone, Default, Debug)]
+pub struct Rendered {
+    pub render_char: char,
+    pub fg_color: ColorPair,
+    pub texture_path: Option<String>,
 }
 
 impl Position {
@@ -505,6 +520,11 @@ fn main() {
         .get_mut::<HashMap<(u32, u32), Chunk>>()
         .unwrap()
         .insert((1, 1), Chunk::new_rand());
+
+    let player = world.get_mut::<Entities>().unwrap().create();
+    world.get_mut::<Components<_>>().unwrap().insert(player, Position::new());
+    world.get_mut::<Components<_>>().unwrap().insert(player, Controlled);
+    world.get_mut::<Components<_>>().unwrap().insert(player, Rendered::new('P', COLOR_TITLE, None));
 
     let mut engine =
         Engine::<GameData, _>::new(InitState, GameData { world, dispatcher }, |_, _| {}, 60.0);
