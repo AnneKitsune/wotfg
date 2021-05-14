@@ -28,7 +28,7 @@ const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
 // or also, 2^23.
 const CHUNK_COUNT_SQRT: u32 = 8388608;
 
-#[derive(Clone, Debug, Eq, PartialEq)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq)]
 pub enum Items {
     A, B
 }
@@ -461,6 +461,29 @@ pub fn curses_render_system(
     Ok(())
 }
 
+pub fn curses_render_inventory_system(
+    controlled: &Components<Controlled>,
+    inventories: &Components<Inventory<Items, (), ()>>,
+    render: &RenderInfo,
+    curses: &mut Option<Curses>,
+) -> SystemResult {
+    let curses = &mut curses.as_mut().unwrap().0;
+    curses.set_color_pair(*COLOR_NORMAL);
+    curses.move_rc(6, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+    curses.print("=== Inventory ===");
+    let mut y = 7;
+    for (_, inv) in join!(&controlled && &inventories) {
+        for item in inv.as_ref().unwrap().content.iter() {
+            if item.is_some() {
+                curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+                curses.print(format!("{:?}", item.as_ref().unwrap().key));
+                y += 1;
+            }
+        }
+    }
+    Ok(())
+}
+
 pub fn curses_end_draw_system(curses: &mut Option<Curses>) -> SystemResult {
     // Render
     curses.as_mut().unwrap().0.refresh();
@@ -612,6 +635,7 @@ fn main() {
     dispatcher = dispatcher.add(cursor_move_system);
     dispatcher = dispatcher.add(curses_render_system);
     dispatcher = dispatcher.add(entity_curses_render_system);
+    dispatcher = dispatcher.add(curses_render_inventory_system);
     dispatcher = dispatcher.add(curses_end_draw_system);
     dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
         ev1.clear();
