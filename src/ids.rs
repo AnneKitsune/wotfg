@@ -97,9 +97,11 @@ pub enum ItemTransitions {
 pub enum Tiles {
     Air,
     Grass,
+    GrassLong,
     Border,
     Bedrock,
     Tree,
+    Rock,
 }
 
 // TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
@@ -107,10 +109,12 @@ impl From<Tiles> for char {
     fn from(t: Tiles) -> Self {
         match t {
             Tiles::Air => ' ',
-            Tiles::Grass => '0',
+            Tiles::Grass => '.',
+            Tiles::GrassLong => ',',
             Tiles::Border => 'b',
             Tiles::Bedrock => 'B',
             Tiles::Tree => 'T',
+            Tiles::Rock => 'o',
         }
     }
 }

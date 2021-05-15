@@ -22,11 +22,12 @@ impl Chunk {
         for x in 0..CHUNK_SIZE_X {
             for y in 0..CHUNK_SIZE_Y {
                 for z in 0..CHUNK_SIZE_Z {
-                    let random_number = rng.rng.rand_range(1..21);
+                    let random_number = rng.rng.rand_range(1..1001);
                     let mut tile = match random_number {
-                        0..=15 => Tiles::Grass,
-                        16..=18 => Tiles::Tree,
-                        19..=20 => Tiles::Air,
+                        0..=1 => Tiles::Tree,
+                        2..=3 => Tiles::Rock,
+                        4..=200 => Tiles::GrassLong,
+                        201..=1000 => Tiles::Grass,
                         // unreachable
                         _ => Tiles::Air,
                     };
