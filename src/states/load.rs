@@ -32,7 +32,7 @@ impl game_engine_core::State<GameData> for LoadState {
         .expect("Failed to insert init item into inventory.");
 
     let item_defs: Vec<ItemDefinition<Items, (), ItemProperties>> = ron::de::from_str(
-        &String::from_utf8(include_bytes!("../assets/item_defs.ron").to_vec()).unwrap(),
+        &String::from_utf8(include_bytes!("../../assets/item_defs.ron").to_vec()).unwrap(),
     )
     .expect("Failed to load file: Invalid format.");
     let item_defs = ItemDefinitions::from(item_defs);
@@ -40,7 +40,7 @@ impl game_engine_core::State<GameData> for LoadState {
     *data.world.get_mut_or_default::<_>() = item_defs;
 
     let stat_defs: Vec<StatDefinition<Stats>> = ron::de::from_str(
-        &String::from_utf8(include_bytes!("../assets/stat_defs.ron").to_vec()).unwrap(),
+        &String::from_utf8(include_bytes!("../../assets/stat_defs.ron").to_vec()).unwrap(),
     )
     .expect("Failed to load file: Invalid format.");
     let stat_defs = StatDefinitions::from(stat_defs);
@@ -48,7 +48,7 @@ impl game_engine_core::State<GameData> for LoadState {
 
     let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats>> =
         ron::de::from_str(
-            &String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec())
+            &String::from_utf8(include_bytes!("../../assets/item_transition_defs.ron").to_vec())
                 .unwrap(),
         )
         .expect("Failed to load file: Invalid format.");
@@ -77,8 +77,10 @@ impl game_engine_core::State<GameData> for LoadState {
         .get_mut::<Components<_>>()
         .unwrap()
         .insert(player, inv);
+    }
 
-        StateTransition::None
+    fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {
+        StateTransition::Switch(Box::new(InitState))
     }
 }
 

@@ -1,6 +1,6 @@
 use crate::*;
 
-fn curses_input_system(
+pub fn curses_input_system(
     keymap: &Keymap,
     input_ev: &mut Vec<InputEvent>,
     curses: &mut Option<Curses>,

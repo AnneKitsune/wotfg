@@ -1,6 +1,6 @@
 use crate::*;
 
-fn cursor_move_system(input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor) -> SystemResult {
+pub fn cursor_move_system(input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor) -> SystemResult {
     for ev in input_ev {
         let new = match ev {
             InputEvent::MoveUp => cursor.0.move_towards(Direction::North),
