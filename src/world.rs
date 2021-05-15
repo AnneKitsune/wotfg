@@ -29,11 +29,11 @@ impl Chunk {
                         // unreachable
                         _ => Tiles::Air,
                     };
-                    if x == 0 || y == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 {
-                        tile = Tiles::Border;
-                    }
                     if z == 0 {
                         tile = Tiles::Bedrock;
+                    }
+                    if x == 0 || y == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 {
+                        tile = Tiles::Border;
                     }
                     tiles.push(tile);
                 }
