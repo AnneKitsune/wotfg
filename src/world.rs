@@ -26,8 +26,8 @@ impl Chunk {
                     let mut tile = match random_number {
                         0..=1 => Tiles::Tree,
                         2..=3 => Tiles::Rock,
-                        4..=200 => Tiles::GrassLong,
-                        201..=1000 => Tiles::Grass,
+                        4..=50 => Tiles::GrassLong,
+                        51..=1000 => Tiles::Grass,
                         // unreachable
                         _ => Tiles::Air,
                     };
