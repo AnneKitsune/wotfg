@@ -1,7 +1,7 @@
 [
     ItemTransitionDefinition (
         key: CraftUnobtainiumPlatesChestpieceTier8,
-        name: "Unobtainium Plates Chestpiece Tier 8",
+        name: "Unobtainium Plates Chestpiece Tier VIII",
         friendly_name: "craft_unobtainium_chestpiece_8",
         icon_path: None,
         input_items: [
