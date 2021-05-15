@@ -87,7 +87,7 @@ checksum = "0d8c1fef690941d3e7788d328517591fecc684c084084702d6ff1641e993699a"
 [[package]]
 name = "bracket-algorithm-traits"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "bracket-geometry",
  "smallvec",
@@ -96,7 +96,7 @@ dependencies = [
 [[package]]
 name = "bracket-color"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "byteorder",
  "lazy_static",
@@ -107,7 +107,7 @@ dependencies = [
 [[package]]
 name = "bracket-geometry"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "serde",
  "ultraviolet",
@@ -116,7 +116,7 @@ dependencies = [
 [[package]]
 name = "bracket-lib"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "bracket-algorithm-traits",
  "bracket-color",
@@ -130,7 +130,7 @@ dependencies = [
 [[package]]
 name = "bracket-noise"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "bracket-random",
 ]
@@ -138,7 +138,7 @@ dependencies = [
 [[package]]
 name = "bracket-pathfinding"
 version = "0.8.4"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "bracket-algorithm-traits",
  "bracket-geometry",
@@ -149,7 +149,7 @@ dependencies = [
 [[package]]
 name = "bracket-random"
 version = "0.8.3"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "getrandom",
  "js-sys",
@@ -164,7 +164,7 @@ dependencies = [
 [[package]]
 name = "bracket-terminal"
 version = "0.8.3"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#d8c8af87173d0a26662fde108f7dc988ad3bed48"
 dependencies = [
  "anyhow",
  "bracket-color",
@@ -748,9 +748,9 @@ dependencies = [
 
 [[package]]
 name = "game_features"
-version = "0.7.0"
+version = "0.7.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "475965685a646d566a9696844d22f53766f2b144c9302bf17e120e536b0c1f4a"
+checksum = "8192401e786aab96b2e1ea0291dcc6cf798c5e4cbe8aaa3cf11f7e27b5419f62"
 dependencies = [
  "derivative",
  "derive-new",
@@ -971,7 +971,7 @@ dependencies = [
 [[package]]
 name = "minigene"
 version = "0.4.0"
-source = "git+https://github.com/jojolepro/minigene#c2ffdc88c4d6aa94a5929ab98cc249fd763d1317"
+source = "git+https://github.com/jojolepro/minigene#3f7df8199644dc0ddf110edb695aef5e339da335"
 dependencies = [
  "bracket-lib",
  "crossterm 0.18.2",
@@ -979,6 +979,7 @@ dependencies = [
  "game_clock",
  "game_features",
  "hibitset",
+ "oorandom",
  "planck_ecs",
  "pushdown-automaton-macro",
  "rayon",
@@ -1323,6 +1324,12 @@ name = "once_cell"
 version = "1.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "af8b08b04175473088b46763e51ee54da5f9a164bc162f615b91bc179dbf15a3"
+
+[[package]]
+name = "oorandom"
+version = "11.1.3"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "0ab1bc2a289d34bd04a330323ac98a1b4bc82c9d9fcb1e66b63caa84da26b575"
 
 [[package]]
 name = "owned_ttf_parser"
@@ -2147,6 +2154,7 @@ dependencies = [
  "minigene",
  "modular-bitfield",
  "ncurses",
+ "oorandom",
  "pathfinding",
  "roman",
  "ron",

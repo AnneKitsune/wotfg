@@ -17,12 +17,13 @@ pub struct Chunk {
 }
 
 impl Chunk {
-    pub fn new_rand() -> Self {
+    pub fn new_rand(rng: &mut RNG) -> Self {
         let mut tiles = vec![];
         for x in 0..CHUNK_SIZE_X {
             for y in 0..CHUNK_SIZE_Y {
                 for z in 0..CHUNK_SIZE_Z {
-                    let mut tile = match (x + y) % 20 {
+                    let random_number = rng.rng.rand_range(1..21);
+                    let mut tile = match random_number {
                         0..=15 => Tiles::Grass,
                         16..=18 => Tiles::Tree,
                         19..=20 => Tiles::Air,
