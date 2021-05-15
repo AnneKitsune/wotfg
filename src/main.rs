@@ -81,7 +81,7 @@ pub enum DamageType {
     Magical,
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]  
+#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize)]  
 pub enum Rarity {
     Common,
     Rare,
@@ -623,16 +623,41 @@ pub fn curses_render_crafting_system(
     controlled: &Components<Controlled>,
     inventories: &Components<Inventory<Items, (), ItemProperties>>,
     item_defs: &ItemDefinitions<Items, (), ItemProperties>,
+    stat_defs: &StatDefinitions<Stats>,
+    transitions: &ItemTransitionDefinitions<ItemTransitions, Items, Effectors, Stats>,
     render: &RenderInfo,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
     //roman::to(level).unwrap();
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(6, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-    curses.print("=== Inventory ===");
-    let mut y = 7;
-    for (_, inv) in join!(&controlled && &inventories) {
+    curses.move_rc(25, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+    curses.print("=== Craft ===");
+    let mut y = 26;
+    for trans in transitions.defs.values() {
+        if trans.auto_trigger == false {
+            let output_defs = trans.output_items.iter().map(|k| item_defs.defs.get(&k.0).expect("Item Transition references item not present in item definitions.")).collect::<Vec<_>>();
+            if output_defs.is_empty() {
+                continue;
+            }
+
+            let single_result = output_defs.len() == 1;
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+
+            // print craft title
+            let (name, color) = if single_result {
+                let output_key = trans.output_items.get(0).unwrap();
+                let output = item_defs.defs.get(&output_key.0).expect("Item Transition references item not present in item definitions.");
+                (format!("{}", output.name), ColorPair::from(output.user_data.rarity))
+            } else {
+                let rarest_color = ColorPair::from(output_defs.iter().map(|d| d.user_data.rarity).max().expect("Failed to order rarities in crafting recipe."));
+                (trans.name.clone(), rarest_color)
+            };
+            curses.set_color_pair(color);
+            curses.print(format!("{}", name));
+        }
+    }
+    /*for (_, inv) in join!(&controlled && &inventories) {
         for item in inv.as_ref().unwrap().content.iter() {
             if item.is_some() {
                 let def = item_defs
@@ -648,10 +673,9 @@ pub fn curses_render_crafting_system(
                 curses.print(format!("{} x{}", def.name, item.as_ref().unwrap().quantity));
                 curses.move_rc(y + 1, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
                 curses.print(format!(">{}", def.description));
-                y += 2;
             }
         }
-    }
+    }*/
     Ok(())
 }
 
