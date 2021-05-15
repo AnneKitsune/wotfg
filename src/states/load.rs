@@ -7,19 +7,31 @@ impl game_engine_core::State<GameData> for LoadState {
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()
-            .insert((0, 0), Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()));
+            .insert(
+                (0, 0),
+                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
+            );
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()
-            .insert((0, 1), Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()));
+            .insert(
+                (0, 1),
+                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
+            );
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()
-            .insert((1, 0), Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()));
+            .insert(
+                (1, 0),
+                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
+            );
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()
-            .insert((1, 1), Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()));
+            .insert(
+                (1, 1),
+                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
+            );
 
         let mut inv = Inventory::<Items, (), ItemProperties>::new_dynamic(0, 9999);
         inv.insert(ItemInstance::new(Items::TestItemA, 1))
