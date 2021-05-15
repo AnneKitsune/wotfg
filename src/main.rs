@@ -229,7 +229,7 @@ impl Position {
 }
 
 #[derive(Clone, Copy, Debug)]
-pub enum Tile {
+pub enum Tiles {
     Air,
     Grass,
     Border,
@@ -238,14 +238,14 @@ pub enum Tile {
 }
 
 // TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
-impl From<Tile> for char {
-    fn from(t: Tile) -> Self {
+impl From<Tiles> for char {
+    fn from(t: Tiles) -> Self {
         match t {
-            Tile::Air => ' ',
-            Tile::Grass => '0',
-            Tile::Border => 'b',
-            Tile::Bedrock => 'B',
-            Tile::Tree => 'T',
+            Tiles::Air => ' ',
+            Tiles::Grass => '0',
+            Tiles::Border => 'b',
+            Tiles::Bedrock => 'B',
+            Tiles::Tree => 'T',
         }
     }
 }
@@ -262,7 +262,7 @@ pub fn mine_system(
 
 #[derive(Debug, Clone)]
 pub struct Chunk {
-    pub tiles: Vec<Tile>,
+    pub tiles: Vec<Tiles>,
     // TODO
     //pub collisions: CollisionMap,
 }
@@ -274,17 +274,17 @@ impl Chunk {
             for y in 0..CHUNK_SIZE_Y {
                 for z in 0..CHUNK_SIZE_Z {
                     let mut tile = match (x + y) % 20 {
-                        0..=15 => Tile::Grass,
-                        16..=18 => Tile::Tree,
-                        19..=20 => Tile::Air,
+                        0..=15 => Tiles::Grass,
+                        16..=18 => Tiles::Tree,
+                        19..=20 => Tiles::Air,
                         // unreachable
-                        _ => Tile::Air,
+                        _ => Tiles::Air,
                     };
                     if x == 0 || y == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 {
-                        tile = Tile::Border;
+                        tile = Tiles::Border;
                     }
                     if z == 0 {
-                        tile = Tile::Bedrock;
+                        tile = Tiles::Bedrock;
                     }
                     tiles.push(tile);
                 }
