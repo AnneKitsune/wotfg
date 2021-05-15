@@ -662,7 +662,9 @@ pub fn curses_render_crafting_system(
             curses.print(format!("Materials:"));
             y += 1;
 
-            for ik in trans.input_items.iter().filter(|(_, _, mode)| *mode == UseMode::Consume) {
+            for ik in trans.input_items.iter().filter(|(_, _, mode)| 
+                if let UseMode::Consume = *mode {true} else {false}
+            ) {
                 let idef = item_defs.defs.get(&ik.0).expect("Item Transition references item not present in item definitions.");
                 curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
                 curses.set_color_pair(ColorPair::from(idef.user_data.rarity));
@@ -676,7 +678,7 @@ pub fn curses_render_crafting_system(
             curses.print(format!("Minimum Skill Requirements:"));
             y += 1;
 
-            for cond in trans.stat_conditions {
+            for cond in trans.stat_conditions.iter() {
                 let stat_def = stat_defs.defs.get(&cond.stat_key).expect("Item Transition references stat not present in stat definitions.");
                 if let StatConditionType::MinValue(min) = cond.condition {
                     curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
@@ -692,7 +694,9 @@ pub fn curses_render_crafting_system(
             curses.print(format!("Tools:"));
             y += 1;
 
-            for ik in trans.input_items.iter().filter(|(_, _, mode)| *mode != UseMode::Consume) {
+            for ik in trans.input_items.iter().filter(|(_, _, mode)| 
+                if let UseMode::Consume = *mode {false} else {true}
+            ) {
                 let idef = item_defs.defs.get(&ik.0).expect("Item Transition references item not present in item definitions.");
                 curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
                 curses.set_color_pair(ColorPair::from(idef.user_data.rarity));

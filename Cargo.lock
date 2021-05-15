@@ -87,7 +87,7 @@ checksum = "0d8c1fef690941d3e7788d328517591fecc684c084084702d6ff1641e993699a"
 [[package]]
 name = "bracket-algorithm-traits"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "bracket-geometry",
  "smallvec",
@@ -96,7 +96,7 @@ dependencies = [
 [[package]]
 name = "bracket-color"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "byteorder",
  "lazy_static",
@@ -107,7 +107,7 @@ dependencies = [
 [[package]]
 name = "bracket-geometry"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "serde",
  "ultraviolet",
@@ -116,7 +116,7 @@ dependencies = [
 [[package]]
 name = "bracket-lib"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "bracket-algorithm-traits",
  "bracket-color",
@@ -130,7 +130,7 @@ dependencies = [
 [[package]]
 name = "bracket-noise"
 version = "0.8.2"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "bracket-random",
 ]
@@ -138,7 +138,7 @@ dependencies = [
 [[package]]
 name = "bracket-pathfinding"
 version = "0.8.4"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "bracket-algorithm-traits",
  "bracket-geometry",
@@ -149,7 +149,7 @@ dependencies = [
 [[package]]
 name = "bracket-random"
 version = "0.8.3"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "getrandom",
  "js-sys",
@@ -164,7 +164,7 @@ dependencies = [
 [[package]]
 name = "bracket-terminal"
 version = "0.8.3"
-source = "git+https://github.com/thebracket/bracket-lib?branch=master#57aac00ee07067f9f748d0273bce95e4638f0320"
+source = "git+https://github.com/thebracket/bracket-lib?branch=master#65e073ee78e7c7b3a6d8fc48ece256cd80331c3d"
 dependencies = [
  "anyhow",
  "bracket-color",
