@@ -99,6 +99,21 @@ impl Default for Rarity {
     }
 }
 
+impl From<Rarity> for ColorPair {
+    fn from(rarity: Rarity) -> Self {
+        match rarity {
+            Rarity::Common => ColorPair::new(Color::White, Color::Black),
+            Rarity::Rare => ColorPair::new(Color::Cyan, Color::Black),
+            Rarity::VeryRare => ColorPair::new(Color::Black, Color::White),
+            Rarity::Epic => ColorPair::new(Color::Blue, Color::White),
+            Rarity::Mythic => ColorPair::new(Color::Green, Color::Yellow),
+            Rarity::Legendary => ColorPair::new(Color::Blue, Color::Yellow),
+            Rarity::Unobtainable => ColorPair::new(Color::Cyan, Color::Magenta),
+            Rarity::Unique => ColorPair::new(Color::Black, Color::Red),
+        }
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum Effectors {
 }
