@@ -748,8 +748,9 @@ dependencies = [
 
 [[package]]
 name = "game_features"
-version = "0.5.1"
-source = "git+https://github.com/jojolepro/game_features#c2bef0a1dce28cacd079ed34e6d4077ad6d117a3"
+version = "0.7.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "475965685a646d566a9696844d22f53766f2b144c9302bf17e120e536b0c1f4a"
 dependencies = [
  "derivative",
  "derive-new",
@@ -970,7 +971,7 @@ dependencies = [
 [[package]]
 name = "minigene"
 version = "0.4.0"
-source = "git+https://github.com/jojolepro/minigene#fbfa4b156f90b89be0fc31d805af34dc092c01ae"
+source = "git+https://github.com/jojolepro/minigene#c2ffdc88c4d6aa94a5929ab98cc249fd763d1317"
 dependencies = [
  "bracket-lib",
  "crossterm 0.18.2",

@@ -35,6 +35,14 @@ pub enum Items {
     TestItemC,
     RustyDagger,
     MagicalGauntlet,
+    UnobtainiumPlatesChestpieceTier8,
+    UnobtainiumPlate,
+    DemonicGlue,
+    DraconicEnergyCore,
+    SoulOfTheTrueMage,
+    Welder,
+    Forge,
+    MagicOrbTier8,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
@@ -49,6 +57,11 @@ pub enum Stats {
     AfterlifeEssence,
     AfterlifeDrain,
     LifeLength,
+    MagicHandling,
+    MetalForging,
+    Gluing,
+    MysticalComprehension,
+    MysticalCrafting,
 }
 
 // Some discrete stats like Magical Crafting V are actually passive skills unlocked
@@ -90,7 +103,7 @@ impl Default for Rarity {
 pub enum Effectors {
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
 }
@@ -788,7 +801,7 @@ fn main() {
     let stat_defs = StatDefinitions::from(stat_defs);
     *world.get_mut_or_default::<_>() = stat_defs;
 
-    let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats, ItemProperties>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
     let transitions_defs = ItemTransitionDefinitions::from(transitions_defs);
     *world.get_mut_or_default::<_>() = transitions_defs;
 

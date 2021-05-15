@@ -1,0 +1,45 @@
+[
+    ItemTransitionDefinition (
+        key: CraftUnobtainiumPlatesChestpieceTier8,
+        name: "Unobtainium Plates Chestpiece Tier 8",
+        friendly_name: "craft_unobtainium_chestpiece_8",
+        icon_path: None,
+        input_items: [
+            (UnobtainiumPlate, 20, Consume),
+            (DemonicGlue, 10, Consume),
+            (DraconicEnergyCore, 1, Consume),
+            (SoulOfTheTrueMage, 20, Consume),
+            (Welder, 1, UseOnce (durability: 50.0)),
+            (Forge, 1, UseOnce (durability: 3.0)),
+            (MagicOrbTier8, 1, UseOnce (durability: 10.0)),
+        ],
+        stat_conditions: [
+            StatCondition (
+                stat_key: MagicHandling,
+                condition: MinValue(10),
+            ),
+            StatCondition (
+                stat_key: MetalForging,
+                condition: MinValue(10),
+            ),
+            StatCondition (
+                stat_key: Gluing,
+                condition: MinValue(6),
+            ),
+            StatCondition (
+                stat_key: MysticalComprehension,
+                condition: MinValue(1),
+            ),
+            StatCondition (
+                stat_key: MysticalCrafting,
+                condition: MinValue(1),
+            ),
+        ],
+        stat_effectors: [],
+        output_items: [(UnobtainiumPlatesChestpieceTier8, 1)],
+        on_condition_lost: Pause,
+        time_to_complete: 2700.0,
+        consume_input_immediate: false,
+        auto_trigger: false,
+    )
+]
