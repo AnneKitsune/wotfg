@@ -13,104 +13,16 @@ use modular_bitfield::prelude::*;
 
 use serde::Deserialize;
 
+mod ids;
+mod world;
+
+pub use self::ids::*;
+pub use self::world::*;
+
 const MAIN_AREA_MARGIN_LEFT: u32 = 0;
 const MAIN_AREA_MARGIN_TOP: u32 = 4;
 const MAIN_AREA_MARGIN_RIGHT: u32 = 40;
 const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
-pub enum Items {
-    TestItemA,
-    TestItemB,
-    TestItemC,
-    RustyDagger,
-    MagicalGauntlet,
-    UnobtainiumPlatesChestpieceTier8,
-    UnobtainiumPlate,
-    DemonicGlue,
-    DraconicEnergyCore,
-    SoulOfTheTrueMage,
-    Welder,
-    Forge,
-    MagicOrbTier8,
-}
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
-pub enum Stats {
-    Health,
-    Mana,
-    AttackSpeedMultiplier,
-    Temperature,
-    MagicalCraftingXp,
-    WeavingXp,
-    MovementSpeedMultiplier,
-    AfterlifeEssence,
-    AfterlifeDrain,
-    LifeLength,
-    MagicHandling,
-    MetalForging,
-    Gluing,
-    MysticalComprehension,
-    MysticalCrafting,
-}
-
-// Some discrete stats like Magical Crafting V are actually passive skills unlocked
-// using the magical_crafting_xp stat.
-
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
-pub enum Skills {
-    AfterlifeEfficiency,
-    MythicalComprehension1,
-    MythicalCrafting1,
-}
-
-// Switch to using effectors directly?
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
-pub enum DamageType {
-    Physical,
-    Magical,
-}
-
-#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize)]
-pub enum Rarity {
-    Common,
-    Rare,
-    VeryRare,
-    Epic,
-    Mythic,
-    Legendary,
-    Unobtainable,
-    Unique,
-}
-
-impl Default for Rarity {
-    fn default() -> Self {
-        Rarity::Common
-    }
-}
-
-impl From<Rarity> for ColorPair {
-    fn from(rarity: Rarity) -> Self {
-        match rarity {
-            Rarity::Common => ColorPair::new(Color::White, Color::Black),
-            Rarity::Rare => ColorPair::new(Color::Cyan, Color::Black),
-            Rarity::VeryRare => ColorPair::new(Color::Magenta, Color::Black),
-            Rarity::Epic => ColorPair::new(Color::Red, Color::Black),
-            Rarity::Mythic => ColorPair::new(Color::Black, Color::White),
-            Rarity::Legendary => ColorPair::new(Color::Blue, Color::White),
-            Rarity::Unobtainable => ColorPair::new(Color::Cyan, Color::Magenta),
-            Rarity::Unique => ColorPair::new(Color::Black, Color::Red),
-        }
-    }
-}
-
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
-pub enum Effectors {}
-
-#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize)]
-pub enum ItemTransitions {
-    CraftUnobtainiumPlatesChestpieceTier8,
-}
 
 #[derive(Default, Clone, Debug, Deserialize)]
 pub struct ItemProperties {
@@ -228,28 +140,6 @@ impl Position {
     }
 }
 
-#[derive(Clone, Copy, Debug)]
-pub enum Tiles {
-    Air,
-    Grass,
-    Border,
-    Bedrock,
-    Tree,
-}
-
-// TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
-impl From<Tiles> for char {
-    fn from(t: Tiles) -> Self {
-        match t {
-            Tiles::Air => ' ',
-            Tiles::Grass => '0',
-            Tiles::Border => 'b',
-            Tiles::Bedrock => 'B',
-            Tiles::Tree => 'T',
-        }
-    }
-}
-
 pub fn mine_system(
     controlled: &Components<Controlled>,
     positions: &Components<Position>,
@@ -258,40 +148,6 @@ pub fn mine_system(
     inventories: &mut Components<Inventory<Items, (), ItemProperties>>,
 ) -> SystemResult {
     Ok(())
-}
-
-#[derive(Debug, Clone)]
-pub struct Chunk {
-    pub tiles: Vec<Tiles>,
-    // TODO
-    //pub collisions: CollisionMap,
-}
-
-impl Chunk {
-    pub fn new_rand() -> Self {
-        let mut tiles = vec![];
-        for x in 0..CHUNK_SIZE_X {
-            for y in 0..CHUNK_SIZE_Y {
-                for z in 0..CHUNK_SIZE_Z {
-                    let mut tile = match (x + y) % 20 {
-                        0..=15 => Tiles::Grass,
-                        16..=18 => Tiles::Tree,
-                        19..=20 => Tiles::Air,
-                        // unreachable
-                        _ => Tiles::Air,
-                    };
-                    if x == 0 || y == 0 || x == CHUNK_SIZE_X - 1 || y == CHUNK_SIZE_Y - 1 {
-                        tile = Tiles::Border;
-                    }
-                    if z == 0 {
-                        tile = Tiles::Bedrock;
-                    }
-                    tiles.push(tile);
-                }
-            }
-        }
-        Self { tiles }
-    }
 }
 
 pub struct Curses(pub EasyCurses);
