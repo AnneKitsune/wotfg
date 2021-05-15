@@ -888,6 +888,7 @@ fn main() {
     dispatcher = dispatcher.add(curses_render_system);
     dispatcher = dispatcher.add(entity_curses_render_system);
     dispatcher = dispatcher.add(curses_render_inventory_system);
+    dispatcher = dispatcher.add(curses_render_crafting_system);
     dispatcher = dispatcher.add(curses_end_draw_system);
     dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
         ev1.clear();
