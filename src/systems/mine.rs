@@ -9,4 +9,3 @@ pub fn mine_system(
 ) -> SystemResult {
     Ok(())
 }
-

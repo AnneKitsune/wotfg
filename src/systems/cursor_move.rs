@@ -14,4 +14,3 @@ pub fn cursor_move_system(input_ev: &mut Vec<InputEvent>, cursor: &mut MapCursor
     }
     Ok(())
 }
-

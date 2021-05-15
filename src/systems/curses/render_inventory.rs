@@ -34,4 +34,3 @@ pub fn curses_render_inventory_system(
     }
     Ok(())
 }
-

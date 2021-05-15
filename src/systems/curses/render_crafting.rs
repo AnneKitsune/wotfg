@@ -148,4 +148,3 @@ pub fn curses_render_crafting_system(
     }*/
     Ok(())
 }
-

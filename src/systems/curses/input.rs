@@ -14,4 +14,3 @@ pub fn curses_input_system(
     }
     Ok(())
 }
-

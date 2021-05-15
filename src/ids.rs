@@ -114,4 +114,3 @@ impl From<Tiles> for char {
         }
     }
 }
-

@@ -5,4 +5,3 @@ pub fn curses_end_draw_system(curses: &mut Option<Curses>) -> SystemResult {
     curses.as_mut().unwrap().0.refresh();
     Ok(())
 }
-

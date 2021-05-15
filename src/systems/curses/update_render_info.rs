@@ -10,4 +10,3 @@ pub fn curses_update_render_info_system(
     render.screen_height = screen_height;
     Ok(())
 }
-

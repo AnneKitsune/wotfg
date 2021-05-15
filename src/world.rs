@@ -42,4 +42,3 @@ impl Chunk {
         Self { tiles }
     }
 }
-

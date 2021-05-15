@@ -36,4 +36,3 @@ impl game_engine_core::State<GameData> for InitState {
         StateTransition::None
     }
 }
-

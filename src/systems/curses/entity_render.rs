@@ -28,4 +28,3 @@ pub fn entity_curses_render_system(
     }
     Ok(())
 }
-
