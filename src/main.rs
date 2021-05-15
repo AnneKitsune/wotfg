@@ -641,20 +641,64 @@ pub fn curses_render_crafting_system(
                 continue;
             }
 
-            let single_result = output_defs.len() == 1;
-            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-
             // print craft title
-            let (name, color) = if single_result {
-                let output_key = trans.output_items.get(0).unwrap();
-                let output = item_defs.defs.get(&output_key.0).expect("Item Transition references item not present in item definitions.");
-                (format!("{}", output.name), ColorPair::from(output.user_data.rarity))
-            } else {
-                let rarest_color = ColorPair::from(output_defs.iter().map(|d| d.user_data.rarity).max().expect("Failed to order rarities in crafting recipe."));
-                (trans.name.clone(), rarest_color)
-            };
-            curses.set_color_pair(color);
-            curses.print(format!("{}", name));
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+            let rarest_color = ColorPair::from(output_defs.iter().map(|d| d.user_data.rarity).max().expect("Failed to order rarities in crafting recipe."));
+            curses.set_color_pair(rarest_color);
+            curses.print(format!("{}", trans.name));
+            y += 1;
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+            curses.set_color_pair(*COLOR_NORMAL);
+            curses.print(format!("===================="));
+            y += 1;
+
+            // print time to craft
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+            curses.print(format!("Time to craft: {} Seconds", trans.time_to_complete as u64));
+            y += 1;
+
+            // print materials
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+            curses.print(format!("Materials:"));
+            y += 1;
+
+            for ik in trans.input_items.iter().filter(|(_, _, mode)| *mode == UseMode::Consume) {
+                let idef = item_defs.defs.get(&ik.0).expect("Item Transition references item not present in item definitions.");
+                curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+                curses.set_color_pair(ColorPair::from(idef.user_data.rarity));
+                curses.print(format!("- {}x {}", ik.1, idef.name));
+                y += 1;
+            }
+
+            // print minimum skill requirements
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+            curses.set_color_pair(*COLOR_NORMAL);
+            curses.print(format!("Minimum Skill Requirements:"));
+            y += 1;
+
+            for cond in trans.stat_conditions {
+                let stat_def = stat_defs.defs.get(&cond.stat_key).expect("Item Transition references stat not present in stat definitions.");
+                if let StatConditionType::MinValue(min) = cond.condition {
+                    curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+                    let roman_level = roman::to(min as i32).expect("Failed to convert required level to roman.");
+                    curses.print(format!("- {} {}", stat_def.name, roman_level));
+                    y += 1;
+                }
+            }
+
+            // print tools
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+            curses.set_color_pair(*COLOR_NORMAL);
+            curses.print(format!("Tools:"));
+            y += 1;
+
+            for ik in trans.input_items.iter().filter(|(_, _, mode)| *mode != UseMode::Consume) {
+                let idef = item_defs.defs.get(&ik.0).expect("Item Transition references item not present in item definitions.");
+                curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+                curses.set_color_pair(ColorPair::from(idef.user_data.rarity));
+                curses.print(format!("- {}", idef.name));
+                y += 1;
+            }
         }
     }
     /*for (_, inv) in join!(&controlled && &inventories) {
