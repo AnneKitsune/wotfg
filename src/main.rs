@@ -81,7 +81,7 @@ pub enum DamageType {
     Magical,
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize)]  
+#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize)]
 pub enum Rarity {
     Common,
     Rare,
@@ -115,8 +115,7 @@ impl From<Rarity> for ColorPair {
 }
 
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
-pub enum Effectors {
-}
+pub enum Effectors {}
 
 #[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize)]
 pub enum ItemTransitions {
@@ -261,13 +260,15 @@ impl From<Tile> for char {
     }
 }
 
-pub fn mine_system(controlled: &Components<Controlled>, positions: &Components<Position>,
+pub fn mine_system(
+    controlled: &Components<Controlled>,
+    positions: &Components<Position>,
     chunks: &Vec<Chunk>,
     inputs: &Vec<InputEvent>,
-    inventories: &mut Components<Inventory<Items, (), ItemProperties>>) -> SystemResult {
+    inventories: &mut Components<Inventory<Items, (), ItemProperties>>,
+) -> SystemResult {
     Ok(())
 }
-
 
 #[derive(Debug, Clone)]
 pub struct Chunk {
@@ -618,7 +619,6 @@ pub fn curses_render_inventory_system(
     Ok(())
 }
 
-
 pub fn curses_render_crafting_system(
     controlled: &Components<Controlled>,
     inventories: &Components<Inventory<Items, (), ItemProperties>>,
@@ -636,14 +636,29 @@ pub fn curses_render_crafting_system(
     let mut y = 26;
     for trans in transitions.defs.values() {
         if trans.auto_trigger == false {
-            let output_defs = trans.output_items.iter().map(|k| item_defs.defs.get(&k.0).expect("Item Transition references item not present in item definitions.")).collect::<Vec<_>>();
+            let output_defs = trans
+                .output_items
+                .iter()
+                .map(|k| {
+                    item_defs
+                        .defs
+                        .get(&k.0)
+                        .expect("Item Transition references item not present in item definitions.")
+                })
+                .collect::<Vec<_>>();
             if output_defs.is_empty() {
                 continue;
             }
 
             // print craft title
             curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-            let rarest_color = ColorPair::from(output_defs.iter().map(|d| d.user_data.rarity).max().expect("Failed to order rarities in crafting recipe."));
+            let rarest_color = ColorPair::from(
+                output_defs
+                    .iter()
+                    .map(|d| d.user_data.rarity)
+                    .max()
+                    .expect("Failed to order rarities in crafting recipe."),
+            );
             curses.set_color_pair(rarest_color);
             curses.print(format!("{}", trans.name));
             y += 1;
@@ -654,7 +669,10 @@ pub fn curses_render_crafting_system(
 
             // print time to craft
             curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-            curses.print(format!("Time to craft: {} Seconds", trans.time_to_complete as u64));
+            curses.print(format!(
+                "Time to craft: {} Seconds",
+                trans.time_to_complete as u64
+            ));
             y += 1;
 
             // print materials
@@ -662,10 +680,17 @@ pub fn curses_render_crafting_system(
             curses.print(format!("Materials:"));
             y += 1;
 
-            for ik in trans.input_items.iter().filter(|(_, _, mode)| 
-                if let UseMode::Consume = *mode {true} else {false}
-            ) {
-                let idef = item_defs.defs.get(&ik.0).expect("Item Transition references item not present in item definitions.");
+            for ik in trans.input_items.iter().filter(|(_, _, mode)| {
+                if let UseMode::Consume = *mode {
+                    true
+                } else {
+                    false
+                }
+            }) {
+                let idef = item_defs
+                    .defs
+                    .get(&ik.0)
+                    .expect("Item Transition references item not present in item definitions.");
                 curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
                 curses.set_color_pair(ColorPair::from(idef.user_data.rarity));
                 curses.print(format!("- {}x {}", ik.1, idef.name));
@@ -679,10 +704,14 @@ pub fn curses_render_crafting_system(
             y += 1;
 
             for cond in trans.stat_conditions.iter() {
-                let stat_def = stat_defs.defs.get(&cond.stat_key).expect("Item Transition references stat not present in stat definitions.");
+                let stat_def = stat_defs
+                    .defs
+                    .get(&cond.stat_key)
+                    .expect("Item Transition references stat not present in stat definitions.");
                 if let StatConditionType::MinValue(min) = cond.condition {
                     curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-                    let roman_level = roman::to(min as i32).expect("Failed to convert required level to roman.");
+                    let roman_level =
+                        roman::to(min as i32).expect("Failed to convert required level to roman.");
                     curses.print(format!("- {} {}", stat_def.name, roman_level));
                     y += 1;
                 }
@@ -694,10 +723,17 @@ pub fn curses_render_crafting_system(
             curses.print(format!("Tools:"));
             y += 1;
 
-            for ik in trans.input_items.iter().filter(|(_, _, mode)| 
-                if let UseMode::Consume = *mode {false} else {true}
-            ) {
-                let idef = item_defs.defs.get(&ik.0).expect("Item Transition references item not present in item definitions.");
+            for ik in trans.input_items.iter().filter(|(_, _, mode)| {
+                if let UseMode::Consume = *mode {
+                    false
+                } else {
+                    true
+                }
+            }) {
+                let idef = item_defs
+                    .defs
+                    .get(&ik.0)
+                    .expect("Item Transition references item not present in item definitions.");
                 curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
                 curses.set_color_pair(ColorPair::from(idef.user_data.rarity));
                 curses.print(format!("- {}", idef.name));
@@ -708,7 +744,6 @@ pub fn curses_render_crafting_system(
             curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
             curses.set_color_pair(*COLOR_NORMAL);
             curses.print(format!("Success Chance with Current Skills: 85%"));
-
         }
     }
     /*for (_, inv) in join!(&controlled && &inventories) {
@@ -764,7 +799,7 @@ pub enum InputEvent {
     LayerDown,
     Cancel,
     Accept,
-    Hanged(HangedInput)
+    Hanged(HangedInput),
 }
 
 #[derive(Clone, Debug, Eq, PartialEq)]
@@ -922,17 +957,27 @@ fn main() {
     inv.insert(ItemInstance::new(Items::MagicalGauntlet, 1))
         .expect("Failed to insert init item into inventory.");
 
-
-    let item_defs: Vec<ItemDefinition<Items, (), ItemProperties>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let item_defs: Vec<ItemDefinition<Items, (), ItemProperties>> = ron::de::from_str(
+        &String::from_utf8(include_bytes!("../assets/item_defs.ron").to_vec()).unwrap(),
+    )
+    .expect("Failed to load file: Invalid format.");
     let item_defs = ItemDefinitions::from(item_defs);
 
     *world.get_mut_or_default::<_>() = item_defs;
 
-    let stat_defs: Vec<StatDefinition<Stats>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/stat_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let stat_defs: Vec<StatDefinition<Stats>> = ron::de::from_str(
+        &String::from_utf8(include_bytes!("../assets/stat_defs.ron").to_vec()).unwrap(),
+    )
+    .expect("Failed to load file: Invalid format.");
     let stat_defs = StatDefinitions::from(stat_defs);
     *world.get_mut_or_default::<_>() = stat_defs;
 
-    let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats>> = ron::de::from_str(&String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec()).unwrap()).expect("Failed to load file: Invalid format.");
+    let transitions_defs: Vec<ItemTransitionDefinition<ItemTransitions, Items, Effectors, Stats>> =
+        ron::de::from_str(
+            &String::from_utf8(include_bytes!("../assets/item_transition_defs.ron").to_vec())
+                .unwrap(),
+        )
+        .expect("Failed to load file: Invalid format.");
     let transitions_defs = ItemTransitionDefinitions::from(transitions_defs);
     *world.get_mut_or_default::<_>() = transitions_defs;
 
