@@ -699,6 +699,12 @@ pub fn curses_render_crafting_system(
                 curses.print(format!("- {}", idef.name));
                 y += 1;
             }
+
+            // print success chance TODO
+            curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+            curses.set_color_pair(*COLOR_NORMAL);
+            curses.print(format!("Success Chance with Current Skills: 85%"));
+
         }
     }
     /*for (_, inv) in join!(&controlled && &inventories) {
