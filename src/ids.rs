@@ -42,6 +42,7 @@ pub enum HarvestType {
     PlantGathering,
     Butchering,
     Shoveling,
+    Chopping,
     Exploding,
 }
 
