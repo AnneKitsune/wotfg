@@ -108,4 +108,3 @@ pub enum Effectors {}
 pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
 }
-

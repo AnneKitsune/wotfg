@@ -39,8 +39,7 @@ impl game_engine_core::State<GameData> for LoadState {
         *data.world.get_mut_or_default::<_>() = transitions_defs;
 
         let tile_defs: Vec<TileDefinition> = ron::de::from_str(
-            &String::from_utf8(include_bytes!("../../assets/tile_defs.ron").to_vec())
-                .unwrap(),
+            &String::from_utf8(include_bytes!("../../assets/tile_defs.ron").to_vec()).unwrap(),
         )
         .expect("Failed to load file: Invalid format.");
         let tile_defs = TileDefinitions::from(tile_defs);
@@ -51,30 +50,41 @@ impl game_engine_core::State<GameData> for LoadState {
             .unwrap()
             .insert(
                 (0, 0),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap(), &mut data.world.get::<_>().unwrap()),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
             );
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()
             .insert(
                 (0, 1),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap(), &mut data.world.get::<_>().unwrap()),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
             );
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()
             .insert(
                 (1, 0),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap(), &mut data.world.get::<_>().unwrap()),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
             );
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()
             .insert(
                 (1, 1),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap(), &mut data.world.get::<_>().unwrap()),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
             );
-
 
         let player = data.world.get_mut::<Entities>().unwrap().create();
         data.world.get_mut::<Components<_>>().unwrap().insert(

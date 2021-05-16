@@ -54,7 +54,10 @@ pub fn curses_render_system(
                     .with_y(y_pos as u8)
                     .with_z(cursor.0.z());
                 if let Some(tile) = chunk.tiles.get(pos.position_index()) {
-                    let def = tile_defs.defs.get(tile).expect("Used tile not present in tile definitions.");
+                    let def = tile_defs
+                        .defs
+                        .get(tile)
+                        .expect("Used tile not present in tile definitions.");
                     curses.set_color_pair((*tile).into());
                     curses.print_char(def.character);
                 } else {
