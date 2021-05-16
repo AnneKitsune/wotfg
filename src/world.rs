@@ -30,7 +30,7 @@ impl Chunk {
                             0..=1 => tile = Tiles::SeliOre,
                             2..=3 => tile = Tiles::GemStoneOre,
                             4..=1000 => tile = Tiles::Stone,
-                            _ => {},
+                            _ => {}
                         },
                         8 => match random_number {
                             0..=1 => tile = Tiles::Tree,
@@ -38,10 +38,10 @@ impl Chunk {
                             4..=50 => tile = Tiles::GrassLong,
                             51..=1000 => tile = Tiles::Grass,
                             // unreachable
-                            _ => {},
+                            _ => {}
                         },
                         9..=15 => tile = Tiles::Air,
-                        _ => {},
+                        _ => {}
                     }
                     if z == 0 {
                         tile = Tiles::Bedrock;
