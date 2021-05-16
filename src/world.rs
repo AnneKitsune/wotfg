@@ -56,7 +56,7 @@ impl Chunk {
 
                     // TODO move to tile definition
                     if match tile {
-                        Tiles::Grass | Tiles::GrassLong | Tiles::Bedrock => false,
+                        Tiles::Grass | Tiles::GrassLong | Tiles::Bedrock | Tiles::Border => false,
                         _ => true,
                     } {
                         collisions

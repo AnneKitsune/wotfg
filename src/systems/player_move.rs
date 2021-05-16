@@ -22,7 +22,7 @@ pub fn player_move_system(
                 _ => continue,
             }
             if let Some(chunk) = chunks.get(&(new_position.chunk_x(), new_position.chunk_y())) {
-                if chunk
+                if !chunk
                     .collisions
                     .get(new_position.z() as usize)
                     .expect("No collision map for loaded chunk.")
