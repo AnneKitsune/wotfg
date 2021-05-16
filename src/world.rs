@@ -23,14 +23,26 @@ impl Chunk {
             for y in 0..CHUNK_SIZE_Y {
                 for z in 0..CHUNK_SIZE_Z {
                     let random_number = rng.rng.rand_range(1..1001);
-                    let mut tile = match random_number {
-                        0..=1 => Tiles::Tree,
-                        2..=3 => Tiles::Rock,
-                        4..=50 => Tiles::GrassLong,
-                        51..=1000 => Tiles::Grass,
-                        // unreachable
-                        _ => Tiles::Air,
-                    };
+                    let mut tile = Tiles::Air;
+
+                    match z {
+                        1..=7 => match random_number {
+                            0..=1 => tile = Tiles::SeliOre,
+                            2..=3 => tile = Tiles::GemStoneOre,
+                            4..=1000 => tile = Tiles::Stone,
+                            _ => {},
+                        },
+                        8 => match random_number {
+                            0..=1 => tile = Tiles::Tree,
+                            2..=3 => tile = Tiles::Rock,
+                            4..=50 => tile = Tiles::GrassLong,
+                            51..=1000 => tile = Tiles::Grass,
+                            // unreachable
+                            _ => {},
+                        },
+                        9..=15 => tile = Tiles::Air,
+                        _ => {},
+                    }
                     if z == 0 {
                         tile = Tiles::Bedrock;
                     }

@@ -102,6 +102,9 @@ pub enum Tiles {
     Bedrock,
     Tree,
     Rock,
+    SeliOre,
+    GemStoneOre,
+    Stone,
 }
 
 // TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
@@ -115,6 +118,9 @@ impl From<Tiles> for char {
             Tiles::Bedrock => 'B',
             Tiles::Tree => 'T',
             Tiles::Rock => 'o',
+            Tiles::SeliOre => '-',
+            Tiles::GemStoneOre => '^',
+            Tiles::Stone => '0',
         }
     }
 }
