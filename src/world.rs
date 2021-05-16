@@ -89,16 +89,16 @@ pub enum Tiles {
 impl From<Tiles> for ColorPair {
     fn from(t: Tiles) -> Self {
         match t {
-            Tiles::Air => ' ',
-            Tiles::Grass => '.',
-            Tiles::GrassLong => ',',
-            Tiles::Border => 'b',
-            Tiles::Bedrock => 'B',
-            Tiles::Tree => 'T',
-            Tiles::Rock => 'o',
-            Tiles::SeliOre => '-',
-            Tiles::GemStoneOre => '^',
-            Tiles::Stone => '0',
+            Tiles::Air => ColorPair::new(Color::White, Color::Black),
+            Tiles::Grass => ColorPair::new(Color::White, Color::Black),
+            Tiles::GrassLong => ColorPair::new(Color::White, Color::Black),
+            Tiles::Border => ColorPair::new(Color::Yellow, Color::Black),
+            Tiles::Bedrock => ColorPair::new(Color::White, Color::Black),
+            Tiles::Tree => ColorPair::new(Color::Yellow, Color::Black),
+            Tiles::Rock => ColorPair::new(Color::White, Color::Black),
+            Tiles::SeliOre => ColorPair::new(Color::Yellow, Color::Black),
+            Tiles::GemStoneOre => ColorPair::new(Color::Green, Color::Black),
+            Tiles::Stone => ColorPair::new(Color::White, Color::Black),
         }
     }
 }

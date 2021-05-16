@@ -4,6 +4,7 @@ pub fn curses_render_system(
     cursor: &MapCursor,
     render: &RenderInfo,
     chunks: &HashMap<(u32, u32), Chunk>,
+    tile_defs: &TileDefinitions,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
@@ -53,8 +54,9 @@ pub fn curses_render_system(
                     .with_y(y_pos as u8)
                     .with_z(cursor.0.z());
                 if let Some(tile) = chunk.tiles.get(pos.position_index()) {
-                    let c = char::from(*(tile));
-                    curses.print_char(c);
+                    let def = tile_defs.defs.get(tile).expect("Used tile not present in tile definitions.");
+                    curses.set_color_pair((*tile).into());
+                    curses.print_char(def.character);
                 } else {
                     eprintln!(
                         "Missing tile at location {}, {}, {} (position index {}).",
