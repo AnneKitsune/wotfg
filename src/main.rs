@@ -274,6 +274,7 @@ fn main() {
     client_dispatcher = client_dispatcher.add(entity_curses_render_system);
     client_dispatcher = client_dispatcher.add(curses_render_inventory_system);
     client_dispatcher = client_dispatcher.add(curses_render_crafting_system);
+    client_dispatcher = client_dispatcher.add(curses_render_close_items_system);
     client_dispatcher = client_dispatcher.add(curses_end_draw_system);
     client_dispatcher = client_dispatcher.add(input_to_player_action);
     client_dispatcher = client_dispatcher.add(|ev1: &mut Vec<InputEvent>| {

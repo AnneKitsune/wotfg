@@ -1,3 +1,4 @@
+mod close_items;
 mod end_draw;
 mod entity_render;
 mod input;
@@ -6,6 +7,7 @@ mod render_crafting;
 mod render_inventory;
 mod update_render_info;
 
+pub use self::close_items::*;
 pub use self::end_draw::*;
 pub use self::entity_render::*;
 pub use self::input::*;
