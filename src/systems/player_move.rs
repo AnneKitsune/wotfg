@@ -26,7 +26,7 @@ pub fn player_move_system(
                     .collisions
                     .get(new_position.z() as usize)
                     .expect("No collision map for loaded chunk.")
-                    .is_set(new_position.x() as u32, new_position.z() as u32)
+                    .is_set(new_position.x() as u32, new_position.y() as u32)
                 {
                     **position = new_position;
                 }
