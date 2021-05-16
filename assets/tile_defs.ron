@@ -15,7 +15,7 @@
         name: "Grass",
         harvest_types: [(Shoveling, 1)],
         harvest_time: 1.0,
-        drops: [],
+        drops: [(GrassFiber, 1)],
         replace_with: Air,
         character: '.',
         solid: false,
@@ -26,7 +26,7 @@
         name: "Long Grass",
         harvest_types: [(Shoveling, 1)],
         harvest_time: 1.0,
-        drops: [],
+        drops: [(GrassFiber, 3)],
         replace_with: Grass,
         character: ',',
         solid: false,
@@ -60,7 +60,7 @@
         harvest_types: [(Chopping, 1)],
         harvest_time: 20.0,
         // TODO
-        drops: [],
+        drops: [(Log, 4)],
         replace_with: Grass,
         character: 'T',
         solid: true,
@@ -69,7 +69,7 @@
     TileDefinition (
         key: Rock,
         name: "Small Rock",
-        harvest_types: [],
+        harvest_types: [(Rock, 1)],
         harvest_time: 1.0,
         // TODO
         drops: [],
@@ -108,7 +108,7 @@
         harvest_types: [(Mining, 1)],
         harvest_time: 10.0,
         // TODO
-        drops: [],
+        drops: [(Rock, 3)],
         replace_with: Air,
         character: '0',
         solid: true,
