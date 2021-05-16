@@ -1,8 +1,11 @@
 use crate::*;
 
-pub fn player_move_system(actions: &Vec<PlayerAction>, players: &Components<Player>,
+pub fn player_move_system(
+    actions: &Vec<PlayerAction>,
+    players: &Components<Player>,
     chunks: &Vec<Chunk>,
-    positions: &mut Components<Position>) -> SystemResult {
+    positions: &mut Components<Position>,
+) -> SystemResult {
     for ev in actions {
         for (player, mut position) in join!(&players && &mut positions) {
             let position = &mut position.as_mut().unwrap();
