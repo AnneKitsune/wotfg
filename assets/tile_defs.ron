@@ -61,7 +61,7 @@
         harvest_time: 20.0,
         // TODO
         drops: [],
-        replace_with: Air,
+        replace_with: Grass,
         character: 'T',
         solid: true,
         icon: None,
