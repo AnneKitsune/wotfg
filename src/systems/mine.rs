@@ -44,19 +44,38 @@ pub fn mine_system(
                         .get(tile)
                         .expect("Tile found in chunk but not in tile defs.");
                     if replaced_def.solid {
-                        chunk.collisions.get_mut(target.z() as usize).unwrap().set(target.x() as u32, target.y() as u32);
+                        chunk
+                            .collisions
+                            .get_mut(target.z() as usize)
+                            .unwrap()
+                            .set(target.x() as u32, target.y() as u32);
                     } else {
-                        chunk.collisions.get_mut(target.z() as usize).unwrap().unset(target.x() as u32, target.y() as u32);
+                        chunk
+                            .collisions
+                            .get_mut(target.z() as usize)
+                            .unwrap()
+                            .unset(target.x() as u32, target.y() as u32);
                     }
 
                     // Drop items created by mining this.
                     for drop in tile_def.drops.iter() {
-                        let drop_def = item_defs.defs.get(&drop.0).expect("Dropped item is not in item defs.");
+                        let drop_def = item_defs
+                            .defs
+                            .get(&drop.0)
+                            .expect("Dropped item is not in item defs.");
                         let entity = entities.create();
                         let item = ItemInstance::new(drop.0, drop.1 as usize);
                         created_items_positions.push((entity, target.clone()));
                         items.insert(entity, item);
-                        renderables.insert(entity, Rendered::new( ',', drop_def.user_data.rarity.into(), None, u32::from(drop_def.user_data.rarity) as i32));
+                        renderables.insert(
+                            entity,
+                            Rendered::new(
+                                ',',
+                                drop_def.user_data.rarity.into(),
+                                None,
+                                u32::from(drop_def.user_data.rarity) as i32,
+                            ),
+                        );
                         // TODO drop items on the ground
                     }
                 }
