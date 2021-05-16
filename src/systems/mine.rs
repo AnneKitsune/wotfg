@@ -23,9 +23,15 @@ pub fn mine_system(
                     .defs
                     .get(tile)
                     .expect("Tile found in chunk but not in tile defs.");
+
                 let mut can_mine = true;
-                for condition in tile_def.harvest_types.iter() {
-                    // TODO check condition
+                if tile_def.harvest_time <= 0.0 {
+                    can_mine = false;
+                }
+                if can_mine {
+                    for condition in tile_def.harvest_types.iter() {
+                        // TODO check condition
+                    }
                 }
                 if can_mine {
                     *tile = tile_def.replace_with;
