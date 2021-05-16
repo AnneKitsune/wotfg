@@ -56,7 +56,7 @@ pub fn mine_system(
                         let item = ItemInstance::new(drop.0, drop.1 as usize);
                         created_items_positions.push((entity, target.clone()));
                         items.insert(entity, item);
-                        renderables.insert(entity, Rendered::new( ',', drop_def.user_data.rarity.into(), None, 0));
+                        renderables.insert(entity, Rendered::new( ',', drop_def.user_data.rarity.into(), None, u32::from(drop_def.user_data.rarity) as i32));
                         // TODO drop items on the ground
                     }
                 }

@@ -101,6 +101,21 @@ impl From<Rarity> for ColorPair {
     }
 }
 
+impl From<Rarity> for u32 {
+    fn from(rarity: Rarity) -> Self {
+        match rarity {
+            Rarity::Common => 0,
+            Rarity::Rare => 1,
+            Rarity::VeryRare => 2,
+            Rarity::Epic => 3,
+            Rarity::Mythic => 4,
+            Rarity::Legendary => 5,
+            Rarity::Unobtainable => 6,
+            Rarity::Unique => 7,
+        }
+    }
+}
+
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum Effectors {}
 
