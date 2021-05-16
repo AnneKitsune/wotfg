@@ -45,6 +45,8 @@ impl game_engine_core::State<GameData> for LoadState {
         let tile_defs = TileDefinitions::from(tile_defs);
         *data.world.get_mut_or_default::<_>() = tile_defs;
 
+        data.world.get_mut::<Auth>().unwrap().id = "123".to_string();
+
         data.world
             .get_mut::<HashMap<(u32, u32), Chunk>>()
             .unwrap()

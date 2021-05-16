@@ -20,6 +20,7 @@ pub fn curses_render_close_items_system(
     let mut y = 41;
     for (player, player_position) in join!(&controlled && &positions) {
         if player.unwrap().id == auth.id {
+        println!("henloust");
             for (item, item_position) in join!(&items && &positions) {
                 // TODO check that item is right next to player
                 let def = item_defs
