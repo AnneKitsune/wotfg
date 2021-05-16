@@ -14,6 +14,11 @@ pub enum Items {
     Welder,
     Forge,
     MagicOrbTier8,
+    GrassFiber,
+    Log,
+    Rock,
+    SeliOre,
+    GemStone,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
