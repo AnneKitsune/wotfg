@@ -15,12 +15,14 @@ use serde::Deserialize;
 
 mod ids;
 mod input;
+mod resources;
 mod states;
 mod systems;
 mod world;
 
 pub use self::ids::*;
 pub use self::input::*;
+pub use self::resources::*;
 pub use self::states::*;
 pub use self::systems::*;
 pub use self::world::*;
@@ -64,10 +66,11 @@ pub enum HangedInput {
     MacroReplay,
 }
 
-/// Indicates that this entity is directly controlled by the input events.
-/// Shouldn't be used once the network is implemented.
-#[derive(Clone, Copy, Default, Debug)]
-pub struct Controlled;
+#[derive(new, Clone, Default, Debug)]
+pub struct Player {
+    pub id: String,
+    pub username: String,
+}
 
 /// Indicates that this entity should be rendered.
 /// The entity must also have a Position component attached if it is inside of the world.
@@ -232,8 +235,6 @@ fn main() {
     let mut world = World::default();
 
     world.initialize::<Entities>();
-    // TODO remove this init once we split the dispatchers
-    world.initialize::<Components<Controlled>>();
     world.initialize::<RNG>();
 
     // client dispatcher
@@ -269,6 +270,7 @@ fn main() {
     client_dispatcher = client_dispatcher.add(curses_render_inventory_system);
     client_dispatcher = client_dispatcher.add(curses_render_crafting_system);
     client_dispatcher = client_dispatcher.add(curses_end_draw_system);
+    client_dispatcher = client_dispatcher.add(input_to_player_action);
     client_dispatcher = client_dispatcher.add(|ev1: &mut Vec<InputEvent>| {
         ev1.clear();
         Ok(())
@@ -277,6 +279,7 @@ fn main() {
     let client_dispatcher = client_dispatcher.build(&mut world);
 
     let mut logic_dispatcher = DispatcherBuilder::default();
+    logic_dispatcher = logic_dispatcher.add(mine_system);
     let logic_dispatcher = logic_dispatcher.build(&mut world);
 
     let mut engine = Engine::<GameData, _>::new(

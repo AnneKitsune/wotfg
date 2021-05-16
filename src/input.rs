@@ -23,6 +23,7 @@ pub enum PlayerAction {
     MoveRight,
     MoveLayerUp,
     MoveLayerDown,
+    Mine(Direction),
 }
 
 #[derive(Clone, Default, Debug)]

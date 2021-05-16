@@ -1,7 +1,7 @@
 use crate::*;
 
 pub fn curses_render_crafting_system(
-    controlled: &Components<Controlled>,
+    controlled: &Components<Player>,
     inventories: &Components<Inventory<Items, (), ItemProperties>>,
     item_defs: &ItemDefinitions<Items, (), ItemProperties>,
     stat_defs: &StatDefinitions<Stats>,
