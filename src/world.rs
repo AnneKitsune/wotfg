@@ -16,7 +16,7 @@ pub struct Chunk {
 }
 
 impl Chunk {
-    pub fn new_rand(rng: &mut RNG) -> Self {
+    pub fn new_rand(rng: &mut RNG, tile_defs: &TileDefinitions) -> Self {
         let mut tiles = vec![];
         let mut collisions = vec![
             CollisionMap::new(CHUNK_SIZE_X as u32, CHUNK_SIZE_Y as u32);
@@ -55,10 +55,7 @@ impl Chunk {
                     tiles.push(tile);
 
                     // TODO move to tile definition
-                    if match tile {
-                        Tiles::Grass | Tiles::GrassLong | Tiles::Bedrock | Tiles::Border => false,
-                        _ => true,
-                    } {
+                    if tile_defs.defs.get(&tile).expect("Tried to generate chunk using tile present in ids but not in tile defs.").solid {
                         collisions
                             .get_mut(z as usize)
                             .unwrap()
@@ -112,6 +109,7 @@ pub struct TileDefinition {
     pub gather_time: f32,
     pub drops: Vec<(Items, usize)>,
     pub character: char,
+    solid: bool,
     pub icon: Option<String>,
 }
 
