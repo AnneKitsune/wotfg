@@ -93,8 +93,12 @@ impl Position {
 
     /// Returns the non pythagorean distance.
     pub fn distance(&self, other: &Position) -> u32 {
-        let delta_x = ((other.chunk_x() as i32 - self.chunk_x() as i32) * CHUNK_SIZE_X as i32).abs() + (other.x() as i32 - self.x() as i32).abs();
-        let delta_y = ((other.chunk_y() as i32 - self.chunk_y() as i32) * CHUNK_SIZE_Y as i32).abs() + (other.y() as i32 - self.y() as i32).abs();
+        let delta_x = ((other.chunk_x() as i32 - self.chunk_x() as i32) * CHUNK_SIZE_X as i32)
+            .abs()
+            + (other.x() as i32 - self.x() as i32).abs();
+        let delta_y = ((other.chunk_y() as i32 - self.chunk_y() as i32) * CHUNK_SIZE_Y as i32)
+            .abs()
+            + (other.y() as i32 - self.y() as i32).abs();
         let delta_z = (other.z() as i32 - self.z() as i32).abs();
         delta_x as u32 + delta_y as u32 + delta_z as u32
     }
