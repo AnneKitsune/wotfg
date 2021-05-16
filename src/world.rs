@@ -103,10 +103,8 @@ impl From<Tiles> for ColorPair {
 #[derive(Clone, Debug, Deserialize, Serialize)]
 pub struct TileDefinition {
     pub key: Tiles,
-    pub mining_level: Option<u32>,
-    pub chopping_level: Option<u32>,
-    pub explosion_level: Option<u32>,
-    pub gather_time: f32,
+    pub harvest_levels: Vec<(HarvestType, u32)>,
+    pub harvest_time: f32,
     pub drops: Vec<(Items, usize)>,
     pub character: char,
     solid: bool,

@@ -16,7 +16,7 @@ pub enum Items {
     MagicOrbTier8,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Stats {
     Health,
     Mana,
@@ -35,10 +35,20 @@ pub enum Stats {
     MysticalCrafting,
 }
 
+// TODO use HarvestType in tools along with DamageType
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
+pub enum HarvestType {
+    Mining,
+    PlantGathering,
+    Butchering,
+    Shoveling,
+    Exploding,
+}
+
 // Some discrete stats like Magical Crafting V are actually passive skills unlocked
 // using the magical_crafting_xp stat.
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Skills {
     AfterlifeEfficiency,
     MythicalComprehension1,
@@ -46,13 +56,13 @@ pub enum Skills {
 }
 
 // Switch to using effectors directly?
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum DamageType {
     Physical,
     Magical,
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize, Serialize)]
 pub enum Rarity {
     Common,
     Rare,
@@ -85,10 +95,10 @@ impl From<Rarity> for ColorPair {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum Effectors {}
 
-#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
 }
