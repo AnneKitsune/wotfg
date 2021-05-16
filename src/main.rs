@@ -221,9 +221,9 @@ impl RenderInfo {
     ) -> Option<(u32, u32)> {
         let offsets = self.map_offsets(cursor);
         let (xmax, ymax) = self.maximum_positions();
-        let x_pos = offsets.0 as i32 + position.0 as i32 + MAIN_AREA_MARGIN_LEFT as i32;
-        let y_pos = offsets.1 as i32 + position.1 as i32 + MAIN_AREA_MARGIN_TOP as i32;
-        if x_pos >= 0 && y_pos >= 0 && (x_pos as u32) < xmax && (y_pos as u32) < ymax {
+        let x_pos = -(offsets.0 as i32) + position.0 as i32 + MAIN_AREA_MARGIN_LEFT as i32;
+        let y_pos = -(offsets.1 as i32) + position.1 as i32 + MAIN_AREA_MARGIN_TOP as i32;
+        if x_pos >= MAIN_AREA_MARGIN_LEFT as i32 && y_pos >= MAIN_AREA_MARGIN_TOP as i32 && (x_pos as u32) < xmax && (y_pos as u32) < ymax {
             Some((x_pos as u32, y_pos as u32))
         } else {
             None

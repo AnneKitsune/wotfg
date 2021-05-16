@@ -21,8 +21,6 @@ pub fn entity_curses_render_system(
                 curses.move_rc(screen_y as i32, screen_x as i32);
                 curses.set_color_pair(rend.color);
                 curses.print_char(rend.render_char);
-            } else {
-                println!("outside of renderable area!");
             }
         }
     }
