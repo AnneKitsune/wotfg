@@ -35,6 +35,16 @@ pub fn mine_system(
                 }
                 if can_mine {
                     *tile = tile_def.replace_with;
+                    let replaced_def = tile_defs
+                        .defs
+                        .get(tile)
+                        .expect("Tile found in chunk but not in tile defs.");
+                    if replaced_def.solid {
+                        chunk.collisions.get_mut(target.z() as usize).unwrap().set(target.x() as u32, target.y() as u32);
+                    } else {
+                        chunk.collisions.get_mut(target.z() as usize).unwrap().unset(target.x() as u32, target.y() as u32);
+                    }
+
                     for drop in tile_def.drops.iter() {
                         // TODO drop items on the ground
                     }
