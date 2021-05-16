@@ -67,6 +67,14 @@ impl game_engine_core::State<GameData> for LoadState {
         let transitions_defs = ItemTransitionDefinitions::from(transitions_defs);
         *data.world.get_mut_or_default::<_>() = transitions_defs;
 
+        let tile_defs: Vec<TileDefinition> = ron::de::from_str(
+            &String::from_utf8(include_bytes!("../../assets/tile_defs.ron").to_vec())
+                .unwrap(),
+        )
+        .expect("Failed to load file: Invalid format.");
+        let tile_defs = TileDefinitions::from(tile_defs);
+        *data.world.get_mut_or_default::<_>() = tile_defs;
+
         let player = data.world.get_mut::<Entities>().unwrap().create();
         data.world.get_mut::<Components<_>>().unwrap().insert(
             player,

@@ -1,5 +1,5 @@
 use crate::*;
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Items {
     TestItemA,
     TestItemB,
@@ -93,34 +93,3 @@ pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
 }
 
-#[derive(Clone, Copy, Debug)]
-pub enum Tiles {
-    Air,
-    Grass,
-    GrassLong,
-    Border,
-    Bedrock,
-    Tree,
-    Rock,
-    SeliOre,
-    GemStoneOre,
-    Stone,
-}
-
-// TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
-impl From<Tiles> for char {
-    fn from(t: Tiles) -> Self {
-        match t {
-            Tiles::Air => ' ',
-            Tiles::Grass => '.',
-            Tiles::GrassLong => ',',
-            Tiles::Border => 'b',
-            Tiles::Bedrock => 'B',
-            Tiles::Tree => 'T',
-            Tiles::Rock => 'o',
-            Tiles::SeliOre => '-',
-            Tiles::GemStoneOre => '^',
-            Tiles::Stone => '0',
-        }
-    }
-}

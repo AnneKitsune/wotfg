@@ -70,3 +70,72 @@ impl Chunk {
         Self { tiles, collisions }
     }
 }
+
+#[derive(PartialEq, Eq, Hash, Clone, Copy, Debug, Deserialize, Serialize)]
+pub enum Tiles {
+    Air,
+    Grass,
+    GrassLong,
+    Border,
+    Bedrock,
+    Tree,
+    Rock,
+    SeliOre,
+    GemStoneOre,
+    Stone,
+}
+
+// TODO move to tile definition once minigene has proper color support.
+impl From<Tiles> for ColorPair {
+    fn from(t: Tiles) -> Self {
+        match t {
+            Tiles::Air => ' ',
+            Tiles::Grass => '.',
+            Tiles::GrassLong => ',',
+            Tiles::Border => 'b',
+            Tiles::Bedrock => 'B',
+            Tiles::Tree => 'T',
+            Tiles::Rock => 'o',
+            Tiles::SeliOre => '-',
+            Tiles::GemStoneOre => '^',
+            Tiles::Stone => '0',
+        }
+    }
+}
+
+#[derive(Clone, Debug, Deserialize, Serialize)]
+pub struct TileDefinition {
+    pub key: Tiles,
+    pub mining_level: Option<u32>,
+    pub chopping_level: Option<u32>,
+    pub explosion_level: Option<u32>,
+    pub gather_time: f32,
+    pub drops: Vec<(Items, usize)>,
+    pub character: char,
+    pub icon: Option<String>,
+}
+
+/// The definitions of all known stats.
+#[derive(Debug, Clone, Serialize, Deserialize, new)]
+pub struct TileDefinitions {
+    /// The definitions.
+    pub defs: HashMap<Tiles, TileDefinition>,
+}
+
+impl Default for TileDefinitions {
+    fn default() -> Self {
+        Self {
+            defs: HashMap::default(),
+        }
+    }
+}
+
+impl From<Vec<TileDefinition>> for TileDefinitions {
+    fn from(t: Vec<TileDefinition>) -> Self {
+        let defs = t
+            .into_iter()
+            .map(|s| (s.key.clone(), s))
+            .collect::<HashMap<_, _>>();
+        Self::new(defs)
+    }
+}

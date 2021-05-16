@@ -11,7 +11,7 @@ use game_engine_core::*;
 use minigene::*;
 use modular_bitfield::prelude::*;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 mod ids;
 mod input;
