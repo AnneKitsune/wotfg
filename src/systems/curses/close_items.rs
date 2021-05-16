@@ -20,7 +20,7 @@ pub fn curses_render_close_items_system(
     let mut y = 41;
     for (player, player_position) in join!(&controlled && &positions) {
         if player.unwrap().id == auth.id {
-            for (item, item_position) in join!(&items && &positions) { 
+            for (item, item_position) in join!(&items && &positions) {
                 // TODO check that item is right next to player
                 let def = item_defs
                     .defs
@@ -35,12 +35,24 @@ pub fn curses_render_close_items_system(
                 curses.set_color_pair(def.user_data.rarity.into());
                 if let Some(select) = selected_item.selected {
                     if select == 1 {
-                        curses.print(format!(">{} x{}", def.name, item.as_ref().unwrap().quantity));
+                        curses.print(format!(
+                            ">{} x{}",
+                            def.name,
+                            item.as_ref().unwrap().quantity
+                        ));
                     } else {
-                        curses.print(format!(" {} x{}", def.name, item.as_ref().unwrap().quantity));
+                        curses.print(format!(
+                            " {} x{}",
+                            def.name,
+                            item.as_ref().unwrap().quantity
+                        ));
                     }
                 } else {
-                    curses.print(format!(" {} x{}", def.name, item.as_ref().unwrap().quantity));
+                    curses.print(format!(
+                        " {} x{}",
+                        def.name,
+                        item.as_ref().unwrap().quantity
+                    ));
                 }
                 y += 1;
             }

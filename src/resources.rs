@@ -9,4 +9,3 @@ pub struct Auth {
 pub struct QuickItemSelect {
     pub selected: Option<u32>,
 }
-
