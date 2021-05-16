@@ -69,10 +69,10 @@
     TileDefinition (
         key: Rock,
         name: "Small Rock",
-        harvest_types: [(Rock, 1)],
+        harvest_types: [],
         harvest_time: 1.0,
         // TODO
-        drops: [],
+        drops: [(Rock, 1)],
         replace_with: Grass,
         character: 'o',
         solid: false,
