@@ -15,8 +15,14 @@ pub fn mine_system(
             target.move_towards(*direction);
             if let Some(chunk) = chunks.get_mut(&(target.chunk_x(), target.chunk_y())) {
                 let idx = target.position_index();
-                let tile = chunk.tiles.get_mut(idx).expect("Tried to mine missing tile in chunk.");
-                let tile_def = tile_defs.defs.get(tile).expect("Tile found in chunk but not in tile defs.");
+                let tile = chunk
+                    .tiles
+                    .get_mut(idx)
+                    .expect("Tried to mine missing tile in chunk.");
+                let tile_def = tile_defs
+                    .defs
+                    .get(tile)
+                    .expect("Tile found in chunk but not in tile defs.");
                 let mut can_mine = true;
                 for condition in tile_def.harvest_types.iter() {
                     // TODO check condition
