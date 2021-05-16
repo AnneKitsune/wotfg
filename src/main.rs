@@ -279,6 +279,7 @@ fn main() {
     let client_dispatcher = client_dispatcher.build(&mut world);
 
     let mut logic_dispatcher = DispatcherBuilder::default();
+    logic_dispatcher = logic_dispatcher.add(player_move_system);
     logic_dispatcher = logic_dispatcher.add(mine_system);
     let logic_dispatcher = logic_dispatcher.build(&mut world);
 
