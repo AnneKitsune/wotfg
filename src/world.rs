@@ -18,7 +18,10 @@ pub struct Chunk {
 impl Chunk {
     pub fn new_rand(rng: &mut RNG) -> Self {
         let mut tiles = vec![];
-        let mut collisions = vec![CollisionMap::new(CHUNK_SIZE_X as u32, CHUNK_SIZE_Y as u32); CHUNK_SIZE_Z as usize];
+        let mut collisions = vec![
+            CollisionMap::new(CHUNK_SIZE_X as u32, CHUNK_SIZE_Y as u32);
+            CHUNK_SIZE_Z as usize
+        ];
         for x in 0..CHUNK_SIZE_X {
             for y in 0..CHUNK_SIZE_Y {
                 for z in 0..CHUNK_SIZE_Z {
@@ -56,7 +59,10 @@ impl Chunk {
                         Tiles::Grass | Tiles::GrassLong | Tiles::Bedrock => false,
                         _ => true,
                     } {
-                        collisions.get_mut(z as usize).unwrap().set(x as u32, y as u32);
+                        collisions
+                            .get_mut(z as usize)
+                            .unwrap()
+                            .set(x as u32, y as u32);
                     }
                 }
             }
