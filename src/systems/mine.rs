@@ -2,13 +2,17 @@ use crate::*;
 
 pub fn mine_system(
     players: &Components<Player>,
-    positions: &Components<Position>,
     actions: &PlayerActionQueue,
     tile_defs: &TileDefinitions,
+    item_defs: &ItemDefinitions<Items, (), ItemProperties>,
+    positions: &mut Components<Position>,
     items: &mut Components<ItemInstance<Items, ()>>,
+    renderables: &mut Components<Rendered>,
+    entities: &mut Entities,
     chunks: &mut HashMap<(u32, u32), Chunk>,
 ) -> SystemResult {
     if let Some(PlayerAction::Mine(direction)) = actions.queue.front() {
+        let mut created_items_positions = vec![];
         for (player, position) in join!(&players && &positions) {
             // TODO check that player id match action source
             let mut target = position.unwrap().clone();
@@ -45,11 +49,26 @@ pub fn mine_system(
                         chunk.collisions.get_mut(target.z() as usize).unwrap().unset(target.x() as u32, target.y() as u32);
                     }
 
+                    // Drop items created by mining this.
                     for drop in tile_def.drops.iter() {
+                        let drop_def = item_defs.defs.get(&drop.0).expect("Dropped item is not in item defs.");
+                        let entity = entities.create();
+                        let item = ItemInstance::new(drop.0, drop.1 as usize);
+                        created_items_positions.push((entity, target.clone()));
+                        items.insert(entity, item);
+                        renderables.insert(entity, Rendered {
+                            render_char: ',',
+                            color: drop_def.user_data.rarity.into(),
+                            texture_path: None,
+                        });
                         // TODO drop items on the ground
                     }
                 }
             }
+        }
+        // little hack to get around borrowing issue if using this inside of the main loop.
+        for (entity, target) in created_items_positions {
+            positions.insert(entity, target);
         }
     }
     Ok(())
