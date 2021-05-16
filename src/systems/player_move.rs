@@ -1,12 +1,12 @@
 use crate::*;
 
 pub fn player_move_system(
-    actions: &Vec<PlayerAction>,
+    actions: &PlayerActionQueue,
     players: &Components<Player>,
     chunks: &Vec<Chunk>,
     positions: &mut Components<Position>,
 ) -> SystemResult {
-    for ev in actions {
+    if let Some(ev) = actions.queue.front() {
         for (player, mut position) in join!(&players && &mut positions) {
             let position = &mut position.as_mut().unwrap();
             // TODO check that action comes from right player
