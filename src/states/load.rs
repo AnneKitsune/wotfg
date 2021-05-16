@@ -77,10 +77,10 @@ impl game_engine_core::State<GameData> for LoadState {
                 .with_chunk_x(0)
                 .with_chunk_y(0),
         );
-        data.world
-            .get_mut::<Components<_>>()
-            .unwrap()
-            .insert(player, Player::new("123".to_string(), "jojolepro".to_string()));
+        data.world.get_mut::<Components<_>>().unwrap().insert(
+            player,
+            Player::new("123".to_string(), "jojolepro".to_string()),
+        );
         data.world
             .get_mut::<Components<_>>()
             .unwrap()

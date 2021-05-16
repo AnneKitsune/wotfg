@@ -40,12 +40,30 @@ impl Default for Keymap {
     fn default() -> Self {
         Keymap {
             map: [
-                (Input::Character('w'), InputEvent::PlayerAction(PlayerAction::MoveUp)),
-                (Input::Character('a'), InputEvent::PlayerAction(PlayerAction::MoveLeft)),
-                (Input::Character('s'), InputEvent::PlayerAction(PlayerAction::MoveDown)),
-                (Input::Character('d'), InputEvent::PlayerAction(PlayerAction::MoveRight)),
-                (Input::Character('q'), InputEvent::PlayerAction(PlayerAction::MoveLayerDown)),
-                (Input::Character('e'), InputEvent::PlayerAction(PlayerAction::MoveLayerUp)),
+                (
+                    Input::Character('w'),
+                    InputEvent::PlayerAction(PlayerAction::MoveUp),
+                ),
+                (
+                    Input::Character('a'),
+                    InputEvent::PlayerAction(PlayerAction::MoveLeft),
+                ),
+                (
+                    Input::Character('s'),
+                    InputEvent::PlayerAction(PlayerAction::MoveDown),
+                ),
+                (
+                    Input::Character('d'),
+                    InputEvent::PlayerAction(PlayerAction::MoveRight),
+                ),
+                (
+                    Input::Character('q'),
+                    InputEvent::PlayerAction(PlayerAction::MoveLayerDown),
+                ),
+                (
+                    Input::Character('e'),
+                    InputEvent::PlayerAction(PlayerAction::MoveLayerUp),
+                ),
                 (Input::Character('W'), InputEvent::ViewUp),
                 (Input::Character('A'), InputEvent::ViewLeft),
                 (Input::Character('S'), InputEvent::ViewDown),
