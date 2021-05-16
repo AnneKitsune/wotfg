@@ -260,22 +260,26 @@ fn main() {
     // multiple chunk loaded
     // multiple players, all assigned to one network connection
 
-    let mut dispatcher = DispatcherBuilder::default();
-    dispatcher = dispatcher.add(curses_update_render_info_system);
-    dispatcher = dispatcher.add(curses_input_system);
-    dispatcher = dispatcher.add(cursor_move_system);
-    dispatcher = dispatcher.add(curses_render_system);
-    dispatcher = dispatcher.add(entity_curses_render_system);
-    dispatcher = dispatcher.add(curses_render_inventory_system);
-    dispatcher = dispatcher.add(curses_render_crafting_system);
-    dispatcher = dispatcher.add(curses_end_draw_system);
-    dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
+    let mut client_dispatcher = DispatcherBuilder::default();
+    client_dispatcher = client_dispatcher.add(curses_update_render_info_system);
+    client_dispatcher = client_dispatcher.add(curses_input_system);
+    client_dispatcher = client_dispatcher.add(cursor_move_system);
+    client_dispatcher = client_dispatcher.add(curses_render_system);
+    client_dispatcher = client_dispatcher.add(entity_curses_render_system);
+    client_dispatcher = client_dispatcher.add(curses_render_inventory_system);
+    client_dispatcher = client_dispatcher.add(curses_render_crafting_system);
+    client_dispatcher = client_dispatcher.add(curses_end_draw_system);
+    client_dispatcher = client_dispatcher.add(|ev1: &mut Vec<InputEvent>| {
         ev1.clear();
         Ok(())
     });
-    let dispatcher = dispatcher.build(&mut world);
+
+    let client_dispatcher = client_dispatcher.build(&mut world);
+
+    let mut logic_dispatcher = DispatcherBuilder::default();
+    let logic_dispatcher = logic_dispatcher.build(&mut world);
 
     let mut engine =
-        Engine::<GameData, _>::new(LoadState, GameData { world, dispatcher }, |_, _| {}, 60.0);
+        Engine::<GameData, _>::new(LoadState, GameData { world, render_dispatcher: client_dispatcher, logic_dispatcher }, |_, _| {}, 60.0);
     engine.engine_loop();
 }
