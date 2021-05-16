@@ -279,7 +279,15 @@ fn main() {
     let mut logic_dispatcher = DispatcherBuilder::default();
     let logic_dispatcher = logic_dispatcher.build(&mut world);
 
-    let mut engine =
-        Engine::<GameData, _>::new(LoadState, GameData { world, render_dispatcher: client_dispatcher, logic_dispatcher }, |_, _| {}, 60.0);
+    let mut engine = Engine::<GameData, _>::new(
+        LoadState,
+        GameData {
+            world,
+            render_dispatcher: client_dispatcher,
+            logic_dispatcher,
+        },
+        |_, _| {},
+        60.0,
+    );
     engine.engine_loop();
 }
