@@ -80,6 +80,7 @@ pub struct Rendered {
     // TODO switch to minigene's exported color
     pub color: ColorPair,
     pub texture_path: Option<String>,
+    pub priority: i32,
 }
 
 impl Position {

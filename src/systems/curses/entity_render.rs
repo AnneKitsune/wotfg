@@ -8,9 +8,14 @@ pub fn entity_curses_render_system(
     curses: &mut Option<Curses>,
 ) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
+    let mut cloned = vec![];
     for (pos, rend) in join!(&positions && &rendered) {
         let pos = pos.unwrap();
         let rend = rend.unwrap();
+        cloned.push((pos.clone(), rend.clone()));
+    }
+    cloned.sort_by(|a, b| a.1.priority.cmp(&b.1.priority));
+    for (pos, rend) in cloned {
         if pos.chunk_x() == cursor.0.chunk_x()
             && pos.chunk_y() == cursor.0.chunk_y()
             && pos.z() == cursor.0.z()

@@ -103,7 +103,7 @@ impl game_engine_core::State<GameData> for LoadState {
         data.world
             .get_mut::<Components<_>>()
             .unwrap()
-            .insert(player, Rendered::new('P', *COLOR_TITLE, None));
+            .insert(player, Rendered::new('P', *COLOR_TITLE, None, 5));
         data.world
             .get_mut::<Components<_>>()
             .unwrap()
