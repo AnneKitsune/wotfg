@@ -107,6 +107,7 @@ pub struct TileDefinition {
     pub harvest_types: Vec<(HarvestType, u32)>,
     pub harvest_time: f32,
     pub drops: Vec<(Items, usize)>,
+    pub replace_with: Tiles,
     pub character: char,
     pub solid: bool,
     pub icon: Option<String>,
