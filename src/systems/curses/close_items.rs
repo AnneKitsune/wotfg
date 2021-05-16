@@ -20,8 +20,9 @@ pub fn curses_render_close_items_system(
     let mut y = 41;
     for (player, player_position) in join!(&controlled && &positions) {
         if player.unwrap().id == auth.id {
-        println!("henloust");
             for (item, item_position) in join!(&items && &positions) {
+                // TODO move this check in a reusable function
+                if player_position.unwrap().distance(item_position.unwrap()) <= PICKUP_DISTANCE && player_position.unwrap().z() == item_position.unwrap().z() {
                 // TODO check that item is right next to player
                 let def = item_defs
                     .defs
@@ -56,6 +57,7 @@ pub fn curses_render_close_items_system(
                     ));
                 }
                 y += 1;
+                }
             }
         }
     }

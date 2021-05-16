@@ -32,6 +32,8 @@ const MAIN_AREA_MARGIN_TOP: u32 = 4;
 const MAIN_AREA_MARGIN_RIGHT: u32 = 40;
 const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
 
+const PICKUP_DISTANCE: u32 = 2;
+
 #[derive(Default, Clone, Debug, Deserialize)]
 pub struct ItemProperties {
     pub rarity: Rarity,
@@ -87,6 +89,14 @@ impl Position {
     /// Returns the position inside the chunk as a single number
     pub fn position_index(&self) -> usize {
         ((self.x() as usize) << 11) | ((self.y() as usize) << 4) | (self.z() as usize)
+    }
+
+    /// Returns the non pythagorean distance.
+    pub fn distance(&self, other: &Position) -> u32 {
+        let delta_x = ((other.chunk_x() as i32 - self.chunk_x() as i32) * CHUNK_SIZE_X as i32).abs() + (other.x() as i32 - self.x() as i32).abs();
+        let delta_y = ((other.chunk_y() as i32 - self.chunk_y() as i32) * CHUNK_SIZE_Y as i32).abs() + (other.y() as i32 - self.y() as i32).abs();
+        let delta_z = (other.z() as i32 - self.z() as i32).abs();
+        delta_x as u32 + delta_y as u32 + delta_z as u32
     }
 
     // TODO add collision map handling
