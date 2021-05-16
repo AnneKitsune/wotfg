@@ -18,6 +18,7 @@ pub fn curses_input_system(
                     }
                 })
                 .next();
+            let had_hanged_input = hanged.is_some();
             if let Some(hanged) = hanged {
                 match hanged {
                     HangedInput::Mine => match ev {
@@ -43,13 +44,15 @@ pub fn curses_input_system(
             } else {
                 input_ev.push(*ev);
             }
-            input_ev.retain(|e| {
-                if let InputEvent::Hanged(_) = e {
-                    false
-                } else {
-                    true
-                }
-            });
+            if had_hanged_input {
+                input_ev.retain(|e| {
+                    if let InputEvent::Hanged(_) = e {
+                        false
+                    } else {
+                        true
+                    }
+                });
+            }
         }
     }
     Ok(())

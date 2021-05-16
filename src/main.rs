@@ -276,7 +276,7 @@ fn main() {
     client_dispatcher = client_dispatcher.add(curses_end_draw_system);
     client_dispatcher = client_dispatcher.add(input_to_player_action);
     client_dispatcher = client_dispatcher.add(|ev1: &mut Vec<InputEvent>| {
-        ev1.clear();
+        ev1.retain(|e| if let InputEvent::Hanged(_) = e {true} else {false});
         Ok(())
     });
 
