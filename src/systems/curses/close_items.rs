@@ -14,10 +14,10 @@ pub fn curses_render_close_items_system(
     let curses = &mut curses.as_mut().unwrap().0;
 
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(26, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+    curses.move_rc(40, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
     curses.print("=== Close Items ===");
     let i = 0;
-    let mut y = 27;
+    let mut y = 41;
     for (player, player_position) in join!(&controlled && &positions) {
         if player.unwrap().id == auth.id {
             for (item, item_position) in join!(&items && &positions) { 

@@ -12,9 +12,9 @@ pub fn curses_render_crafting_system(
     let curses = &mut curses.as_mut().unwrap().0;
     //roman::to(level).unwrap();
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(25, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+    curses.move_rc(16, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
     curses.print("=== Craft ===");
-    let mut y = 26;
+    let mut y = 17;
     for trans in transitions.defs.values() {
         if trans.auto_trigger == false {
             let output_defs = trans
