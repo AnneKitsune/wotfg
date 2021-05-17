@@ -4,6 +4,7 @@ pub fn player_move_system(
     actions: &PlayerActionQueue,
     players: &Components<Player>,
     chunks: &HashMap<(u32, u32), Chunk>,
+    cursor: &mut MapCursor,
     positions: &mut Components<Position>,
 ) -> SystemResult {
     if let Some(ev) = actions.queue.front() {
@@ -28,6 +29,12 @@ pub fn player_move_system(
                     .expect("No collision map for loaded chunk.")
                     .is_set(new_position.x() as u32, new_position.y() as u32)
                 {
+                    // TODO move this to a new system that receives network events of player
+                    // moved
+                    if **position == cursor.0 {
+                        cursor.0 = new_position.clone();
+                    }
+
                     **position = new_position;
                 }
             }
