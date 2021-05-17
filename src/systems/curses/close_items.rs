@@ -19,6 +19,7 @@ pub fn curses_render_close_items_system(
     let mut y = 41;
     for (player, player_position) in join!(&controlled && &positions) {
         if player.unwrap().id == auth.id {
+            let mut i = 0;
             for (item, item_position) in join!(&items && &positions) {
                 // TODO move this check in a reusable function
                 if player_position.unwrap().distance(item_position.unwrap()) <= PICKUP_DISTANCE
@@ -37,7 +38,7 @@ pub fn curses_render_close_items_system(
                     curses.move_rc(y, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
                     curses.set_color_pair(def.user_data.rarity.into());
                     if let Some(select) = selected_item.selected {
-                        if select == 1 {
+                        if select == i {
                             curses.print(format!(
                                 ">{} x{}",
                                 def.name,
@@ -59,6 +60,7 @@ pub fn curses_render_close_items_system(
                     }
                     y += 1;
                 }
+                i += 1;
             }
         }
     }
