@@ -225,4 +225,49 @@
         maximum_stack: None,
         maximum_durability: None,
     ),
-]	
+	 ItemDefinition (
+        key: SilverKukri,
+        user_data: ItemProperties (
+            damages: [
+                (Physical, 20.0),
+            ],
+            crit_chance: 10.0,
+            mining_level: 1,
+            chopping_level: 1,
+            attack_speed: 1.0,
+            mining_speed: 1.0,
+            attack_range: 1.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Silver Kukri",
+        friendly_name: "silver_kukri",
+        description: "10% chance critical hit",
+        maximum_stack: Some(1),
+        maximum_durability: Some(10),
+    ),
+    ItemDefinition (
+        key: StoneAxe,
+        user_data: ItemProperties (
+            damages: [
+                (Physical, 20.0),
+            ],
+            crit_chance: 1.0,
+            mining_level: 1,
+            chopping_level: 2,
+            attack_speed: 1.0,
+            mining_speed: 1.0,
+            attack_range: 1.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Stone Axe",
+        friendly_name: "stone_axe",
+        description: "can break wood",
+        maximum_stack: Some(1),
+        maximum_durability: Some(10),
+    ),
+  
+]

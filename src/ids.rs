@@ -14,6 +14,9 @@ pub enum Items {
     Welder,
     Forge,
     MagicOrbTier8,
+    StoneAxe,
+    SilverKukri,
+    GrimReaperScythe,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
