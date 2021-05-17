@@ -9,6 +9,9 @@ pub const CHUNK_SIZE_Z: u8 = 16;
 // or also, 2^23.
 pub const CHUNK_COUNT_SQRT: u32 = 8388608;
 
+// 4GB in total, assuming 1 byte per chunk.
+pub const WORLD_WIDTH_HEIGHT: u32 = 125;
+
 #[derive(Debug, Clone)]
 pub struct Chunk {
     pub tiles: Vec<Tiles>,

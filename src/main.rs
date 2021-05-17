@@ -103,7 +103,6 @@ impl Position {
         delta_x as u32 + delta_y as u32 + delta_z as u32
     }
 
-    // TODO add collision map handling
     pub fn move_towards(&mut self, direction: Direction) {
         match direction {
             Direction::West => {
@@ -120,7 +119,7 @@ impl Position {
             Direction::East => {
                 if self.x() >= CHUNK_SIZE_X - 1 {
                     // change chunk
-                    if self.chunk_x() < CHUNK_COUNT_SQRT - 1 {
+                    if self.chunk_x() < WORLD_WIDTH_HEIGHT - 1 {
                         self.set_chunk_x(self.chunk_x() + 1);
                         self.set_x(0);
                     }
@@ -142,7 +141,7 @@ impl Position {
             Direction::South => {
                 if self.y() >= CHUNK_SIZE_Y - 1 {
                     // change chunk
-                    if self.chunk_y() < CHUNK_COUNT_SQRT - 1 {
+                    if self.chunk_y() < WORLD_WIDTH_HEIGHT - 1 {
                         self.set_chunk_y(self.chunk_y() + 1);
                         self.set_y(0);
                     }
