@@ -19,8 +19,8 @@ pub fn curses_render_hanged_input_system(
                     HangedInput::MacroReplay => "play",
                 };
                 curses.print(s);
-            },
-            _ => {},
+            }
+            _ => {}
         }
     }
     curses.move_rc(render.screen_height as i32, 0);
