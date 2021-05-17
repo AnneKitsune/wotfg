@@ -300,6 +300,8 @@ fn main() {
     client_dispatcher = client_dispatcher.add(entity_curses_render_system);
     client_dispatcher = client_dispatcher.add(curses_render_crafting_system);
     client_dispatcher = client_dispatcher.add(curses_render_close_items_system);
+    client_dispatcher = client_dispatcher.add(curses_render_action_queue_system);
+    client_dispatcher = client_dispatcher.add(curses_render_hanged_input_system);
     client_dispatcher = client_dispatcher.add(curses_end_draw_system);
     client_dispatcher = client_dispatcher.add(input_to_player_action);
     let client_dispatcher = client_dispatcher.build(&mut world);
