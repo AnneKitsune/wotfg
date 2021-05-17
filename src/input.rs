@@ -41,6 +41,19 @@ pub struct Keymap {
     pub map: HashMap<Input, InputEvent>,
 }
 
+impl Keymap {
+    pub fn key_for_event(&self, ev: &InputEvent) -> Option<char> {
+        for (k, v) in self.map.iter() {
+            if v == ev {
+                if let Input::Character(c) = k {
+                    return Some(*c);
+                }
+            }
+        }
+        None
+    }
+}
+
 impl Default for Keymap {
     fn default() -> Self {
         Keymap {

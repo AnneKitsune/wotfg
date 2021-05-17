@@ -13,11 +13,11 @@ pub fn curses_render_hanged_input_system(
     for ev in input_ev {
         match ev {
             InputEvent::Hanged(hanged) => {
-                let s = match hanged => {
+                let s = match hanged {
                     HangedInput::Mine => "mine",
                     HangedInput::MacroRecord => "rec",
                     HangedInput::MacroReplay => "play",
-                }
+                };
                 curses.print(s);
             },
             _ => {},
