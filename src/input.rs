@@ -9,6 +9,8 @@ pub enum InputEvent {
     ViewRight,
     ViewLayerUp,
     ViewLayerDown,
+    SelectUp,
+    SelectDown,
     Cancel,
     Accept,
     Hanged(HangedInput),
@@ -70,6 +72,9 @@ impl Default for Keymap {
                 (Input::Character('D'), InputEvent::ViewRight),
                 (Input::Character('Q'), InputEvent::ViewLayerDown),
                 (Input::Character('E'), InputEvent::ViewLayerUp),
+                // TODO find better bindings or use arrow keys here
+                (Input::Character('1'), InputEvent::SelectUp),
+                (Input::Character('2'), InputEvent::SelectDown),
                 (Input::Character('m'), InputEvent::Hanged(HangedInput::Mine)),
                 (Input::Character('\n'), InputEvent::Accept),
                 (Input::Character('\u{1b}'), InputEvent::Cancel), // Escape
