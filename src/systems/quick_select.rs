@@ -31,10 +31,10 @@ pub fn quick_select_system(
                             if *sel > 0 {
                                 *sel -= 1;
                             }
-                        },
+                        }
                         InputEvent::SelectDown => {
                             *sel += 1;
-                        },
+                        }
                         InputEvent::Accept => {
                             // TODO move this to player action pick up item, once we have entity
                             // network identifiers.
@@ -47,8 +47,8 @@ pub fn quick_select_system(
                                     entities.kill(entity);
                                 }
                             }
-                        },
-                        _ => {},
+                        }
+                        _ => {}
                     }
                 }
             }
