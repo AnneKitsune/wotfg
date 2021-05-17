@@ -16,17 +16,31 @@ pub fn curses_render_inventory_system(
 
     // TODO probably shouldn't be clearing from here. should have a dedicated system instead.
     curses.set_color_pair(*COLOR_NORMAL);
-    for y in (MAIN_AREA_MARGIN_TOP as i32)..(render.screen_height as i32 - MAIN_AREA_MARGIN_BOTTOM as i32) {
-        for x in (MAIN_AREA_MARGIN_LEFT as i32)..(render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32) {
+    for y in (MAIN_AREA_MARGIN_TOP as i32)
+        ..(render.screen_height as i32 - MAIN_AREA_MARGIN_BOTTOM as i32)
+    {
+        for x in (MAIN_AREA_MARGIN_LEFT as i32)
+            ..(render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32)
+        {
             curses.move_rc(y, x);
             curses.print_char(' ');
         }
     }
 
     let start = MAIN_AREA_MARGIN_LEFT as i32;
-    let third = (render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32 - MAIN_AREA_MARGIN_LEFT as i32) / 3 + MAIN_AREA_MARGIN_LEFT as i32;
-    let center = (render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32 - MAIN_AREA_MARGIN_LEFT as i32) / 2 + MAIN_AREA_MARGIN_LEFT as i32;
-    let third2 = (render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32 - MAIN_AREA_MARGIN_LEFT as i32) / 3 * 2 + MAIN_AREA_MARGIN_LEFT as i32;
+    let third =
+        (render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32 - MAIN_AREA_MARGIN_LEFT as i32)
+            / 3
+            + MAIN_AREA_MARGIN_LEFT as i32;
+    let center =
+        (render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32 - MAIN_AREA_MARGIN_LEFT as i32)
+            / 2
+            + MAIN_AREA_MARGIN_LEFT as i32;
+    let third2 =
+        (render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32 - MAIN_AREA_MARGIN_LEFT as i32)
+            / 3
+            * 2
+            + MAIN_AREA_MARGIN_LEFT as i32;
     let end = render.screen_width as i32 - MAIN_AREA_MARGIN_RIGHT as i32;
 
     curses.set_color_pair(*COLOR_NORMAL);

@@ -40,7 +40,7 @@ impl game_engine_core::State<GameData> for InitState {
             match ev {
                 InputEvent::Crafting => trans = StateTransition::Push(Box::new(CraftingState)),
                 InputEvent::Inventory => trans = StateTransition::Push(Box::new(InventoryState)),
-                _ => {},
+                _ => {}
             }
         }
         clear_events.system().run(&mut data.world).unwrap();

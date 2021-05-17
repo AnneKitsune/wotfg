@@ -16,7 +16,7 @@ impl game_engine_core::State<GameData> for CraftingState {
             match ev {
                 InputEvent::Inventory => trans = StateTransition::Push(Box::new(InventoryState)),
                 InputEvent::Cancel => trans = StateTransition::Pop,
-                _ => {},
+                _ => {}
             }
         }
         clear_events.system().run(&mut data.world).unwrap();
