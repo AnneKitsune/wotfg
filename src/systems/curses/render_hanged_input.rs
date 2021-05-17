@@ -8,7 +8,7 @@ pub fn curses_render_hanged_input_system(
     let curses = &mut curses.as_mut().unwrap().0;
 
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(render.screen_height as i32, 0);
+    curses.move_rc(render.screen_height as i32 - 1, 0);
 
     for ev in input_ev {
         match ev {
@@ -23,7 +23,5 @@ pub fn curses_render_hanged_input_system(
             _ => {}
         }
     }
-    curses.move_rc(render.screen_height as i32, 0);
-    curses.print_char('|');
     Ok(())
 }
