@@ -30,7 +30,7 @@ pub use self::world::*;
 const MAIN_AREA_MARGIN_LEFT: u32 = 0;
 const MAIN_AREA_MARGIN_TOP: u32 = 4;
 const MAIN_AREA_MARGIN_RIGHT: u32 = 40;
-const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
+const MAIN_AREA_MARGIN_BOTTOM: u32 = 1;
 
 const PICKUP_DISTANCE: u32 = 2;
 
@@ -340,7 +340,7 @@ fn main() {
             render_crafting_dispatcher,
             logic_dispatcher,
         },
-        |_, _| {},
+        |data, time| {data.world.get_mut_or_default::<Time>().advance_frame(time.delta_real_time());},
         60.0,
     );
     engine.engine_loop();

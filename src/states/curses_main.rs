@@ -28,10 +28,12 @@ impl game_engine_core::State<GameData> for InitState {
     }
 
     fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {
-        data.logic_dispatcher
-            .run_seq(&mut data.world)
-            .expect("Failed to run systems.");
-        data.world.maintain();
+        while data.world.get_mut::<Time>().unwrap().step_fixed_update() {
+            data.logic_dispatcher
+                .run_seq(&mut data.world)
+                .expect("Failed to run systems.");
+            data.world.maintain();
+        }
         data.render_dispatcher
             .run_seq(&mut data.world)
             .expect("Failed to run systems.");

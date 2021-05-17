@@ -13,6 +13,9 @@ impl game_engine_core::State<GameData> for LoadState {
         inv.insert(ItemInstance::new(Items::MagicalGauntlet, 1))
             .expect("Failed to insert init item into inventory.");
 
+        // TODO put 5.0 in a const
+        data.world.get_mut_or_default::<Time>().set_fixed_time(Duration::from_secs_f32(5.0));
+
         let item_defs: Vec<ItemDefinition<Items, (), ItemProperties>> = ron::de::from_str(
             &String::from_utf8(include_bytes!("../../assets/item_defs.ron").to_vec()).unwrap(),
         )
