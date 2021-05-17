@@ -35,9 +35,17 @@ impl game_engine_core::State<GameData> for InitState {
         data.render_dispatcher
             .run_seq(&mut data.world)
             .expect("Failed to run systems.");
+        let mut trans = StateTransition::None;
+        for ev in data.world.get::<Vec<InputEvent>>().unwrap().iter() {
+            match ev {
+                InputEvent::Crafting => trans = StateTransition::Push(Box::new(CraftingState)),
+                InputEvent::Inventory => trans = StateTransition::Push(Box::new(InventoryState)),
+                _ => {},
+            }
+        }
         clear_events.system().run(&mut data.world).unwrap();
         data.world.maintain();
 
-        StateTransition::None
+        trans
     }
 }

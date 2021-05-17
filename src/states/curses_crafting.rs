@@ -14,7 +14,7 @@ impl game_engine_core::State<GameData> for CraftingState {
         let mut trans = StateTransition::None;
         for ev in data.world.get::<Vec<InputEvent>>().unwrap().iter() {
             match ev {
-                InputEvent::Inventory => trans = StateTransition::Push(Box::new(Inventory)),
+                InputEvent::Inventory => trans = StateTransition::Push(Box::new(InventoryState)),
                 InputEvent::Cancel => trans = StateTransition::Pop,
                 _ => {},
             }
