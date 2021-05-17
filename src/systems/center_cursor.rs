@@ -15,8 +15,8 @@ pub fn center_cursor_system(
                         cursor.0 = position.unwrap().clone();
                     }
                 }
-            },
-            _ => {},
+            }
+            _ => {}
         }
     }
     Ok(())
