@@ -14,6 +14,8 @@ pub enum Items {
     Welder,
     Forge,
     MagicOrbTier8,
+    StoneAxe,
+    SilverKukri,
     GrassFiber,
     Log,
     Rock,
