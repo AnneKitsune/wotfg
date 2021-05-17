@@ -59,8 +59,8 @@ pub fn curses_render_close_items_system(
                         ));
                     }
                     y += 1;
+                    i += 1;
                 }
-                i += 1;
             }
         }
     }

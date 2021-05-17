@@ -24,22 +24,22 @@ pub fn quick_select_system(
                 }
             }
 
-            if let Some(mut sel) = selected_item.selected {
+            if let Some(sel) = selected_item.selected.as_mut() {
                 for ev in input_ev {
                     match ev {
                         InputEvent::SelectUp => {
-                            if sel > 0 {
-                                sel -= 1;
+                            if *sel > 0 {
+                                *sel -= 1;
                             }
-                        }
+                        },
                         InputEvent::SelectDown => {
-                            sel += 1;
-                        }
+                            *sel += 1;
+                        },
                         InputEvent::Accept => {
                             // TODO move this to player action pick up item, once we have entity
                             // network identifiers.
-                            if (sel as usize) < close.len() {
-                                let (entity, item) = close.remove(sel as usize);
+                            if (*sel as usize) < close.len() {
+                                let (entity, item) = close.remove(*sel as usize);
                                 if let Err(e) = inventory.as_mut().unwrap().insert(item) {
                                     // TODO better error handling
                                     eprintln!("Failed to insert item in inventory.");
@@ -47,8 +47,8 @@ pub fn quick_select_system(
                                     entities.kill(entity);
                                 }
                             }
-                        }
-                        _ => {}
+                        },
+                        _ => {},
                     }
                 }
             }
