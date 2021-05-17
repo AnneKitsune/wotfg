@@ -1,3 +1,4 @@
+mod center_cursor;
 mod curses;
 mod cursor_move;
 mod input_to_player_action;
@@ -6,6 +7,7 @@ mod network;
 mod player_move;
 mod quick_select;
 
+pub use self::center_cursor::*;
 pub use self::curses::*;
 pub use self::cursor_move::*;
 pub use self::input_to_player_action::*;
