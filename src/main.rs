@@ -311,7 +311,6 @@ fn main() {
     render_inventory_dispatcher = render_inventory_dispatcher.add(entity_curses_render_system);
     render_inventory_dispatcher = render_inventory_dispatcher.add(curses_render_inventory_system);
     render_inventory_dispatcher = render_inventory_dispatcher.add(curses_end_draw_system);
-    render_inventory_dispatcher = render_inventory_dispatcher.add(input_to_player_action);
     let render_inventory_dispatcher = render_inventory_dispatcher.build(&mut world);
 
     let mut render_crafting_dispatcher = DispatcherBuilder::default();
@@ -321,7 +320,6 @@ fn main() {
     render_crafting_dispatcher = render_crafting_dispatcher.add(entity_curses_render_system);
     render_crafting_dispatcher = render_crafting_dispatcher.add(curses_render_inventory_system);
     render_crafting_dispatcher = render_crafting_dispatcher.add(curses_end_draw_system);
-    render_crafting_dispatcher = render_crafting_dispatcher.add(input_to_player_action);
     let render_crafting_dispatcher = render_crafting_dispatcher.build(&mut world);
 
     let mut logic_dispatcher = DispatcherBuilder::default();

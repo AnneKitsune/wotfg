@@ -10,9 +10,9 @@ pub fn curses_render_inventory_system(
 ) -> SystemResult {
     let curses = &mut curses.as_mut().unwrap().0;
     curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(6, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
+    curses.move_rc(MAIN_AREA_MARGIN_TOP as i32, MAIN_AREA_MARGIN_LEFT as i32);
     curses.print("=== Inventory ===");
-    let mut y = 7;
+    let mut y = MAIN_AREA_MARGIN_TOP as i32 + 1;
     for (player, inv) in join!(&controlled && &inventories) {
         if player.unwrap().id == auth.id {
             for item in inv.as_ref().unwrap().content.iter() {
