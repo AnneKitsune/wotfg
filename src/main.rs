@@ -340,7 +340,11 @@ fn main() {
             render_crafting_dispatcher,
             logic_dispatcher,
         },
-        |data, time| {data.world.get_mut_or_default::<Time>().advance_frame(time.delta_real_time());},
+        |data, time| {
+            data.world
+                .get_mut_or_default::<Time>()
+                .advance_frame(time.delta_real_time());
+        },
         60.0,
     );
     engine.engine_loop();
