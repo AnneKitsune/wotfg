@@ -287,7 +287,6 @@ fn main() {
     client_dispatcher = client_dispatcher.add(cursor_move_system);
     client_dispatcher = client_dispatcher.add(curses_render_system);
     client_dispatcher = client_dispatcher.add(entity_curses_render_system);
-    client_dispatcher = client_dispatcher.add(curses_render_inventory_system);
     client_dispatcher = client_dispatcher.add(curses_render_crafting_system);
     client_dispatcher = client_dispatcher.add(curses_render_close_items_system);
     client_dispatcher = client_dispatcher.add(curses_end_draw_system);
@@ -302,8 +301,28 @@ fn main() {
         });
         Ok(())
     });
-
     let client_dispatcher = client_dispatcher.build(&mut world);
+
+    let mut render_inventory_dispatcher = DispatcherBuilder::default();
+    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_update_render_info_system);
+    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_input_system);
+    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_render_system);
+    render_inventory_dispatcher = render_inventory_dispatcher.add(entity_curses_render_system);
+    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_render_inventory_system);
+    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_end_draw_system);
+    render_inventory_dispatcher = render_inventory_dispatcher.add(input_to_player_action);
+    render_inventory_dispatcher = render_inventory_dispatcher.add(|ev1: &mut Vec<InputEvent>| {
+        ev1.retain(|e| {
+            if let InputEvent::Hanged(_) = e {
+                true
+            } else {
+                false
+            }
+        });
+        Ok(())
+    });
+    let render_inventory_dispatcher = render_inventory_dispatcher.build(&mut world);
+
 
     let mut logic_dispatcher = DispatcherBuilder::default();
     logic_dispatcher = logic_dispatcher.add(player_move_system);
