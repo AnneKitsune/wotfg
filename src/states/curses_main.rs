@@ -35,6 +35,7 @@ impl game_engine_core::State<GameData> for InitState {
         data.render_dispatcher
             .run_seq(&mut data.world)
             .expect("Failed to run systems.");
+        clear_events.system().run(&mut data.world).unwrap();
         data.world.maintain();
 
         StateTransition::None

@@ -14,6 +14,8 @@ pub enum InputEvent {
     Cancel,
     Accept,
     CenterCursor,
+    Inventory,
+    Crafting,
     Hanged(HangedInput),
     PlayerAction(PlayerAction),
 }
@@ -76,7 +78,9 @@ impl Default for Keymap {
                 // TODO find better bindings or use arrow keys here
                 (Input::Character('1'), InputEvent::SelectUp),
                 (Input::Character('2'), InputEvent::SelectDown),
-                (Input::Character('c'), InputEvent::CenterCursor),
+                (Input::Character('z'), InputEvent::CenterCursor),
+                (Input::Character('i'), InputEvent::Inventory),
+                (Input::Character('c'), InputEvent::Crafting),
                 (Input::Character('m'), InputEvent::Hanged(HangedInput::Mine)),
                 (Input::Character('\n'), InputEvent::Accept),
                 (Input::Character('\u{1b}'), InputEvent::Cancel), // Escape
