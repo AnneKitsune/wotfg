@@ -4,13 +4,13 @@ pub fn quick_select_system(
     controlled: &Components<Player>,
     items: &Components<ItemInstance<Items, ()>>,
     positions: &Components<Position>,
-    entities: &Entities,
     auth: &Auth,
     input_ev: &Vec<InputEvent>,
     selected_item: &mut QuickItemSelect,
-    inventories: &mut Components<Inventory<Items, (), ItemProperties>>,
+    inventories: &mut Components<Inventory<Items, (), ()>>,
+    entities: &mut Entities,
 ) -> SystemResult {
-    for (player, player_position, inventory) in join!(&controlled && &positions && &mut inventories)
+    for (player, player_position, mut inventory) in join!(&controlled && &positions && &mut inventories)
     {
         if player.unwrap().id == auth.id {
             let mut close = vec![];
@@ -39,8 +39,12 @@ pub fn quick_select_system(
                             // network identifiers.
                             if (sel as usize) < close.len() {
                                 let (entity, item) = close.remove(sel as usize);
-                                inventory.as_mut().unwrap().insert(item);
-                                entities.kill(entity);
+                                if let Err(e) = inventory.as_mut().unwrap().insert(item) {
+                                    // TODO better error handling
+                                    eprintln!("Failed to insert item in inventory.");
+                                } else {
+                                    entities.kill(entity);
+                                }
                             }
                         }
                         _ => {}

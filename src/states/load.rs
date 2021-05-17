@@ -4,7 +4,7 @@ pub struct LoadState;
 
 impl game_engine_core::State<GameData> for LoadState {
     fn on_start(&mut self, data: &mut GameData) {
-        let mut inv = Inventory::<Items, (), ItemProperties>::new_dynamic(0, 9999);
+        let mut inv = Inventory::<Items, (), ()>::new_dynamic(0, 9999);
         inv.insert(ItemInstance::new(Items::TestItemA, 1))
             .expect("Failed to insert init item into inventory.");
         inv.get_mut(0).unwrap().quantity = 2;

@@ -2,7 +2,7 @@ use crate::*;
 
 pub fn curses_render_inventory_system(
     controlled: &Components<Player>,
-    inventories: &Components<Inventory<Items, (), ItemProperties>>,
+    inventories: &Components<Inventory<Items, (), ()>>,
     item_defs: &ItemDefinitions<Items, (), ItemProperties>,
     render: &RenderInfo,
     auth: &Auth,

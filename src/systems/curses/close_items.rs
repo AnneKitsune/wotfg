@@ -2,7 +2,7 @@ use crate::*;
 
 pub fn curses_render_close_items_system(
     controlled: &Components<Player>,
-    inventories: &Components<Inventory<Items, (), ItemProperties>>,
+    inventories: &Components<Inventory<Items, (), ()>>,
     item_defs: &ItemDefinitions<Items, (), ItemProperties>,
     items: &Components<ItemInstance<Items, ()>>,
     positions: &Components<Position>,
