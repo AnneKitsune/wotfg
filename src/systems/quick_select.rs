@@ -10,7 +10,8 @@ pub fn quick_select_system(
     selected_item: &mut QuickItemSelect,
     inventories: &mut Components<Inventory<Items, (), ItemProperties>>,
 ) -> SystemResult {
-    for (player, player_position, inventory) in join!(&controlled && &positions && &mut inventories) {
+    for (player, player_position, inventory) in join!(&controlled && &positions && &mut inventories)
+    {
         if player.unwrap().id == auth.id {
             let mut close = vec![];
             for (entity, item, item_position) in join!(&entities && &items && &positions) {
@@ -29,10 +30,10 @@ pub fn quick_select_system(
                             if sel > 0 {
                                 sel -= 1;
                             }
-                        },
+                        }
                         InputEvent::SelectDown => {
                             sel += 1;
-                        },
+                        }
                         InputEvent::Accept => {
                             // TODO move this to player action pick up item, once we have entity
                             // network identifiers.
@@ -41,8 +42,8 @@ pub fn quick_select_system(
                                 inventory.as_mut().unwrap().insert(item);
                                 entities.kill(entity);
                             }
-                        },
-                        _ => {},
+                        }
+                        _ => {}
                     }
                 }
             }
@@ -65,4 +66,3 @@ pub fn quick_select_system(
     }
     Ok(())
 }
-
