@@ -10,7 +10,8 @@ pub fn quick_select_system(
     inventories: &mut Components<Inventory<Items, (), ()>>,
     entities: &mut Entities,
 ) -> SystemResult {
-    for (player, player_position, mut inventory) in join!(&controlled && &positions && &mut inventories)
+    for (player, player_position, mut inventory) in
+        join!(&controlled && &positions && &mut inventories)
     {
         if player.unwrap().id == auth.id {
             let mut close = vec![];
