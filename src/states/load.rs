@@ -4,27 +4,27 @@ pub struct LoadState;
 
 impl game_engine_core::State<GameData> for LoadState {
     fn on_start(&mut self, data: &mut GameData) {
-        let mut inv = Inventory::<Items, (), ()>::new_dynamic(0, 9999);
-        inv.insert(ItemInstance::new(Items::TestItemA, 1))
-            .expect("Failed to insert init item into inventory.");
-        inv.get_mut(0).unwrap().quantity = 2;
-        inv.insert(ItemInstance::new(Items::RustyDagger, 1))
-            .expect("Failed to insert init item into inventory.");
-        inv.insert(ItemInstance::new(Items::MagicalGauntlet, 1))
-            .expect("Failed to insert init item into inventory.");
-
-        // TODO put 5.0 in a const
-        data.world
-            .get_mut_or_default::<Time>()
-            .set_fixed_time(Duration::from_secs_f32(5.0));
-
         let item_defs: Vec<ItemDefinition<Items, (), ItemProperties>> = ron::de::from_str(
             &String::from_utf8(include_bytes!("../../assets/item_defs.ron").to_vec()).unwrap(),
         )
         .expect("Failed to load file: Invalid format.");
         let item_defs = ItemDefinitions::from(item_defs);
 
+        let mut inv = Inventory::<Items, (), ()>::new_dynamic(0, 9999);
+        inv.insert(ItemInstance::new(Items::TestItemA, 1), &item_defs)
+            .expect("Failed to insert init item into inventory.");
+        inv.get_mut(0).unwrap().quantity = 2;
+        inv.insert(ItemInstance::new(Items::RustyDagger, 1), &item_defs)
+            .expect("Failed to insert init item into inventory.");
+        inv.insert(ItemInstance::new(Items::MagicalGauntlet, 1), &item_defs)
+            .expect("Failed to insert init item into inventory.");
+
         *data.world.get_mut_or_default::<_>() = item_defs;
+
+        // TODO put 5.0 in a const
+        data.world
+            .get_mut_or_default::<Time>()
+            .set_fixed_time(Duration::from_secs_f32(5.0));
 
         let stat_defs: Vec<StatDefinition<Stats>> = ron::de::from_str(
             &String::from_utf8(include_bytes!("../../assets/stat_defs.ron").to_vec()).unwrap(),

@@ -6,6 +6,7 @@ pub fn quick_select_system(
     positions: &Components<Position>,
     auth: &Auth,
     input_ev: &Vec<InputEvent>,
+    item_defs: &ItemDefinitions<Items, (), ItemProperties>,
     selected_item: &mut QuickItemSelect,
     inventories: &mut Components<Inventory<Items, (), ()>>,
     entities: &mut Entities,
@@ -40,7 +41,7 @@ pub fn quick_select_system(
                             // network identifiers.
                             if (*sel as usize) < close.len() {
                                 let (entity, item) = close.remove(*sel as usize);
-                                if let Err(e) = inventory.as_mut().unwrap().insert(item) {
+                                if let Err(e) = inventory.as_mut().unwrap().insert(item, item_defs) {
                                     // TODO better error handling
                                     eprintln!("Failed to insert item in inventory.");
                                 } else {
