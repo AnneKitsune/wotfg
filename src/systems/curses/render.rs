@@ -153,12 +153,13 @@ pub fn curses_render_system(
 
     // Map Cursor
 
-    curses.set_color_pair(*COLOR_NORMAL);
+    curses.set_color_pair(*COLOR_TITLE);
     curses.move_rc(
         (cursor.0.y() as u32 + MAIN_AREA_MARGIN_TOP - map_offset.1) as i32,
         (cursor.0.x() as u32 + MAIN_AREA_MARGIN_LEFT - map_offset.0) as i32,
     );
-    curses.print_char(acs::block());
+    //curses.print_char(acs::block());
+    curses.print_char('X');
 
     Ok(())
 }

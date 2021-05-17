@@ -283,6 +283,7 @@ fn main() {
     client_dispatcher = client_dispatcher.add(curses_update_render_info_system);
     client_dispatcher = client_dispatcher.add(curses_input_system);
     client_dispatcher = client_dispatcher.add(quick_select_system);
+    client_dispatcher = client_dispatcher.add(center_cursor_system);
     client_dispatcher = client_dispatcher.add(cursor_move_system);
     client_dispatcher = client_dispatcher.add(curses_render_system);
     client_dispatcher = client_dispatcher.add(entity_curses_render_system);
