@@ -11,16 +11,18 @@ use game_engine_core::*;
 use minigene::*;
 use modular_bitfield::prelude::*;
 
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 
 mod ids;
 mod input;
+mod resources;
 mod states;
 mod systems;
 mod world;
 
 pub use self::ids::*;
 pub use self::input::*;
+pub use self::resources::*;
 pub use self::states::*;
 pub use self::systems::*;
 pub use self::world::*;
@@ -29,6 +31,8 @@ const MAIN_AREA_MARGIN_LEFT: u32 = 0;
 const MAIN_AREA_MARGIN_TOP: u32 = 4;
 const MAIN_AREA_MARGIN_RIGHT: u32 = 40;
 const MAIN_AREA_MARGIN_BOTTOM: u32 = 0;
+
+const PICKUP_DISTANCE: u32 = 2;
 
 #[derive(Default, Clone, Debug, Deserialize)]
 pub struct ItemProperties {
@@ -64,10 +68,11 @@ pub enum HangedInput {
     MacroReplay,
 }
 
-/// Indicates that this entity is directly controlled by the input events.
-/// Shouldn't be used once the network is implemented.
-#[derive(Clone, Copy, Default, Debug)]
-pub struct Controlled;
+#[derive(new, Clone, Default, Debug)]
+pub struct Player {
+    pub id: String,
+    pub username: String,
+}
 
 /// Indicates that this entity should be rendered.
 /// The entity must also have a Position component attached if it is inside of the world.
@@ -77,12 +82,25 @@ pub struct Rendered {
     // TODO switch to minigene's exported color
     pub color: ColorPair,
     pub texture_path: Option<String>,
+    pub priority: i32,
 }
 
 impl Position {
     /// Returns the position inside the chunk as a single number
     pub fn position_index(&self) -> usize {
         ((self.x() as usize) << 11) | ((self.y() as usize) << 4) | (self.z() as usize)
+    }
+
+    /// Returns the non pythagorean distance.
+    pub fn distance(&self, other: &Position) -> u32 {
+        let delta_x = ((other.chunk_x() as i32 - self.chunk_x() as i32) * CHUNK_SIZE_X as i32)
+            .abs()
+            + (other.x() as i32 - self.x() as i32).abs();
+        let delta_y = ((other.chunk_y() as i32 - self.chunk_y() as i32) * CHUNK_SIZE_Y as i32)
+            .abs()
+            + (other.y() as i32 - self.y() as i32).abs();
+        let delta_z = (other.z() as i32 - self.z() as i32).abs();
+        delta_x as u32 + delta_y as u32 + delta_z as u32
     }
 
     // TODO add collision map handling
@@ -218,9 +236,13 @@ impl RenderInfo {
     ) -> Option<(u32, u32)> {
         let offsets = self.map_offsets(cursor);
         let (xmax, ymax) = self.maximum_positions();
-        let x_pos = offsets.0 as i32 + position.0 as i32 + MAIN_AREA_MARGIN_LEFT as i32;
-        let y_pos = offsets.1 as i32 + position.1 as i32 + MAIN_AREA_MARGIN_TOP as i32;
-        if x_pos >= 0 && y_pos >= 0 && (x_pos as u32) < xmax && (y_pos as u32) < ymax {
+        let x_pos = -(offsets.0 as i32) + position.0 as i32 + MAIN_AREA_MARGIN_LEFT as i32;
+        let y_pos = -(offsets.1 as i32) + position.1 as i32 + MAIN_AREA_MARGIN_TOP as i32;
+        if x_pos >= MAIN_AREA_MARGIN_LEFT as i32
+            && y_pos >= MAIN_AREA_MARGIN_TOP as i32
+            && (x_pos as u32) < xmax
+            && (y_pos as u32) < ymax
+        {
             Some((x_pos as u32, y_pos as u32))
         } else {
             None
@@ -232,8 +254,6 @@ fn main() {
     let mut world = World::default();
 
     world.initialize::<Entities>();
-    // TODO remove this init once we split the dispatchers
-    world.initialize::<Components<Controlled>>();
     world.initialize::<RNG>();
 
     // client dispatcher
@@ -260,22 +280,48 @@ fn main() {
     // multiple chunk loaded
     // multiple players, all assigned to one network connection
 
-    let mut dispatcher = DispatcherBuilder::default();
-    dispatcher = dispatcher.add(curses_update_render_info_system);
-    dispatcher = dispatcher.add(curses_input_system);
-    dispatcher = dispatcher.add(cursor_move_system);
-    dispatcher = dispatcher.add(curses_render_system);
-    dispatcher = dispatcher.add(entity_curses_render_system);
-    dispatcher = dispatcher.add(curses_render_inventory_system);
-    dispatcher = dispatcher.add(curses_render_crafting_system);
-    dispatcher = dispatcher.add(curses_end_draw_system);
-    dispatcher = dispatcher.add(|ev1: &mut Vec<InputEvent>| {
-        ev1.clear();
+    let mut client_dispatcher = DispatcherBuilder::default();
+    client_dispatcher = client_dispatcher.add(curses_update_render_info_system);
+    client_dispatcher = client_dispatcher.add(curses_input_system);
+    client_dispatcher = client_dispatcher.add(cursor_move_system);
+    client_dispatcher = client_dispatcher.add(curses_render_system);
+    client_dispatcher = client_dispatcher.add(entity_curses_render_system);
+    client_dispatcher = client_dispatcher.add(curses_render_inventory_system);
+    client_dispatcher = client_dispatcher.add(curses_render_crafting_system);
+    client_dispatcher = client_dispatcher.add(curses_render_close_items_system);
+    client_dispatcher = client_dispatcher.add(curses_end_draw_system);
+    client_dispatcher = client_dispatcher.add(input_to_player_action);
+    client_dispatcher = client_dispatcher.add(|ev1: &mut Vec<InputEvent>| {
+        ev1.retain(|e| {
+            if let InputEvent::Hanged(_) = e {
+                true
+            } else {
+                false
+            }
+        });
         Ok(())
     });
-    let dispatcher = dispatcher.build(&mut world);
 
-    let mut engine =
-        Engine::<GameData, _>::new(LoadState, GameData { world, dispatcher }, |_, _| {}, 60.0);
+    let client_dispatcher = client_dispatcher.build(&mut world);
+
+    let mut logic_dispatcher = DispatcherBuilder::default();
+    logic_dispatcher = logic_dispatcher.add(player_move_system);
+    logic_dispatcher = logic_dispatcher.add(mine_system);
+    logic_dispatcher = logic_dispatcher.add(|ev1: &mut PlayerActionQueue| {
+        ev1.queue.pop_front();
+        Ok(())
+    });
+    let logic_dispatcher = logic_dispatcher.build(&mut world);
+
+    let mut engine = Engine::<GameData, _>::new(
+        LoadState,
+        GameData {
+            world,
+            render_dispatcher: client_dispatcher,
+            logic_dispatcher,
+        },
+        |_, _| {},
+        60.0,
+    );
     engine.engine_loop();
 }

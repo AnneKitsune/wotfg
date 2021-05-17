@@ -205,6 +205,7 @@
         maximum_stack: None,
         maximum_durability: None,
     ),
+    
     ItemDefinition (
         key: MagicOrbTier8,
         user_data: ItemProperties (
@@ -225,6 +226,7 @@
         maximum_stack: None,
         maximum_durability: None,
     ),
+
 	 ItemDefinition (
         key: SilverKukri,
         user_data: ItemProperties (
@@ -239,15 +241,98 @@
             attack_range: 1.0,
             can_range: false,
             rarity: Common,
+        ),    
+            slot_type: (),
+            name: "Silver Kukri",
+            friendly_name: "silver_kukri",
+            description: "10% chance critical hit",
+            maximum_stack: Some(1),
+            maximum_durability: Some(10),
+    ),    
+            
+    ItemDefinition (
+        key: GrassFiber,
+        user_data: ItemProperties (
+            damages: [],
+            crit_chance: 0.0,
+            mining_level: 0,
+            chopping_level: 0,
+            attack_speed: 0.0,
+            mining_speed: 0.0,
+            attack_range: 0.0,
+            can_range: false,
+            rarity: Common,
         ),
         slot_type: (),
-        name: "Silver Kukri",
-        friendly_name: "silver_kukri",
-        description: "10% chance critical hit",
-        maximum_stack: Some(1),
-        maximum_durability: Some(10),
+        name: "Grass Fiber",
+        friendly_name: "grass_fiber",
+        description: "Fibers extracted from ground-level grass.",
+        maximum_stack: None,
+        maximum_durability: None,
     ),
     ItemDefinition (
+        key: Log,
+        user_data: ItemProperties (
+            damages: [],
+            crit_chance: 0.0,
+            mining_level: 0,
+            chopping_level: 0,
+            attack_speed: 0.0,
+            mining_speed: 0.0,
+            attack_range: 0.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Log",
+        friendly_name: "log",
+        description: "A log from a tree that was cut down.",
+        maximum_stack: None,
+        maximum_durability: None,
+    ),
+    ItemDefinition (
+        key: Rock,
+        user_data: ItemProperties (
+            damages: [],
+            crit_chance: 0.0,
+            mining_level: 0,
+            chopping_level: 0,
+            attack_speed: 0.0,
+            mining_speed: 0.0,
+            attack_range: 0.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Small Rock",
+        friendly_name: "rock",
+        description: "A small piece of rock. It is irregular in shape and gray.",
+        maximum_stack: None,
+        maximum_durability: None,
+    ),
+    ItemDefinition (
+        key: SeliOre,
+        user_data: ItemProperties (
+            damages: [],
+            crit_chance: 0.0,
+            mining_level: 0,
+            chopping_level: 0,
+            attack_speed: 0.0,
+            mining_speed: 0.0,
+            attack_range: 0.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Seli Ore",
+        friendly_name: "ore_seli",
+        description: "Mineral containing some Seli.",
+        maximum_stack: None,
+        maximum_durability: None,
+           
+    ),
+    
+        ItemDefinition (
         key: StoneAxe,
         user_data: ItemProperties (
             damages: [
@@ -269,5 +354,27 @@
         maximum_stack: Some(1),
         maximum_durability: Some(10),
     ),
-  
-]
+        
+    
+    ItemDefinition (
+        key: GemStone,
+        user_data: ItemProperties (
+            damages: [],
+            crit_chance: 0.0,
+            mining_level: 0,
+            chopping_level: 0,
+            attack_speed: 0.0,
+            mining_speed: 0.0,
+            attack_range: 0.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Gemstone",
+        friendly_name: "gemstone",
+        description: "A curious looking gem. Amber in color.",
+        maximum_stack: None,
+        maximum_durability: None,
+    ),
+]	
+

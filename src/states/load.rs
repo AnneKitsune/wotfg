@@ -4,35 +4,6 @@ pub struct LoadState;
 
 impl game_engine_core::State<GameData> for LoadState {
     fn on_start(&mut self, data: &mut GameData) {
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (0, 0),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
-            );
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (0, 1),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
-            );
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (1, 0),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
-            );
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (1, 1),
-                Chunk::new_rand(&mut data.world.get_mut::<_>().unwrap()),
-            );
-
         let mut inv = Inventory::<Items, (), ItemProperties>::new_dynamic(0, 9999);
         inv.insert(ItemInstance::new(Items::TestItemA, 1))
             .expect("Failed to insert init item into inventory.");
@@ -67,6 +38,56 @@ impl game_engine_core::State<GameData> for LoadState {
         let transitions_defs = ItemTransitionDefinitions::from(transitions_defs);
         *data.world.get_mut_or_default::<_>() = transitions_defs;
 
+        let tile_defs: Vec<TileDefinition> = ron::de::from_str(
+            &String::from_utf8(include_bytes!("../../assets/tile_defs.ron").to_vec()).unwrap(),
+        )
+        .expect("Failed to load file: Invalid format.");
+        let tile_defs = TileDefinitions::from(tile_defs);
+        *data.world.get_mut_or_default::<_>() = tile_defs;
+
+        data.world.get_mut::<Auth>().unwrap().id = "123".to_string();
+
+        data.world
+            .get_mut::<HashMap<(u32, u32), Chunk>>()
+            .unwrap()
+            .insert(
+                (0, 0),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
+            );
+        data.world
+            .get_mut::<HashMap<(u32, u32), Chunk>>()
+            .unwrap()
+            .insert(
+                (0, 1),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
+            );
+        data.world
+            .get_mut::<HashMap<(u32, u32), Chunk>>()
+            .unwrap()
+            .insert(
+                (1, 0),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
+            );
+        data.world
+            .get_mut::<HashMap<(u32, u32), Chunk>>()
+            .unwrap()
+            .insert(
+                (1, 1),
+                Chunk::new_rand(
+                    &mut data.world.get_mut::<_>().unwrap(),
+                    &mut data.world.get::<_>().unwrap(),
+                ),
+            );
+
         let player = data.world.get_mut::<Entities>().unwrap().create();
         data.world.get_mut::<Components<_>>().unwrap().insert(
             player,
@@ -77,14 +98,14 @@ impl game_engine_core::State<GameData> for LoadState {
                 .with_chunk_x(0)
                 .with_chunk_y(0),
         );
+        data.world.get_mut::<Components<_>>().unwrap().insert(
+            player,
+            Player::new("123".to_string(), "jojolepro".to_string()),
+        );
         data.world
             .get_mut::<Components<_>>()
             .unwrap()
-            .insert(player, Controlled);
-        data.world
-            .get_mut::<Components<_>>()
-            .unwrap()
-            .insert(player, Rendered::new('P', *COLOR_TITLE, None));
+            .insert(player, Rendered::new('P', *COLOR_TITLE, None, 999));
         data.world
             .get_mut::<Components<_>>()
             .unwrap()

@@ -1,5 +1,5 @@
 use crate::*;
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Items {
     TestItemA,
     TestItemB,
@@ -16,10 +16,14 @@ pub enum Items {
     MagicOrbTier8,
     StoneAxe,
     SilverKukri,
-    GrimReaperScythe,
+    GrassFiber,
+    Log,
+    Rock,
+    SeliOre,
+    GemStone,
 }
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Stats {
     Health,
     Mana,
@@ -38,10 +42,21 @@ pub enum Stats {
     MysticalCrafting,
 }
 
+// TODO use HarvestType in tools along with DamageType
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
+pub enum HarvestType {
+    Mining,
+    PlantGathering,
+    Butchering,
+    Shoveling,
+    Chopping,
+    Exploding,
+}
+
 // Some discrete stats like Magical Crafting V are actually passive skills unlocked
 // using the magical_crafting_xp stat.
 
-#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize)]
+#[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Skills {
     AfterlifeEfficiency,
     MythicalComprehension1,
@@ -49,13 +64,13 @@ pub enum Skills {
 }
 
 // Switch to using effectors directly?
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum DamageType {
     Physical,
     Magical,
 }
 
-#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize)]
+#[derive(Copy, Clone, Debug, Eq, PartialEq, PartialOrd, Ord, Deserialize, Serialize)]
 pub enum Rarity {
     Common,
     Rare,
@@ -88,36 +103,25 @@ impl From<Rarity> for ColorPair {
     }
 }
 
-#[derive(Clone, Debug, Eq, PartialEq, Deserialize)]
-pub enum Effectors {}
-
-#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize)]
-pub enum ItemTransitions {
-    CraftUnobtainiumPlatesChestpieceTier8,
-}
-
-#[derive(Clone, Copy, Debug)]
-pub enum Tiles {
-    Air,
-    Grass,
-    GrassLong,
-    Border,
-    Bedrock,
-    Tree,
-    Rock,
-}
-
-// TODO do that, but for a tile that has bg and fg color, and a tile texture/animation.
-impl From<Tiles> for char {
-    fn from(t: Tiles) -> Self {
-        match t {
-            Tiles::Air => ' ',
-            Tiles::Grass => '.',
-            Tiles::GrassLong => ',',
-            Tiles::Border => 'b',
-            Tiles::Bedrock => 'B',
-            Tiles::Tree => 'T',
-            Tiles::Rock => 'o',
+impl From<Rarity> for u32 {
+    fn from(rarity: Rarity) -> Self {
+        match rarity {
+            Rarity::Common => 0,
+            Rarity::Rare => 1,
+            Rarity::VeryRare => 2,
+            Rarity::Epic => 3,
+            Rarity::Mythic => 4,
+            Rarity::Legendary => 5,
+            Rarity::Unobtainable => 6,
+            Rarity::Unique => 7,
         }
     }
+}
+
+#[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+pub enum Effectors {}
+
+#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+pub enum ItemTransitions {
+    CraftUnobtainiumPlatesChestpieceTier8,
 }
