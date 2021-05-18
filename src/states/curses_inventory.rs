@@ -3,6 +3,12 @@ use crate::*;
 pub struct InventoryState;
 
 impl game_engine_core::State<GameData> for InventoryState {
+    fn on_start(&mut self, data: &mut GameData) {
+        let invs = data.world.get::<Components<Inventory<Items, (), ()>>>().unwrap();
+        let inv = invs.iter().next().unwrap();
+        let inv_str = ron::ser::to_string(&*inv).expect("Failed to serialize");
+        std::fs::write(format!("{}/worlds/dev/jojolepro_inventory.ron", env!("CARGO_MANIFEST_DIR")), inv_str).expect("Failed to write inventory to file.");
+    }
     fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {
         while data.world.get_mut::<Time>().unwrap().step_fixed_update() {
             data.logic_dispatcher

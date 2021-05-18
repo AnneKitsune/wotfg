@@ -9,16 +9,6 @@ impl game_engine_core::State<GameData> for LoadState {
         )
         .expect("Failed to load file: Invalid format.");
         let item_defs = ItemDefinitions::from(item_defs);
-
-        let mut inv = Inventory::<Items, (), ()>::new_dynamic(0, 9999);
-        inv.insert(ItemInstance::new(Items::TestItemA, 1), &item_defs)
-            .expect("Failed to insert init item into inventory.");
-        inv.get_mut(0).unwrap().quantity = 2;
-        inv.insert(ItemInstance::new(Items::RustyDagger, 1), &item_defs)
-            .expect("Failed to insert init item into inventory.");
-        inv.insert(ItemInstance::new(Items::MagicalGauntlet, 1), &item_defs)
-            .expect("Failed to insert init item into inventory.");
-
         *data.world.get_mut_or_default::<_>() = item_defs;
 
         // TODO put 5.0 in a const
@@ -111,10 +101,20 @@ impl game_engine_core::State<GameData> for LoadState {
             .get_mut::<Components<_>>()
             .unwrap()
             .insert(player, Rendered::new('P', *COLOR_TITLE, None, 999));
-        data.world
-            .get_mut::<Components<_>>()
-            .unwrap()
-            .insert(player, inv);
+
+        let inv_result = std::fs::read(format!("{}/worlds/dev/jojolepro_inventory.ron", env!("CARGO_MANIFEST_DIR")));
+        if let Ok(inv_str) = inv_result {
+            let inv: Inventory<Items, (), ()> = ron::de::from_bytes(inv_str.as_slice()).expect("Failed to deserialize");
+            data.world
+                .get_mut::<Components<_>>()
+                .unwrap()
+                .insert(player, inv);
+        } else {
+            data.world
+                .get_mut::<Components<_>>()
+                .unwrap()
+                .insert(player, Inventory::<Items, (), ()>::new_dynamic(0, 9999));
+        }
     }
 
     fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {

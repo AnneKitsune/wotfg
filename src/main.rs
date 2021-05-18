@@ -34,7 +34,7 @@ const MAIN_AREA_MARGIN_BOTTOM: u32 = 1;
 
 const PICKUP_DISTANCE: u32 = 2;
 
-#[derive(Default, Clone, Debug, Deserialize)]
+#[derive(Default, Clone, Debug, Deserialize, Serialize)]
 pub struct ItemProperties {
     pub rarity: Rarity,
     pub damages: Vec<(DamageType, f32)>,
