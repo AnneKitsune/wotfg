@@ -1,2 +1,3 @@
 target/
 Cargo.lock
+worlds/dev/jojolepro_inventory.ron
