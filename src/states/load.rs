@@ -106,9 +106,13 @@ impl game_engine_core::State<GameData> for LoadState {
             .unwrap()
             .insert(player, Rendered::new('P', *COLOR_TITLE, None, 999));
 
-        let inv_result = std::fs::read(format!("{}/worlds/dev/jojolepro_inventory.ron", env!("CARGO_MANIFEST_DIR")));
+        let inv_result = std::fs::read(format!(
+            "{}/worlds/dev/jojolepro_inventory.ron",
+            env!("CARGO_MANIFEST_DIR")
+        ));
         if let Ok(inv_str) = inv_result {
-            let inv: Inventory<Items, (), ()> = ron::de::from_bytes(inv_str.as_slice()).expect("Failed to deserialize");
+            let inv: Inventory<Items, (), ()> =
+                ron::de::from_bytes(inv_str.as_slice()).expect("Failed to deserialize");
             data.world
                 .get_mut::<Components<_>>()
                 .unwrap()

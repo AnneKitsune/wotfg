@@ -79,7 +79,9 @@ impl Chunk {
         for x in 0..CHUNK_SIZE_X as u32 {
             for y in 0..CHUNK_SIZE_Y as u32 {
                 for z in 0..CHUNK_SIZE_Z {
-                    let tile = tiles.get(idx).expect("Missing tile in chunk that is being loaded!");
+                    let tile = tiles
+                        .get(idx)
+                        .expect("Missing tile in chunk that is being loaded!");
                     if tile_defs.defs.get(&tile).expect("Tried to generate chunk using tile present in ids but not in tile defs.").solid {
                         collisions
                             .get_mut(z as usize)
@@ -96,10 +98,23 @@ impl Chunk {
 pub fn generate_world(rng: &mut RNG, tile_defs: &TileDefinitions) {
     for chunk_x in 0..WORLD_WIDTH_HEIGHT {
         for chunk_y in 0..WORLD_WIDTH_HEIGHT {
-            println!("Generating chunk {}/{}", chunk_x * WORLD_WIDTH_HEIGHT + chunk_y, WORLD_WIDTH_HEIGHT * WORLD_WIDTH_HEIGHT);
+            println!(
+                "Generating chunk {}/{}",
+                chunk_x * WORLD_WIDTH_HEIGHT + chunk_y,
+                WORLD_WIDTH_HEIGHT * WORLD_WIDTH_HEIGHT
+            );
             let chunk = Chunk::new_rand(rng, tile_defs);
             let data = bincode::serialize(&chunk.tiles).expect("Failed to serialize chunk data.");
-            std::fs::write(format!("{}/worlds/dev/chunks/{}_{}.bin", env!("CARGO_MANIFEST_DIR"), chunk_x, chunk_y), data).expect("Failed to write chunk data to disk.");
+            std::fs::write(
+                format!(
+                    "{}/worlds/dev/chunks/{}_{}.bin",
+                    env!("CARGO_MANIFEST_DIR"),
+                    chunk_x,
+                    chunk_y
+                ),
+                data,
+            )
+            .expect("Failed to write chunk data to disk.");
         }
     }
 }

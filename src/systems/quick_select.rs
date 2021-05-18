@@ -41,7 +41,8 @@ pub fn quick_select_system(
                             // network identifiers.
                             if (*sel as usize) < close.len() {
                                 let (entity, item) = close.remove(*sel as usize);
-                                if let Err(e) = inventory.as_mut().unwrap().insert(item, item_defs) {
+                                if let Err(e) = inventory.as_mut().unwrap().insert(item, item_defs)
+                                {
                                     // TODO better error handling
                                     eprintln!("Failed to insert item in inventory.");
                                 } else {
