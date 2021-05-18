@@ -1,3 +1,4 @@
 target/
 Cargo.lock
 worlds/dev/jojolepro_inventory.ron
+worlds/dev/chunks/*.bin
