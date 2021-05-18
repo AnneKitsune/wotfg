@@ -69,6 +69,28 @@ impl Chunk {
         }
         Self { tiles, collisions }
     }
+    pub fn from_tiles(tiles: Vec<Tiles>, tile_defs: &TileDefinitions) -> Self {
+        let mut collisions = vec![
+            CollisionMap::new(CHUNK_SIZE_X as u32, CHUNK_SIZE_Y as u32);
+            CHUNK_SIZE_Z as usize
+        ];
+        let idx = 0;
+        // TODO accessing arrays in this order might be inneficient.
+        for x in 0..CHUNK_SIZE_X as u32 {
+            for y in 0..CHUNK_SIZE_Y as u32 {
+                for z in 0..CHUNK_SIZE_Z {
+                    let tile = tiles.get(idx).expect("Missing tile in chunk that is being loaded!");
+                    if tile_defs.defs.get(&tile).expect("Tried to generate chunk using tile present in ids but not in tile defs.").solid {
+                        collisions
+                            .get_mut(z as usize)
+                            .unwrap()
+                            .set(x as u32, y as u32);
+                    }
+                }
+            }
+        }
+        Self { tiles, collisions }
+    }
 }
 
 #[derive(PartialEq, Eq, Hash, Clone, Copy, Debug, Deserialize, Serialize)]
