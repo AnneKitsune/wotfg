@@ -46,47 +46,6 @@ impl game_engine_core::State<GameData> for LoadState {
 
         data.world.get_mut::<Auth>().unwrap().id = "123".to_string();
 
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (0, 0),
-                Chunk::new_rand(
-                    &mut data.world.get_mut::<_>().unwrap(),
-                    &mut data.world.get::<_>().unwrap(),
-                ),
-            );
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (0, 1),
-                Chunk::new_rand(
-                    &mut data.world.get_mut::<_>().unwrap(),
-                    &mut data.world.get::<_>().unwrap(),
-                ),
-            );
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (1, 0),
-                Chunk::new_rand(
-                    &mut data.world.get_mut::<_>().unwrap(),
-                    &mut data.world.get::<_>().unwrap(),
-                ),
-            );
-        data.world
-            .get_mut::<HashMap<(u32, u32), Chunk>>()
-            .unwrap()
-            .insert(
-                (1, 1),
-                Chunk::new_rand(
-                    &mut data.world.get_mut::<_>().unwrap(),
-                    &mut data.world.get::<_>().unwrap(),
-                ),
-            );
-
         let player = data.world.get_mut::<Entities>().unwrap().create();
         data.world.get_mut::<Components<_>>().unwrap().insert(
             player,

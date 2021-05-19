@@ -125,3 +125,10 @@ pub enum Effectors {}
 pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
 }
+
+#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+pub enum ServerEvents {
+    ChunkLoaded(u32, u32),
+    ChunkUnloaded(u32, u32),
+}
+

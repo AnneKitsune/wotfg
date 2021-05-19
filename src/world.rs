@@ -93,6 +93,34 @@ impl Chunk {
         }
         Self { tiles, collisions }
     }
+    pub fn from_disk(x: u32, y: u32, world: String, tile_defs: &TileDefinitions) -> Self {
+        let data = std::fs::read(
+            format!(
+                "{}/worlds/{}/chunks/{}_{}.bin",
+                env!("CARGO_MANIFEST_DIR"),
+                world,
+                x,
+                y
+            ),
+        )
+        .expect("Failed to read chunk data from disk.");
+        let tiles = bincode::deserialize(&data).expect("Failed to deserialize chunk data.");
+        Self::from_tiles(tiles, tile_defs)
+    }
+    pub fn to_disk(&self, x: u32, y: u32, world: String) {
+        let data = bincode::serialize(&self.tiles).expect("Failed to serialize chunk data.");
+        std::fs::write(
+            format!(
+                "{}/worlds/{}/chunks/{}_{}.bin",
+                env!("CARGO_MANIFEST_DIR"),
+                world,
+                x,
+                y
+            ),
+            data,
+        )
+        .expect("Failed to write chunk data to disk.");
+    }
 }
 
 pub fn generate_world(rng: &mut RNG, tile_defs: &TileDefinitions) {
@@ -104,17 +132,7 @@ pub fn generate_world(rng: &mut RNG, tile_defs: &TileDefinitions) {
                 WORLD_WIDTH_HEIGHT * WORLD_WIDTH_HEIGHT
             );
             let chunk = Chunk::new_rand(rng, tile_defs);
-            let data = bincode::serialize(&chunk.tiles).expect("Failed to serialize chunk data.");
-            std::fs::write(
-                format!(
-                    "{}/worlds/dev/chunks/{}_{}.bin",
-                    env!("CARGO_MANIFEST_DIR"),
-                    chunk_x,
-                    chunk_y
-                ),
-                data,
-            )
-            .expect("Failed to write chunk data to disk.");
+            chunk.to_disk(chunk_x, chunk_y, "dev".to_string());
         }
     }
 }
