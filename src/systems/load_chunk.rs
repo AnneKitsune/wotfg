@@ -1,7 +1,13 @@
 use crate::*;
 use std::collections::HashSet;
 
-pub fn load_chunks_system(players: &Components<Player>, positions: &Components<Position>, tile_defs: &TileDefinitions, events: &mut Vec<ServerEvents>, chunks: &mut HashMap<(u32, u32), Chunk>) -> SystemResult {
+pub fn load_chunks_system(
+    players: &Components<Player>,
+    positions: &Components<Position>,
+    tile_defs: &TileDefinitions,
+    events: &mut Vec<ServerEvents>,
+    chunks: &mut HashMap<(u32, u32), Chunk>,
+) -> SystemResult {
     let current = chunks.keys().map(|k| *k).collect::<HashSet<_>>();
     let mut next = HashSet::<(u32, u32)>::default();
     for (position, _) in join!(&positions && &players) {
@@ -18,7 +24,10 @@ pub fn load_chunks_system(players: &Components<Player>, positions: &Components<P
     }
     for l in unload {
         // save to disk
-        chunks.remove(l).unwrap().to_disk(l.0, l.1, "dev".to_string());
+        chunks
+            .remove(l)
+            .unwrap()
+            .to_disk(l.0, l.1, "dev".to_string());
         events.push(ServerEvents::ChunkUnloaded(l.0, l.1));
     }
     Ok(())

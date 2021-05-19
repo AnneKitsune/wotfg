@@ -131,4 +131,3 @@ pub enum ServerEvents {
     ChunkLoaded(u32, u32),
     ChunkUnloaded(u32, u32),
 }
-

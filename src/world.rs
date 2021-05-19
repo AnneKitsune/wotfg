@@ -94,15 +94,13 @@ impl Chunk {
         Self { tiles, collisions }
     }
     pub fn from_disk(x: u32, y: u32, world: String, tile_defs: &TileDefinitions) -> Self {
-        let data = std::fs::read(
-            format!(
-                "{}/worlds/{}/chunks/{}_{}.bin",
-                env!("CARGO_MANIFEST_DIR"),
-                world,
-                x,
-                y
-            ),
-        )
+        let data = std::fs::read(format!(
+            "{}/worlds/{}/chunks/{}_{}.bin",
+            env!("CARGO_MANIFEST_DIR"),
+            world,
+            x,
+            y
+        ))
         .expect("Failed to read chunk data from disk.");
         let tiles = bincode::deserialize(&data).expect("Failed to deserialize chunk data.");
         Self::from_tiles(tiles, tile_defs)
