@@ -39,8 +39,7 @@ impl game_engine_core::State<GameData> for LoadState {
         .expect("Failed to load file: Invalid format.");
         let tile_defs = TileDefinitions::from(tile_defs);
 
-        generate_world(&mut *data.world.get_mut::<_>().unwrap(), &tile_defs);
-        panic!("done!");
+        //generate_world(&mut *data.world.get_mut::<_>().unwrap(), &tile_defs);
 
         *data.world.get_mut_or_default::<_>() = tile_defs;
 
