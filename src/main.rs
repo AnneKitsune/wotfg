@@ -319,7 +319,7 @@ fn main() {
     render_crafting_dispatcher = render_crafting_dispatcher.add(curses_input_system);
     render_crafting_dispatcher = render_crafting_dispatcher.add(curses_render_system);
     render_crafting_dispatcher = render_crafting_dispatcher.add(entity_curses_render_system);
-    render_crafting_dispatcher = render_crafting_dispatcher.add(curses_render_inventory_system);
+    render_crafting_dispatcher = render_crafting_dispatcher.add(curses_render_crafting_system);
     render_crafting_dispatcher = render_crafting_dispatcher.add(curses_end_draw_system);
     let render_crafting_dispatcher = render_crafting_dispatcher.build(&mut world);
 
