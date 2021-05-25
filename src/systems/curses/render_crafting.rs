@@ -129,8 +129,8 @@ pub fn curses_render_crafting_system(
                         .expect("Item Transition references stat not present in stat definitions.");
                     if let StatConditionType::MinValue(min) = cond.condition {
                         curses.move_rc(y_description, center);
-                        let roman_level =
-                            roman::to(min as i32).expect("Failed to convert required level to roman.");
+                        let roman_level = roman::to(min as i32)
+                            .expect("Failed to convert required level to roman.");
                         curses.print(format!("- {} {}", stat_def.name, roman_level));
                         y_description += 1;
                     }
@@ -163,12 +163,10 @@ pub fn curses_render_crafting_system(
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(*COLOR_NORMAL);
                 curses.print(format!("Success Chance with Current Skills: 85"));
-
             } else {
                 curses.print(" ");
             }
-
-                    }
+        }
     }
     /*for (_, inv) in join!(&controlled && &inventories) {
         for item in inv.as_ref().unwrap().content.iter() {
