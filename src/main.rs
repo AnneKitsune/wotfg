@@ -330,11 +330,12 @@ fn main() {
     logic_dispatcher = logic_dispatcher.add(mine_system);
     logic_dispatcher = logic_dispatcher.add(load_chunks_system);
     logic_dispatcher = logic_dispatcher.add(send_chunk_data_system);
-    logic_dispatcher = logic_dispatcher.add(|ev1: &mut PlayerActionQueue, ev2: &mut Vec<ServerEvents>| {
-        ev1.queue.pop_front();
-        ev2.clear();
-        Ok(())
-    });
+    logic_dispatcher =
+        logic_dispatcher.add(|ev1: &mut PlayerActionQueue, ev2: &mut Vec<ServerEvents>| {
+            ev1.queue.pop_front();
+            ev2.clear();
+            Ok(())
+        });
     let logic_dispatcher = logic_dispatcher.build(&mut world);
 
     let mut engine = Engine::<GameData, _>::new(

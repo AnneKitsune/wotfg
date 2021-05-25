@@ -1,13 +1,20 @@
 use crate::*;
 
-pub fn player_join_leave_system(positions: &mut Components<Position>, rendered: &mut Components<Rendered>, players: &mut Components<Player>, entities: &mut Entities, inventories: &mut Components<Inventory<Items, (), ()>>, server_events: &mut Vec<ServerEvents>) -> SystemResult {
+pub fn player_join_leave_system(
+    positions: &mut Components<Position>,
+    rendered: &mut Components<Rendered>,
+    players: &mut Components<Player>,
+    entities: &mut Entities,
+    inventories: &mut Components<Inventory<Items, (), ()>>,
+    server_events: &mut Vec<ServerEvents>,
+) -> SystemResult {
     let mut joins = vec![];
     for ev in server_events.iter() {
         match ev {
             ServerEvents::PlayerJoin(player) => {
                 joins.push(player.clone());
-            },
-            _ => {},
+            }
+            _ => {}
         }
     }
     for player in joins {
@@ -19,16 +26,14 @@ pub fn player_join_leave_system(positions: &mut Components<Position>, rendered: 
             .with_z(0)
             .with_chunk_x(0)
             .with_chunk_y(0);
-        server_events.push(ServerEvents::PlayerChangedChunk(player.clone(), position.chunk_x(), position.chunk_y()));
+        server_events.push(ServerEvents::PlayerChangedChunk(
+            player.clone(),
+            position.chunk_x(),
+            position.chunk_y(),
+        ));
         let entity = entities.create();
-        positions.insert(
-            entity,
-            position,
-        );
-        players.insert(
-            entity,
-            player,
-        );
+        positions.insert(entity, position);
+        players.insert(entity, player);
         rendered.insert(entity, Rendered::new('P', *COLOR_TITLE, None, 999));
 
         // load inventory from save file. be careful here about player names as this does read

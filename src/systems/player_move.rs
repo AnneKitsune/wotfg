@@ -40,7 +40,11 @@ pub fn player_move_system(
                     **position = new_position;
                 }
             } else {
-                server_events.push(ServerEvents::PlayerChangedChunk(player.unwrap().clone(), new_position.chunk_x(), new_position.chunk_y()));
+                server_events.push(ServerEvents::PlayerChangedChunk(
+                    player.unwrap().clone(),
+                    new_position.chunk_x(),
+                    new_position.chunk_y(),
+                ));
                 if **position == cursor.0 {
                     cursor.0 = new_position.clone();
                 }

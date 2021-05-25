@@ -45,8 +45,13 @@ impl game_engine_core::State<GameData> for LoadState {
 
         data.world.get_mut::<Auth>().unwrap().id = "123".to_string();
 
-        data.world.get_mut::<Vec<ServerEvents>>().unwrap().push(ServerEvents::PlayerJoin(Player::new("123".to_string(), "jojolepro".to_string())));
-
+        data.world
+            .get_mut::<Vec<ServerEvents>>()
+            .unwrap()
+            .push(ServerEvents::PlayerJoin(Player::new(
+                "123".to_string(),
+                "jojolepro".to_string(),
+            )));
     }
 
     fn update(&mut self, data: &mut GameData) -> StateTransition<GameData> {
