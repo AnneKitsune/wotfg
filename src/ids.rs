@@ -130,4 +130,6 @@ pub enum ItemTransitions {
 pub enum ServerEvents {
     ChunkLoaded(u32, u32),
     ChunkUnloaded(u32, u32),
+    PlayerChangedChunk(Player, u32, u32),
+    PlayerJoin(Player),
 }

@@ -6,9 +6,11 @@ pub fn player_move_system(
     chunks: &HashMap<(u32, u32), Chunk>,
     cursor: &mut MapCursor,
     positions: &mut Components<Position>,
+    server_events: &mut Vec<ServerEvents>,
 ) -> SystemResult {
-    if let Some(ev) = actions.queue.front() {
-        for (player, mut position) in join!(&players && &mut positions) {
+    for (player, mut position) in join!(&players && &mut positions) {
+        // TODO change to using one action queue per player
+        if let Some(ev) = actions.queue.front() {
             let position = position.as_mut().unwrap();
             let mut new_position = position.clone();
             // TODO check that action comes from right player
@@ -37,6 +39,13 @@ pub fn player_move_system(
 
                     **position = new_position;
                 }
+            } else {
+                server_events.push(ServerEvents::PlayerChangedChunk(player.unwrap().clone(), new_position.chunk_x(), new_position.chunk_y()));
+                if **position == cursor.0 {
+                    cursor.0 = new_position.clone();
+                }
+
+                **position = new_position;
             }
         }
     }

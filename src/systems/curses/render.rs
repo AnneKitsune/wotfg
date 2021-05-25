@@ -3,7 +3,8 @@ use crate::*;
 pub fn curses_render_system(
     cursor: &MapCursor,
     render: &RenderInfo,
-    chunks: &HashMap<(u32, u32), Chunk>,
+    //chunks: &HashMap<(u32, u32), Chunk>,
+    chunk: &Option<Chunk>,
     tile_defs: &TileDefinitions,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
@@ -40,7 +41,8 @@ pub fn curses_render_system(
     let map_offset = render.map_offsets(cursor);
     let (xmax, ymax) = render.maximum_positions();
 
-    if let Some(chunk) = chunks.get(&(cursor.0.chunk_x(), cursor.0.chunk_y())) {
+    //if let Some(chunk) = chunks.get(&(cursor.0.chunk_x(), cursor.0.chunk_y())) {
+    if let Some(chunk) = chunk {
         // Render the map tiles and border
         for y in MAIN_AREA_MARGIN_TOP..ymax {
             for x in MAIN_AREA_MARGIN_LEFT..xmax {
@@ -72,7 +74,7 @@ pub fn curses_render_system(
             }
         }
     } else {
-        eprintln!("No chunk data for this chunk!");
+        //eprintln!("No chunk data for this chunk!");
     }
 
     // ---- Map visibility sides ----
