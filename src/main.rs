@@ -322,6 +322,7 @@ fn main() {
         .add(curses_update_render_info_system)
         .add(curses_input_system)
         .add(crafting_input_system)
+        .add(client_start_craft_system)
         .add(curses_render_system)
         .add(entity_curses_render_system)
         .add(curses_render_crafting_system)
