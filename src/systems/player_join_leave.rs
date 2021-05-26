@@ -1,6 +1,8 @@
 use crate::*;
 
 pub fn player_join_leave_system(
+    stat_defs: &StatDefinitions<Stats>,
+    stat_sets: &mut Components<StatSet<Stats>>,
     positions: &mut Components<Position>,
     rendered: &mut Components<Rendered>,
     players: &mut Components<Player>,
@@ -35,6 +37,7 @@ pub fn player_join_leave_system(
         positions.insert(entity, position);
         players.insert(entity, player);
         rendered.insert(entity, Rendered::new('P', *COLOR_TITLE, None, 999));
+        stat_sets.insert(entity, stat_defs.to_statset());
 
         // load inventory from save file. be careful here about player names as this does read
         // accesses to the disk.
