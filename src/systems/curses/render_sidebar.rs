@@ -51,20 +51,18 @@ pub fn curses_render_sidebar_system(
         let statset = statset.unwrap();
         if auth.id == player.unwrap().id {
             let name = player.unwrap().username.clone();
-            let health = statset.stats.get(&Stats::Health).unwrap().value;
-            let mana = statset.stats.get(&Stats::Mana).unwrap().value;
 
-            curses.move_rc(y, left);
+            curses.move_rc(y, left + 1);
             curses.print(format!("Name: {}", name));
             y += 1;
 
-            curses.move_rc(y, left);
-            curses.print(format!("Health: {}", health));
-            y += 1;
-
-            curses.move_rc(y, left);
-            curses.print(format!("Mana: {}", mana));
-            y += 1;
+            for key in [Stats::Health, Stats::AfterlifeEssence].iter() {
+                let stat_name = stat_defs.defs.get(key).expect("Missing stat in stat definitions.").name.clone();
+                let stat_value = statset.stats.get(key).expect("Missing stat in player statset.").value;
+                curses.move_rc(y, left + 1);
+                curses.print(format!("{}: {}", stat_name, stat_value));
+                y += 1;
+            }
         }
     }
 

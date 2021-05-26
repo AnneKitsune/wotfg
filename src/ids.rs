@@ -27,7 +27,6 @@ pub enum Items {
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
 pub enum Stats {
     Health,
-    Mana,
     AttackSpeedMultiplier,
     Temperature,
     MagicalCraftingXp,
