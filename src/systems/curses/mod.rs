@@ -7,6 +7,7 @@ mod render_action_queue;
 mod render_crafting;
 mod render_hanged_input;
 mod render_inventory;
+mod render_sidebar;
 mod update_render_info;
 
 pub use self::close_items::*;
@@ -18,4 +19,5 @@ pub use self::render_action_queue::*;
 pub use self::render_crafting::*;
 pub use self::render_hanged_input::*;
 pub use self::render_inventory::*;
+pub use self::render_sidebar::*;
 pub use self::update_render_info::*;

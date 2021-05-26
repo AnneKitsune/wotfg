@@ -146,15 +146,7 @@ pub fn curses_render_system(
         cursor.0.z(),
     ));
 
-    // Sidebar Test
-    curses.set_color_pair(*COLOR_NORMAL);
-    curses.move_rc(4, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-    curses.print("Some Things");
-    curses.move_rc(5, (render.screen_width - MAIN_AREA_MARGIN_RIGHT) as i32);
-    curses.print("And More");
-
     // Map Cursor
-
     curses.set_color_pair(*COLOR_TITLE);
     curses.move_rc(
         (cursor.0.y() as u32 + MAIN_AREA_MARGIN_TOP - map_offset.1) as i32,
