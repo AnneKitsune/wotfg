@@ -321,6 +321,7 @@ fn main() {
     let render_crafting_dispatcher = DispatcherBuilder::default()
         .add(curses_update_render_info_system)
         .add(curses_input_system)
+        .add(crafting_input_system)
         .add(curses_render_system)
         .add(entity_curses_render_system)
         .add(curses_render_crafting_system)
