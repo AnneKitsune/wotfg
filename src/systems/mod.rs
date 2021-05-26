@@ -1,4 +1,5 @@
 mod center_cursor;
+mod crafting_input;
 mod curses;
 mod cursor_move;
 mod input_to_player_action;
@@ -11,6 +12,7 @@ mod quick_select;
 mod send_chunk_data;
 
 pub use self::center_cursor::*;
+pub use self::crafting_input::*;
 pub use self::curses::*;
 pub use self::cursor_move::*;
 pub use self::input_to_player_action::*;

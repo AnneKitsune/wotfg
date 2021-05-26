@@ -9,3 +9,8 @@ pub struct Auth {
 pub struct QuickItemSelect {
     pub selected: Option<u32>,
 }
+
+#[derive(Eq, PartialEq, Default, Debug)]
+pub struct SelectedCraft {
+    pub selected: Option<u32>,
+}

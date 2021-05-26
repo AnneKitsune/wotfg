@@ -16,6 +16,7 @@ pub enum InputEvent {
     CenterCursor,
     Inventory,
     Crafting,
+    AttemptStartCraft(u32),
     Hanged(HangedInput),
     PlayerAction(PlayerAction),
 }
@@ -29,6 +30,7 @@ pub enum PlayerAction {
     MoveLayerUp,
     MoveLayerDown,
     Mine(Direction),
+    StartCraft(ItemTransitions),
 }
 
 #[derive(Clone, Default, Debug)]

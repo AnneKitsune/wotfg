@@ -122,7 +122,7 @@ impl From<Rarity> for u32 {
 #[derive(Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum Effectors {}
 
-#[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
+#[derive(Copy, Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
     Plank,
