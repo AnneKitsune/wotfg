@@ -9,6 +9,7 @@ pub fn curses_render_crafting_system(
     stat_defs: &StatDefinitions<Stats>,
     transitions: &ItemTransitionDefinitions<ItemTransitions, Items, Effectors, Stats>,
     render: &RenderInfo,
+    selected_craft: &SelectedCraft,
     auth: &Auth,
     curses: &mut Option<Curses>,
 ) -> SystemResult {
@@ -40,8 +41,7 @@ pub fn curses_render_crafting_system(
     curses.move_rc(MAIN_AREA_MARGIN_TOP as i32, center - half);
     curses.print(s);
 
-    // TODO replace by resource
-    let selected_recipe = 0;
+    let selected_recipe = selected_craft.selected.unwrap_or(0);
 
     //roman::to(level).unwrap();
     let mut y_list = (MAIN_AREA_MARGIN_TOP + 1) as i32;
