@@ -39,7 +39,28 @@
         output_items: [(UnobtainiumPlatesChestpieceTier8, 1)],
         on_condition_lost: Pause,
         time_to_complete: 2700.0,
-        consume_input_immediate: false,
+        consume_input_immediate: true,
         auto_trigger: false,
-    )
+    ),
+    ItemTransitionDefinition (
+        key: Plank,
+        name: "Wooden Planks",
+        friendly_name: "craft_wooden_plank",
+        icon_path: None,
+        input_items: [
+            (Log, 1, Consume),
+        ],
+        stat_conditions: [
+            StatCondition (
+                stat_key: Sawing,
+                condition: MinValue(0),
+            ),
+        ],
+        stat_effectors: [],
+        output_items: [(Plank, 5)],
+        on_condition_lost: Pause,
+        time_to_complete: 15.0,
+        consume_input_immediate: true,
+        auto_trigger: false,
+    ),
 ]

@@ -21,6 +21,7 @@ pub enum Items {
     Rock,
     SeliOre,
     GemStone,
+    Plank,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
@@ -40,6 +41,7 @@ pub enum Stats {
     Gluing,
     MysticalComprehension,
     MysticalCrafting,
+    Sawing,
 }
 
 // TODO use HarvestType in tools along with DamageType
@@ -124,6 +126,7 @@ pub enum Effectors {}
 #[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]
 pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
+    Plank,
 }
 
 #[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]

@@ -331,8 +331,7 @@
         maximum_durability: None,
            
     ),
-    
-        ItemDefinition (
+    ItemDefinition (
         key: StoneAxe,
         user_data: ItemProperties (
             damages: [
@@ -354,8 +353,6 @@
         maximum_stack: Some(1),
         maximum_durability: Some(10),
     ),
-        
-    
     ItemDefinition (
         key: GemStone,
         user_data: ItemProperties (
@@ -373,6 +370,26 @@
         name: "Gemstone",
         friendly_name: "gemstone",
         description: "A curious looking gem. Amber in color.",
+        maximum_stack: None,
+        maximum_durability: None,
+    ),
+    ItemDefinition (
+        key: Plank,
+        user_data: ItemProperties (
+            damages: [],
+            crit_chance: 0.0,
+            mining_level: 0,
+            chopping_level: 0,
+            attack_speed: 0.0,
+            mining_speed: 0.0,
+            attack_range: 0.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Plank",
+        friendly_name: "plank",
+        description: "A plank cut from solid wood.",
         maximum_stack: None,
         maximum_durability: None,
     ),

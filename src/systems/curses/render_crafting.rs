@@ -128,8 +128,7 @@ pub fn curses_render_crafting_system(
                         .expect("Item Transition references stat not present in stat definitions.");
                     if let StatConditionType::MinValue(min) = cond.condition {
                         curses.move_rc(y_description, center);
-                        let roman_level = roman::to(min as i32)
-                            .expect("Failed to convert required level to roman.");
+                        let roman_level = roman::to(min as i32).unwrap_or("0".to_string());
                         curses.print(format!("- {} {}", stat_def.name, roman_level));
                         y_description += 1;
                     }
