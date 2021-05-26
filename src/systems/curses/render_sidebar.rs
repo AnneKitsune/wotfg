@@ -57,8 +57,17 @@ pub fn curses_render_sidebar_system(
             y += 1;
 
             for key in [Stats::Health, Stats::AfterlifeEssence].iter() {
-                let stat_name = stat_defs.defs.get(key).expect("Missing stat in stat definitions.").name.clone();
-                let stat_value = statset.stats.get(key).expect("Missing stat in player statset.").value;
+                let stat_name = stat_defs
+                    .defs
+                    .get(key)
+                    .expect("Missing stat in stat definitions.")
+                    .name
+                    .clone();
+                let stat_value = statset
+                    .stats
+                    .get(key)
+                    .expect("Missing stat in player statset.")
+                    .value;
                 curses.move_rc(y, left + 1);
                 curses.print(format!("{}: {}", stat_name, stat_value));
                 y += 1;
