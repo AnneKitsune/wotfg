@@ -290,20 +290,21 @@ fn main() {
     // multiple chunk loaded
     // multiple players, all assigned to one network connection
 
-    let mut client_dispatcher = DispatcherBuilder::default();
-    client_dispatcher = client_dispatcher.add(curses_update_render_info_system);
-    client_dispatcher = client_dispatcher.add(curses_input_system);
-    client_dispatcher = client_dispatcher.add(quick_select_system);
-    client_dispatcher = client_dispatcher.add(center_cursor_system);
-    client_dispatcher = client_dispatcher.add(cursor_move_system);
-    client_dispatcher = client_dispatcher.add(curses_render_system);
-    client_dispatcher = client_dispatcher.add(entity_curses_render_system);
-    client_dispatcher = client_dispatcher.add(curses_render_close_items_system);
-    client_dispatcher = client_dispatcher.add(curses_render_action_queue_system);
-    client_dispatcher = client_dispatcher.add(curses_render_hanged_input_system);
-    client_dispatcher = client_dispatcher.add(curses_end_draw_system);
-    client_dispatcher = client_dispatcher.add(input_to_player_action);
-    let client_dispatcher = client_dispatcher.build(&mut world);
+    let client_dispatcher = DispatcherBuilder::default()
+        .add(curses_update_render_info_system)
+        .add(curses_input_system)
+        .add(quick_select_system)
+        .add(center_cursor_system)
+        .add(cursor_move_system)
+        .add(curses_render_system)
+        .add(entity_curses_render_system)
+        .add(curses_render_close_items_system)
+        .add(curses_render_action_queue_system)
+        .add(curses_render_hanged_input_system)
+        .add(curses_render_sidebar_system)
+        .add(curses_end_draw_system)
+        .add(input_to_player_action)
+        .build(&mut world);
 
     let render_inventory_dispatcher = DispatcherBuilder::default()
         .add(curses_update_render_info_system)
@@ -313,6 +314,7 @@ fn main() {
         .add(curses_render_inventory_system)
         .add(curses_render_action_queue_system)
         .add(curses_render_hanged_input_system)
+        .add(curses_render_sidebar_system)
         .add(curses_end_draw_system)
         .build(&mut world);
 
@@ -324,6 +326,7 @@ fn main() {
         .add(curses_render_crafting_system)
         .add(curses_render_action_queue_system)
         .add(curses_render_hanged_input_system)
+        .add(curses_render_sidebar_system)
         .add(curses_end_draw_system)
         .build(&mut world);
 
