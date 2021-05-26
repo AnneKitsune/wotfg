@@ -17,10 +17,8 @@ pub fn curses_render_sidebar_system(
 
     // clear anything that could have been written on top of the sidebar
     curses.set_color_pair(*COLOR_NORMAL);
-    for y in 0..render.screen_height as i32
-    {
-        for x in left..right
-        {
+    for y in 0..render.screen_height as i32 {
+        for x in left..right {
             curses.move_rc(y, x);
             curses.print_char(' ');
         }

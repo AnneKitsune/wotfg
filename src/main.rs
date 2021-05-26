@@ -340,8 +340,8 @@ fn main() {
             ev1.queue.pop_front();
             ev2.clear();
             Ok(())
-        }).
-        build(&mut world);
+        })
+        .build(&mut world);
 
     let mut engine = Engine::<GameData, _>::new(
         LoadState,
