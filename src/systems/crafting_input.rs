@@ -14,16 +14,16 @@ pub fn crafting_input_system(
                     if *sel > 0 {
                         *sel -= 1;
                     }
-                },
+                }
                 InputEvent::SelectDown => {
                     *sel += 1;
-                },
+                }
                 InputEvent::Accept => {
                     if *sel < max {
                         out.push(*sel);
                     }
-                },
-                _ => {},
+                }
+                _ => {}
             }
         }
     }
