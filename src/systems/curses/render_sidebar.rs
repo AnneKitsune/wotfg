@@ -20,7 +20,11 @@ pub fn curses_render_sidebar_system(
     for y in 0..render.screen_height as i32 {
         for x in left..=right {
             curses.move_rc(y, x);
-            let c = if (x == left && y == 1) || (x == right && y == 1) || (x == left && y == (render.screen_height as i32 - 1)) || (x == right && y == (render.screen_height as i32 - 1)) {
+            let c = if (x == left && y == 1)
+                || (x == right && y == 1)
+                || (x == left && y == (render.screen_height as i32 - 1))
+                || (x == right && y == (render.screen_height as i32 - 1))
+            {
                 '+'
             } else if x == left || x == right {
                 '|'
@@ -42,7 +46,6 @@ pub fn curses_render_sidebar_system(
         curses.print_char('=');
     }
     y += 1;
-
 
     for (player, statset) in join!(&players && &stats) {
         let statset = statset.unwrap();
