@@ -73,12 +73,11 @@ pub fn curses_render_crafting_system(
             );
             curses.move_rc(y_list, start + 1);
             curses.set_color_pair(rarest_color);
+            curses.print(format!("{}", trans.name));
             curses.move_rc(y_list, start);
+            curses.set_color_pair(*COLOR_NORMAL);
             if number == selected_recipe {
                 curses.print(">");
-                curses.move_rc(y_description, start);
-                curses.set_color_pair(rarest_color);
-                curses.print(format!("{}", trans.name));
 
                 y_description += 1;
                 curses.move_rc(y_description, center);
@@ -96,7 +95,7 @@ pub fn curses_render_crafting_system(
 
                 // print materials
                 curses.move_rc(y_description, center);
-                curses.print(format!("Materials:"));
+                curses.print(format!("=== Materials ==="));
                 y_description += 1;
 
                 for ik in trans.input_items.iter().filter(|(_, _, mode)| {
@@ -119,7 +118,7 @@ pub fn curses_render_crafting_system(
                 // print minimum skill requirements
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(*COLOR_NORMAL);
-                curses.print(format!("Minimum Skill Requirements:"));
+                curses.print(format!("=== Minimum Skill Requirements ==="));
                 y_description += 1;
 
                 for cond in trans.stat_conditions.iter() {
@@ -139,7 +138,7 @@ pub fn curses_render_crafting_system(
                 // print tools
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(*COLOR_NORMAL);
-                curses.print(format!("Tools:"));
+                curses.print(format!("=== Tools ==="));
                 y_description += 1;
 
                 for ik in trans.input_items.iter().filter(|(_, _, mode)| {
@@ -166,6 +165,7 @@ pub fn curses_render_crafting_system(
             } else {
                 curses.print(" ");
             }
+            y_list += 1;
         }
     }
     /*for (_, inv) in join!(&controlled && &inventories) {
