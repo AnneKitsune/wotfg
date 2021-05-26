@@ -79,6 +79,9 @@ pub fn curses_render_crafting_system(
             if number == selected_recipe {
                 curses.print(">");
 
+                curses.move_rc(y_description, center);
+                curses.set_color_pair(rarest_color);
+                curses.print(format!("{}", trans.name));
                 y_description += 1;
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(*COLOR_NORMAL);

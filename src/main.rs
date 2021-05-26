@@ -305,37 +305,40 @@ fn main() {
     client_dispatcher = client_dispatcher.add(input_to_player_action);
     let client_dispatcher = client_dispatcher.build(&mut world);
 
-    let mut render_inventory_dispatcher = DispatcherBuilder::default();
-    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_update_render_info_system);
-    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_input_system);
-    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_render_system);
-    render_inventory_dispatcher = render_inventory_dispatcher.add(entity_curses_render_system);
-    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_render_inventory_system);
-    render_inventory_dispatcher = render_inventory_dispatcher.add(curses_end_draw_system);
-    let render_inventory_dispatcher = render_inventory_dispatcher.build(&mut world);
+    let render_inventory_dispatcher = DispatcherBuilder::default()
+        .add(curses_update_render_info_system)
+        .add(curses_input_system)
+        .add(curses_render_system)
+        .add(entity_curses_render_system)
+        .add(curses_render_inventory_system)
+        .add(curses_render_action_queue_system)
+        .add(curses_render_hanged_input_system)
+        .add(curses_end_draw_system)
+        .build(&mut world);
 
-    let mut render_crafting_dispatcher = DispatcherBuilder::default();
-    render_crafting_dispatcher = render_crafting_dispatcher.add(curses_update_render_info_system);
-    render_crafting_dispatcher = render_crafting_dispatcher.add(curses_input_system);
-    render_crafting_dispatcher = render_crafting_dispatcher.add(curses_render_system);
-    render_crafting_dispatcher = render_crafting_dispatcher.add(entity_curses_render_system);
-    render_crafting_dispatcher = render_crafting_dispatcher.add(curses_render_crafting_system);
-    render_crafting_dispatcher = render_crafting_dispatcher.add(curses_end_draw_system);
-    let render_crafting_dispatcher = render_crafting_dispatcher.build(&mut world);
+    let render_crafting_dispatcher = DispatcherBuilder::default()
+        .add(curses_update_render_info_system)
+        .add(curses_input_system)
+        .add(curses_render_system)
+        .add(entity_curses_render_system)
+        .add(curses_render_crafting_system)
+        .add(curses_render_action_queue_system)
+        .add(curses_render_hanged_input_system)
+        .add(curses_end_draw_system)
+        .build(&mut world);
 
-    let mut logic_dispatcher = DispatcherBuilder::default();
-    logic_dispatcher = logic_dispatcher.add(player_join_leave_system);
-    logic_dispatcher = logic_dispatcher.add(player_move_system);
-    logic_dispatcher = logic_dispatcher.add(mine_system);
-    logic_dispatcher = logic_dispatcher.add(load_chunks_system);
-    logic_dispatcher = logic_dispatcher.add(send_chunk_data_system);
-    logic_dispatcher =
-        logic_dispatcher.add(|ev1: &mut PlayerActionQueue, ev2: &mut Vec<ServerEvents>| {
+    let logic_dispatcher = DispatcherBuilder::default()
+        .add(player_join_leave_system)
+        .add(player_move_system)
+        .add(mine_system)
+        .add(load_chunks_system)
+        .add(send_chunk_data_system)
+        .add(|ev1: &mut PlayerActionQueue, ev2: &mut Vec<ServerEvents>| {
             ev1.queue.pop_front();
             ev2.clear();
             Ok(())
-        });
-    let logic_dispatcher = logic_dispatcher.build(&mut world);
+        }).
+        build(&mut world);
 
     let mut engine = Engine::<GameData, _>::new(
         LoadState,
