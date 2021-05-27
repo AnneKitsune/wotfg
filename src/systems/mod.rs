@@ -1,5 +1,6 @@
 mod center_cursor;
 mod client_start_craft;
+mod crafting;
 mod crafting_input;
 mod curses;
 mod cursor_move;
@@ -14,6 +15,7 @@ mod send_chunk_data;
 
 pub use self::center_cursor::*;
 pub use self::client_start_craft::*;
+pub use self::crafting::*;
 pub use self::crafting_input::*;
 pub use self::curses::*;
 pub use self::cursor_move::*;
