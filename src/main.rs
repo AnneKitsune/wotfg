@@ -336,6 +336,7 @@ fn main() {
         .add(player_join_leave_system)
         .add(player_move_system)
         .add(mine_system)
+        .add(crafting_system)
         .add(load_chunks_system)
         .add(send_chunk_data_system)
         .add(|ev1: &mut PlayerActionQueue, ev2: &mut Vec<ServerEvents>| {
