@@ -13,10 +13,12 @@ pub fn crafting_system(
     if let Some(a) = player_actions.queue.front() {
         match a {
             PlayerAction::StartCraft(key) => {
-                for (player, mut inventory, statset) in join!(&players && &mut inventories && &statsets) {
+                for (player, mut inventory, statset) in
+                    join!(&players && &mut inventories && &statsets)
+                {
                     let mut inv = inventory.as_mut().unwrap();
                     let statset = statset.unwrap();
-                    if let Some(trans) = transitions .defs.get(&key) {
+                    if let Some(trans) = transitions.defs.get(&key) {
                         // TODO move to game_features
                         let mut ok = true;
                         // check item conditions
@@ -51,8 +53,8 @@ pub fn crafting_system(
                         }
                     }
                 }
-            },
-            _ => {},
+            }
+            _ => {}
         }
     }
     Ok(())
