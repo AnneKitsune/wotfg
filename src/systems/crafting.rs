@@ -54,7 +54,8 @@ pub fn crafting_system(
                             for i in trans.output_items.iter() {
                                 // ignore error
                                 // TODO drop items on the ground instead
-                                if let Err(_) = inv.insert(ItemInstance::new(i.0, i.1), item_defs) {}
+                                if let Err(_) = inv.insert(ItemInstance::new(i.0, i.1), item_defs) {
+                                }
                             }
                         }
                     }
