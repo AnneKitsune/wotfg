@@ -25,9 +25,8 @@ pub fn client_start_craft_system(
                             .defs
                             .values()
                             .filter(|t| !t.auto_trigger)
-                            .nth(*id as usize + 1)
+                            .nth(*id as usize)
                         {
-                            println!("checking if can craft.");
                             let mut ok = true;
                             // check item conditions
                             for i in trans.input_items.iter() {

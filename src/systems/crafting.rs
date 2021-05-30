@@ -18,9 +18,7 @@ pub fn crafting_system(
                 {
                     let mut inv = inventory.as_mut().unwrap();
                     let statset = statset.unwrap();
-                    println!("pre trans");
                     if let Some(trans) = transitions.defs.get(&key) {
-                        println!("post trans");
                         // TODO move to game_features
                         let mut ok = true;
                         // check item conditions
@@ -30,7 +28,6 @@ pub fn crafting_system(
                                 break;
                             }
                         }
-                        println!("has items: {}", ok);
 
                         // check stat conditions
                         if ok {
@@ -41,7 +38,6 @@ pub fn crafting_system(
                                 }
                             }
                         }
-                        println!("has stats: {}", ok);
                         if ok {
                             // consume resources
                             for i in trans.input_items.iter() {
