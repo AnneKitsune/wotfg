@@ -45,6 +45,7 @@ pub struct ItemProperties {
     pub mining_speed: f32,
     pub attack_range: f32,
     pub can_range: bool,
+    pub placeable: Option<Tiles>,
 }
 
 #[bitfield]

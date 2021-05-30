@@ -23,6 +23,7 @@ pub enum Items {
     GemStone,
     Plank,
     Kneesocks,
+    WoodWall,
 }
 
 #[derive(Clone, Copy, Debug, Eq, PartialEq, Hash, Deserialize, Serialize)]
