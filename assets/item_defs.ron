@@ -393,5 +393,25 @@
         maximum_stack: None,
         maximum_durability: None,
     ),
+    ItemDefinition (
+        key: Kneesocks,
+        user_data: ItemProperties (
+            damages: [],
+            crit_chance: 0.0,
+            mining_level: 0,
+            chopping_level: 0,
+            attack_speed: 0.0,
+            mining_speed: 0.0,
+            attack_range: 0.0,
+            can_range: false,
+            rarity: Common,
+        ),
+        slot_type: (),
+        name: "Kneesocks",
+        friendly_name: "kneesocks",
+        description: "The best feminine garment to have ever existed. Boosts beauty by 100%!",
+        maximum_stack: None,
+        maximum_durability: None,
+    ),
 ]	
 
