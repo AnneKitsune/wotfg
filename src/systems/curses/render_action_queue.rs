@@ -16,6 +16,7 @@ pub fn curses_render_action_queue_system(
     for action in actions.queue.iter() {
         let c = match action {
             PlayerAction::Mine(_) => keymap.key_for_event(&InputEvent::Hanged(HangedInput::Mine)).unwrap(),
+            PlayerAction::StartCraft(_) => 'c',
             a => keymap.key_for_event(&InputEvent::PlayerAction(*a)).expect("No key associated to one of the PlayerAction. curses_render_action_queue_system needs to be updated."),
         };
         if c != ' ' {
