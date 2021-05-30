@@ -128,6 +128,7 @@ pub enum Effectors {}
 pub enum ItemTransitions {
     CraftUnobtainiumPlatesChestpieceTier8,
     Plank,
+    WoodWall,
 }
 
 #[derive(Hash, Clone, Debug, Eq, PartialEq, Deserialize, Serialize)]

@@ -63,4 +63,20 @@
         consume_input_immediate: true,
         auto_trigger: false,
     ),
+    ItemTransitionDefinition (
+        key: WoodWall,
+        name: "Wooden Wall",
+        friendly_name: "craft_wall_wood",
+        icon_path: None,
+        input_items: [
+            (Plank, 2, Consume),
+        ],
+        stat_conditions: [],
+        stat_effectors: [],
+        output_items: [(WoodWall, 1)],
+        on_condition_lost: Pause,
+        time_to_complete: 15.0,
+        consume_input_immediate: true,
+        auto_trigger: false,
+    ),
 ]
