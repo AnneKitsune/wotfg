@@ -79,13 +79,17 @@ pub fn curses_render_crafting_system(
             if number as u32 == selected_recipe {
                 curses.print(">");
 
+                y_description += 1;
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(rarest_color);
                 curses.print(format!("{}", trans.name));
                 y_description += 1;
-                curses.move_rc(y_description, center);
-                curses.set_color_pair(*COLOR_NORMAL);
-                curses.print(format!("===================="));
+                let eq = end - center;
+                for i in 0..eq {
+                    curses.move_rc(y_description, center+i);
+                    curses.set_color_pair(*COLOR_NORMAL);
+                    curses.print_char('=');
+                }
                 y_description += 1;
 
                 // print time to craft
@@ -97,6 +101,7 @@ pub fn curses_render_crafting_system(
                 y_description += 1;
 
                 // print materials
+                y_description += 1;
                 curses.move_rc(y_description, center);
                 curses.print(format!("=== Materials ==="));
                 y_description += 1;
@@ -119,6 +124,7 @@ pub fn curses_render_crafting_system(
                 }
 
                 // print minimum skill requirements
+                y_description += 1;
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(*COLOR_NORMAL);
                 curses.print(format!("=== Minimum Skill Requirements ==="));
@@ -138,6 +144,7 @@ pub fn curses_render_crafting_system(
                 }
 
                 // print tools
+                y_description += 1;
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(*COLOR_NORMAL);
                 curses.print(format!("=== Tools ==="));
@@ -161,6 +168,7 @@ pub fn curses_render_crafting_system(
                 }
 
                 // print success chance TODO
+                y_description += 1;
                 curses.move_rc(y_description, center);
                 curses.set_color_pair(*COLOR_NORMAL);
                 curses.print(format!("Success Chance with Current Skills: 85"));
