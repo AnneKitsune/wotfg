@@ -147,6 +147,7 @@ pub enum Tiles {
     SeliOre,
     GemStoneOre,
     Stone,
+    WoodWall,
 }
 
 // TODO move to tile definition once minigene has proper color support.
@@ -163,6 +164,7 @@ impl From<Tiles> for ColorPair {
             Tiles::SeliOre => ColorPair::new(Color::Yellow, Color::Black),
             Tiles::GemStoneOre => ColorPair::new(Color::Green, Color::Black),
             Tiles::Stone => ColorPair::new(Color::White, Color::Black),
+            Tiles::WoodWall => ColorPair::new(Color::White, Color::Black),
         }
     }
 }

@@ -114,4 +114,15 @@
         solid: true,
         icon: None,
     ),
+    TileDefinition (
+        key: WoodWall,
+        name: "Wooden Wall",
+        harvest_types: [(Chopping, 1)],
+        harvest_time: 30.0,
+        drops: [(WoodWall, 1)],
+        replace_with: Air,
+        character: 'W',
+        solid: true,
+        icon: None,
+    ),
 ]
